@@ -1,4 +1,4 @@
-import { User, IUserDocument } from '../models/User';
+import { User } from '../models/User';
 import { ApiError } from '../utils/ApiError';
 import { generateAccessToken, generateRefreshToken } from '../utils/generateToken';
 import { UserRole } from '../utils/constants';
