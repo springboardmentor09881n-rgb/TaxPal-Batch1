@@ -6,7 +6,7 @@ dotenv.config();
 
 const envSchema = z.object({
   PORT: z.coerce.number().default(5000),
-  MONGO_URI: z.string().min(1, 'MONGO_URI is required'),
+  MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
   JWT_SECRET: z.string().min(1, 'JWT_SECRET is required'),
   JWT_EXPIRES: z.string().default('15m'),
   REFRESH_SECRET: z.string().min(1, 'REFRESH_SECRET is required'),
