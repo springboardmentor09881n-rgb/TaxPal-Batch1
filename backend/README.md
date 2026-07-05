@@ -1,4 +1,4 @@
-# Salary Management Backend API
+# TaxPal: Personal Finance & Tax Estimator for freelancers
 
 A production-ready, highly secure, and scalable backend for a Salary Management System. Built using **Node.js**, **Express.js**, **TypeScript**, and **MongoDB/Mongoose**, this project implements **Clean Architecture** and the **MVC (Model-View-Controller)** pattern.
 
