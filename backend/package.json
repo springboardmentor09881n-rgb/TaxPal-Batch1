@@ -1,5 +1,5 @@
 {
-  "name": "salary-management-backend",
+  "name": "TaxPal: Personal Finance & Tax Estimator for Freelancers",
   "version": "1.0.0",
   "description": "Production-ready salary management system backend following MVC and clean architecture",
   "main": "dist/server.js",
