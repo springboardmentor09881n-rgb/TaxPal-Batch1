@@ -9,8 +9,33 @@ export class AuthController {
    */
   public static async register(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email, password, role } = req.body;
-      const result = await AuthService.register(email, password, role);
+      const {
+        email,
+        password,
+        role,
+        fullName,
+        username,
+        phone,
+        country,
+        state,
+        city,
+        language,
+        incomeBracket,
+      } = req.body;
+
+      const result = await AuthService.register({
+        email,
+        password,
+        role,
+        fullName,
+        username,
+        phone,
+        country,
+        state,
+        city,
+        language,
+        incomeBracket,
+      });
 
       // Set cookie options
       const isProduction = process.env.NODE_ENV === 'production';
@@ -60,6 +85,40 @@ export class AuthController {
       });
 
       res.status(200).json(new ApiResponse(result, 'User logged in successfully'));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Fetch current user profile handler
+   */
+  public static async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new ApiError(401, 'Unauthorized: User context missing');
+      }
+
+      const user = await AuthService.getProfile(userId);
+      res.status(200).json(new ApiResponse(user, 'User profile retrieved successfully'));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Update current user profile handler
+   */
+  public static async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new ApiError(401, 'Unauthorized: User context missing');
+      }
+
+      const user = await AuthService.updateProfile(userId, req.body);
+      res.status(200).json(new ApiResponse(user, 'Profile updated successfully'));
     } catch (error) {
       next(error);
     }

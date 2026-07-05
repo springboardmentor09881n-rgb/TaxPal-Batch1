@@ -11,6 +11,14 @@ interface AuthResponse {
     id: string;
     email: string;
     role: UserRole;
+    fullName: string;
+    username: string;
+    phone?: string;
+    country: string;
+    state?: string;
+    city?: string;
+    language?: string;
+    incomeBracket?: string;
   };
   accessToken: string;
   refreshToken: string;
@@ -20,16 +28,41 @@ export class AuthService {
   /**
    * Register a new user
    */
-  public static async register(email: string, password: string, role: UserRole): Promise<AuthResponse> {
-    const existingUser = await User.findOne({ email });
+  public static async register(userData: {
+    email: string;
+    password?: string;
+    role: UserRole;
+    fullName: string;
+    username: string;
+    phone?: string;
+    country: string;
+    state?: string;
+    city?: string;
+    language?: string;
+    incomeBracket?: string;
+  }): Promise<AuthResponse> {
+    const existingUser = await User.findOne({ email: userData.email });
     if (existingUser) {
       throw new ApiError(400, 'User with this email already exists');
     }
 
+    const existingUsername = await User.findOne({ username: userData.username });
+    if (existingUsername) {
+      throw new ApiError(400, 'Username is already taken');
+    }
+
     const user = new User({
-      email,
-      password,
-      role,
+      email: userData.email,
+      password: userData.password,
+      role: userData.role,
+      fullName: userData.fullName,
+      username: userData.username,
+      phone: userData.phone,
+      country: userData.country,
+      state: userData.state,
+      city: userData.city,
+      language: userData.language,
+      incomeBracket: userData.incomeBracket,
     });
 
     await user.save();
@@ -51,6 +84,14 @@ export class AuthService {
         id: user._id.toString(),
         email: user.email,
         role: user.role,
+        fullName: user.fullName,
+        username: user.username,
+        phone: user.phone,
+        country: user.country,
+        state: user.state,
+        city: user.city,
+        language: user.language,
+        incomeBracket: user.incomeBracket,
       },
       accessToken,
       refreshToken,
@@ -93,10 +134,66 @@ export class AuthService {
         id: user._id.toString(),
         email: user.email,
         role: user.role,
+        fullName: user.fullName,
+        username: user.username,
+        phone: user.phone,
+        country: user.country,
+        state: user.state,
+        city: user.city,
+        language: user.language,
+        incomeBracket: user.incomeBracket,
       },
       accessToken,
       refreshToken,
     };
+  }
+
+  /**
+   * Fetch a user profile by ID
+   */
+  public static async getProfile(userId: string): Promise<any> {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ApiError(404, 'User not found');
+    }
+    return user;
+  }
+
+  /**
+   * Update user profile fields
+   */
+  public static async updateProfile(userId: string, data: any): Promise<any> {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ApiError(404, 'User not found');
+    }
+
+    if (data.email && data.email !== user.email) {
+      const emailExists = await User.findOne({ email: data.email });
+      if (emailExists) {
+        throw new ApiError(400, 'Email is already taken by another user');
+      }
+      user.email = data.email;
+    }
+
+    if (data.username && data.username !== user.username) {
+      const usernameExists = await User.findOne({ username: data.username });
+      if (usernameExists) {
+        throw new ApiError(400, 'Username is already taken');
+      }
+      user.username = data.username;
+    }
+
+    if (data.fullName !== undefined) user.fullName = data.fullName;
+    if (data.phone !== undefined) user.phone = data.phone;
+    if (data.country !== undefined) user.country = data.country;
+    if (data.state !== undefined) user.state = data.state;
+    if (data.city !== undefined) user.city = data.city;
+    if (data.language !== undefined) user.language = data.language;
+    if (data.incomeBracket !== undefined) user.incomeBracket = data.incomeBracket;
+
+    await user.save();
+    return user;
   }
 
   /**

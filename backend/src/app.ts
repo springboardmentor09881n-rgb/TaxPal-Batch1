@@ -7,9 +7,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
 
 import authRoutes from './routes/auth.routes';
-import userRoutes from './routes/user.routes';
-import employeeRoutes from './routes/employee.routes';
-import salaryRoutes from './routes/salary.routes';
+import transactionRoutes from './routes/transaction.routes';
 
 import { errorHandler } from './middleware/error.middleware';
 import { ApiError } from './utils/ApiError';
@@ -58,9 +56,7 @@ app.use('/api', apiLimiter);
 
 // Register routes
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/employees', employeeRoutes);
-app.use('/api/salary', salaryRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -75,7 +71,7 @@ app.get('/health', (req, res) => {
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'Welcome to the Salary Management System API',
+    message: 'Welcome to the TaxPal API',
   });
 });
 

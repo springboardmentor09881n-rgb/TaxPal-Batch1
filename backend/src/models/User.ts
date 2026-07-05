@@ -6,6 +6,14 @@ export interface IUser {
   email: string;
   password?: string;
   role: UserRole;
+  fullName: string;
+  username: string;
+  phone?: string;
+  country: string;
+  state?: string;
+  city?: string;
+  language?: string;
+  incomeBracket?: string;
   refreshTokens: string[];
   comparePassword(candidatePassword: string): Promise<boolean>;
   createdAt: Date;
@@ -32,6 +40,42 @@ const userSchema = new Schema<IUserDocument>(
       type: String,
       enum: Object.values(UserRole),
       default: UserRole.EMPLOYEE,
+    },
+    fullName: {
+      type: String,
+      required: [true, 'Full name is required'],
+      trim: true,
+    },
+    username: {
+      type: String,
+      required: [true, 'Username is required'],
+      unique: true,
+      trim: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    country: {
+      type: String,
+      required: [true, 'Country is required'],
+      trim: true,
+    },
+    state: {
+      type: String,
+      trim: true,
+    },
+    city: {
+      type: String,
+      trim: true,
+    },
+    language: {
+      type: String,
+      trim: true,
+    },
+    incomeBracket: {
+      type: String,
+      trim: true,
     },
     refreshTokens: {
       type: [String],
