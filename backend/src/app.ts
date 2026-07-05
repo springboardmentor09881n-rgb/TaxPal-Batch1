@@ -71,7 +71,7 @@ app.get('/health', (req, res) => {
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'Welcome to the TaxPal API',
+    message: 'Welcome to the TaxPal: Personal Finance & Tax Estimator for Freelancers API',
   });
 });
 
