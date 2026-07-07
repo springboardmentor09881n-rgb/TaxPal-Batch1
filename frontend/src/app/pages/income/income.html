@@ -1,0 +1,71 @@
+<div class="container">
+
+  <h2>Record New Income</h2>
+  <p>Add details about your income to track your finances better.</p>
+
+  <div class="row">
+
+    <div class="field">
+      <label>Description <span>*</span></label>
+      <input
+        type="text"
+        placeholder="e.g. Web Design Project"
+        [(ngModel)]="description">
+    </div>
+
+    <div class="field">
+      <label>Amount <span>*</span></label>
+      <input
+        type="number"
+        placeholder="$ 0.00"
+        [(ngModel)]="amount">
+    </div>
+
+  </div>
+
+  <div class="row">
+
+    <div class="field">
+      <label>Category <span>*</span></label>
+      <input
+        type="text"
+        placeholder="Select a category"
+        [(ngModel)]="category">
+    </div>
+
+    <div class="field">
+      <label>Date <span>*</span></label>
+      <input
+        type="date"
+        [(ngModel)]="transactionDate">
+    </div>
+
+  </div>
+
+  <label>Notes (Optional)</label>
+
+  <textarea
+    rows="4"
+    placeholder="Add any additional details..."
+    [(ngModel)]="notes">
+  </textarea>
+
+  <div class="buttons">
+
+    <button
+      type="button"
+      class="cancel-btn"
+      routerLink="/dashboard">
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      class="save-btn"
+      (click)="saveIncome()">
+      Save
+    </button>
+
+  </div>
+
+</div>

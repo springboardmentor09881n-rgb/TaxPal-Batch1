@@ -1,0 +1,101 @@
+<div class="container">
+
+  <h2>Create an Account</h2>
+  <p class="subtitle">
+    Enter your information to create your TaxPal account
+  </p>
+
+  <label>Full Name <span>*</span></label>
+  <input
+    type="text"
+    placeholder="Enter your full name"
+    [(ngModel)]="fullName">
+
+  <label>Username <span>*</span></label>
+  <input
+    type="text"
+    placeholder="Enter your username"
+    [(ngModel)]="username">
+
+  <label>Email <span>*</span></label>
+  <input
+    type="email"
+    placeholder="Enter your email"
+    [(ngModel)]="email">
+
+  <label>Password <span>*</span></label>
+  <input
+    type="password"
+    placeholder="Enter your password"
+    [(ngModel)]="password">
+
+  <label>Confirm Password <span>*</span></label>
+  <input
+    type="password"
+    placeholder="Confirm your password"
+    [(ngModel)]="confirmPassword">
+
+  <label>Country <span>*</span></label>
+  <select [(ngModel)]="country">
+    <option value="">Select your country</option>
+    <option>India</option>
+    <option>USA</option>
+    <option>Canada</option>
+    <option>UK</option>
+  </select>
+
+  <label>User ID</label>
+  <input
+    type="text"
+    placeholder="Enter your User ID"
+    [(ngModel)]="userId">
+
+  <label>Phone Number</label>
+  <input
+    type="tel"
+    placeholder="Enter your phone number"
+    [(ngModel)]="phone">
+
+  <label>State</label>
+  <select [(ngModel)]="state">
+    <option value="">Select your state</option>
+    <option>Telangana</option>
+    <option>Andhra Pradesh</option>
+    <option>Karnataka</option>
+    <option>Tamil Nadu</option>
+    <option>Kerala</option>
+  </select>
+
+  <label>City</label>
+  <select [(ngModel)]="city">
+    <option value="">Select your city</option>
+    <option>Hyderabad</option>
+    <option>Warangal</option>
+    <option>Karimnagar</option>
+    <option>Chennai</option>
+    <option>Bangalore</option>
+  </select>
+
+  <label>Language</label>
+  <select [(ngModel)]="language">
+    <option value="">Select language</option>
+    <option>English</option>
+    <option>Hindi</option>
+    <option>French</option>
+    <option>Spanish</option>
+  </select>
+
+  <label>Income Bracket</label>
+  <select [(ngModel)]="incomeBracket">
+    <option value="">Select income bracket</option>
+    <option>&lt; 25k</option>
+    <option>25k - 50k</option>
+    <option>50k - 100k</option>
+    <option>100k+</option>
+  </select>
+
+  <button (click)="createAccount()">
+    Create Account
+  </button>
+
+</div>

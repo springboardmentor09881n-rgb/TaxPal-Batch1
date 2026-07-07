@@ -1,0 +1,46 @@
+<div class="login-container">
+  <div class="login-card">
+
+    <h1>TaxPal</h1>
+    <p class="subtitle">
+      Sign in to your account to continue
+    </p>
+
+    <div class="field-header">
+      <label>Username</label>
+    </div>
+
+    <input
+      type="email"
+      placeholder="Enter your username"
+      [(ngModel)]="email">
+
+    <div class="field-header">
+      <label>Password</label>
+      <a href="#">Forgot password?</a>
+    </div>
+
+    <input
+      type="password"
+      placeholder="Enter your password"
+      [(ngModel)]="password">
+
+    <button (click)="login()">
+      Sign In
+    </button>
+
+    <p class="demo-text">
+      Demo account: demo / password
+    </p>
+
+    <p class="signup-link">
+      Don't have an account?
+      <a routerLink="/signup">Sign up</a>
+    </p>
+
+    <p class="footer">
+      © 2025 TaxPal. All rights reserved.
+    </p>
+
+  </div>
+</div>

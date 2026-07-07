@@ -1,0 +1,88 @@
+.login-container{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#faf8fb;
+}
+
+.login-card{
+  width:320px;
+  background:white;
+  padding:25px;
+  border:1px solid #e5e5e5;
+  border-radius:6px;
+}
+
+.login-card h1{
+  text-align:center;
+  margin-bottom:8px;
+  font-size:32px;
+  font-weight:700;
+}
+
+.subtitle{
+  text-align:center;
+  color:#777;
+  font-size:13px;
+  margin-bottom:20px;
+}
+
+.field-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:10px;
+}
+
+.field-header label{
+  font-size:13px;
+  font-weight:600;
+}
+
+.field-header a{
+  font-size:12px;
+  color:#666;
+  text-decoration:none;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  margin-bottom:10px;
+  border:1px solid #ddd;
+  border-radius:4px;
+  box-sizing:border-box;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  background:#0ea5ff;
+  color:white;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.demo-text{
+  text-align:center;
+  color:#666;
+  font-size:12px;
+  margin-top:15px;
+}
+
+.signup-link{
+  text-align:center;
+  font-size:13px;
+  margin-top:10px;
+}
+
+.footer{
+  text-align:center;
+  font-size:11px;
+  color:#888;
+  margin-top:20px;
+}
