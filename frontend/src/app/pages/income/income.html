@@ -1,0 +1,118 @@
+<div class="transaction-container">
+  <!-- Dynamic background glow decorations -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <div class="transaction-card">
+    <div class="brand-section">
+      <div class="brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <h2>TaxPal</h2>
+    </div>
+
+    <h2 class="card-title">Add Income</h2>
+    <p class="card-subtitle">Record a new source of revenue to estimate your tax slice</p>
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    <form (submit)="saveIncome(); $event.preventDefault()" class="transaction-form">
+      <!-- Description -->
+      <div class="input-group" [class.has-error]="descriptionError">
+        <label for="description">Description</label>
+        <input
+          id="description"
+          type="text"
+          placeholder="e.g. Website Development"
+          [(ngModel)]="description"
+          name="description">
+        @if (descriptionError) {
+          <span class="error-text">{{ descriptionError }}</span>
+        }
+      </div>
+
+      <!-- Amount -->
+      <div class="input-group" [class.has-error]="amountError">
+        <label for="amount">Amount (INR)</label>
+        <input
+          id="amount"
+          type="number"
+          placeholder="e.g. 15000"
+          [(ngModel)]="amount"
+          name="amount">
+        @if (amountError) {
+          <span class="error-text">{{ amountError }}</span>
+        }
+      </div>
+
+      <!-- Category Select -->
+      <div class="input-group" [class.has-error]="categoryError">
+        <label for="category">Category</label>
+        <select
+          id="category"
+          [(ngModel)]="category"
+          name="category">
+          <option value="Freelance Project">Freelance Project</option>
+          <option value="Consulting">Consulting</option>
+          <option value="Contract Work">Contract Work</option>
+          <option value="Royalties">Royalties</option>
+          <option value="Ad Revenue">Ad Revenue</option>
+          <option value="Other">Other</option>
+        </select>
+        @if (categoryError) {
+          <span class="error-text">{{ categoryError }}</span>
+        }
+      </div>
+
+      <!-- Transaction Date -->
+      <div class="input-group" [class.has-error]="dateError">
+        <label for="transactionDate">Date</label>
+        <input
+          id="transactionDate"
+          type="date"
+          [(ngModel)]="transactionDate"
+          name="transactionDate">
+        @if (dateError) {
+          <span class="error-text">{{ dateError }}</span>
+        }
+      </div>
+
+      <!-- Notes (Optional) -->
+      <div class="input-group">
+        <label for="notes">Notes (Optional)</label>
+        <textarea
+          id="notes"
+          rows="3"
+          placeholder="Add any extra details..."
+          [(ngModel)]="notes"
+          name="notes"></textarea>
+      </div>
+
+      <!-- Submit and Cancel Actions -->
+      <div class="action-buttons">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+          @if (isLoading) {
+            <span class="spinner"></span>
+            <span>Saving...</span>
+          } @else {
+            <span>Save Income</span>
+          }
+        </button>
+        
+        <a routerLink="/dashboard" class="btn-cancel">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>

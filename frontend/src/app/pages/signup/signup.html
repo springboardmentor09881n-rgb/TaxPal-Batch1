@@ -1,0 +1,249 @@
+<div class="signup-container">
+  <!-- Dynamic background glow decorations -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <div class="signup-card">
+    <div class="brand-section">
+      <div class="brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <h1>TaxPal</h1>
+      <p>Personal Finance & Tax Estimator</p>
+    </div>
+
+    <h2 class="card-title">Create your account</h2>
+    <p class="card-subtitle">Get started with tax estimates and expense management</p>
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    <form (submit)="createAccount(); $event.preventDefault()" class="signup-form">
+      <div class="form-grid">
+        <!-- REQUIRED SECTION -->
+        <div class="form-section">
+          <h3>Required Information</h3>
+
+          <!-- Full Name -->
+          <div class="input-group" [class.has-error]="fullNameError">
+            <label for="fullName">Full Name</label>
+            <input
+              id="fullName"
+              type="text"
+              placeholder="John Doe"
+              [(ngModel)]="fullName"
+              name="fullName"
+              (input)="onFullNameInput()"
+              (blur)="validateFullName()">
+            @if (fullNameError) {
+              <span class="error-text">{{ fullNameError }}</span>
+            }
+          </div>
+
+          <!-- Username -->
+          <div class="input-group" [class.has-error]="usernameError">
+            <label for="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              placeholder="johndoe123"
+              [(ngModel)]="username"
+              name="username"
+              (input)="onUsernameInput()"
+              (blur)="validateUsername()">
+            @if (usernameError) {
+              <span class="error-text">{{ usernameError }}</span>
+            }
+          </div>
+
+          <!-- Email -->
+          <div class="input-group" [class.has-error]="emailError">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="john@example.com"
+              [(ngModel)]="email"
+              name="email"
+              (input)="onEmailInput()"
+              (blur)="validateEmail()">
+            @if (emailError) {
+              <span class="error-text">{{ emailError }}</span>
+            }
+          </div>
+
+          <!-- Password -->
+          <div class="input-group" [class.has-error]="passwordError">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Password123"
+              [(ngModel)]="password"
+              name="password"
+              (input)="onPasswordInput()"
+              (blur)="validatePassword()">
+
+            <!-- Password Strength Indicator -->
+            @if (password) {
+              <div class="strength-meter">
+                <div class="strength-bar-bg">
+                  <div class="strength-bar" [class]="passwordStrengthClass" [style.width.%]="passwordStrength * 33.3"></div>
+                </div>
+                <span class="strength-text" [class]="passwordStrengthClass">{{ passwordStrengthText }}</span>
+              </div>
+            }
+
+            @if (passwordError) {
+              <span class="error-text">{{ passwordError }}</span>
+            }
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="input-group" [class.has-error]="confirmPasswordError">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              placeholder="Confirm password"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              (input)="onConfirmPasswordInput()">
+            @if (confirmPasswordError) {
+              <span class="error-text">{{ confirmPasswordError }}</span>
+            }
+          </div>
+
+          <!-- Country Select -->
+          <div class="input-group" [class.has-error]="countryError">
+            <label for="country">Country</label>
+            <select
+              id="country"
+              [(ngModel)]="country"
+              name="country"
+              (change)="onCountryInput()">
+              <option value="" disabled selected>Select country</option>
+              <option value="United States">United States</option>
+              <option value="India">India</option>
+              <option value="Canada">Canada</option>
+              <option value="Australia">Australia</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Germany">Germany</option>
+              <option value="France">France</option>
+              <option value="Other">Other</option>
+            </select>
+            @if (countryError) {
+              <span class="error-text">{{ countryError }}</span>
+            }
+          </div>
+        </div>
+
+        <!-- OPTIONAL SECTION -->
+        <div class="form-section">
+          <h3>Optional Details</h3>
+
+          <!-- Phone Number -->
+          <div class="input-group">
+            <label for="phone">Phone Number</label>
+            <input
+              id="phone"
+              type="tel"
+              placeholder="+1 (555) 000-0000"
+              [(ngModel)]="phone"
+              name="phone">
+          </div>
+
+          <!-- Conditional State (e.g. US, Canada, India, Australia) -->
+          @if (showStateField) {
+            <div class="input-group state-fade-in">
+              <label for="state">State / Province</label>
+              <input
+                id="state"
+                type="text"
+                placeholder="Enter state"
+                [(ngModel)]="state"
+                name="state">
+            </div>
+          }
+
+          <!-- City -->
+          <div class="input-group">
+            <label for="city">City</label>
+            <input
+              id="city"
+              type="text"
+              placeholder="Enter city"
+              [(ngModel)]="city"
+              name="city">
+          </div>
+
+          <!-- Language -->
+          <div class="input-group">
+            <label for="language">Language</label>
+            <select
+              id="language"
+              [(ngModel)]="language"
+              name="language">
+              <option value="English">English</option>
+              <option value="Spanish">Spanish</option>
+              <option value="French">French</option>
+              <option value="German">German</option>
+              <option value="Japanese">Japanese</option>
+              <option value="Chinese">Chinese</option>
+              <option value="Hindi">Hindi</option>
+            </select>
+          </div>
+
+          <!-- Income Bracket -->
+          <div class="input-group">
+            <label for="incomeBracket">Income Bracket</label>
+            <select
+              id="incomeBracket"
+              [(ngModel)]="incomeBracket"
+              name="incomeBracket">
+              <option value="" selected>Select income bracket</option>
+              <option value="<25k">&lt; 25k</option>
+              <option value="25k-50k">25k - 50k</option>
+              <option value="50k-100k">50k - 100k</option>
+              <option value="100k-150k">100k - 150k</option>
+              <option value="150k+">150k+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary btn-signup" [disabled]="isLoading">
+        @if (isLoading) {
+          <span class="spinner"></span>
+          <span>Creating account...</span>
+        } @else {
+          <span>Create Account</span>
+          <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12,5 19,12 12,19"></polyline>
+          </svg>
+        }
+      </button>
+    </form>
+
+    <div class="footer-links">
+      <p class="login-link">
+        Already have an account?
+        <a routerLink="/">Sign In</a>
+      </p>
+    </div>
+  </div>
+</div>
