@@ -39,7 +39,7 @@ export class AuthController {
 
       // Set cookie options
       const isProduction = process.env.NODE_ENV === 'production';
-      
+
       res.cookie('accessToken', result.accessToken, {
         httpOnly: true,
         secure: isProduction,
@@ -110,7 +110,11 @@ export class AuthController {
   /**
    * Update current user profile handler
    */
-  public static async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public static async updateProfile(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const userId = req.user?.id;
       if (!userId) {

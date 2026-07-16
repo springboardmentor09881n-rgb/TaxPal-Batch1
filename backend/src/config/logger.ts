@@ -25,12 +25,10 @@ const format = winston.format.combine(
   winston.format.printf((info) => {
     const msg = info.stack || info.message;
     return `[${info.timestamp}] [${info.level}]: ${msg}`;
-  })
+  }),
 );
 
-const transports = [
-  new winston.transports.Console(),
-];
+const transports = [new winston.transports.Console()];
 
 export const logger = winston.createLogger({
   level: env.NODE_ENV === 'development' ? 'debug' : 'info',

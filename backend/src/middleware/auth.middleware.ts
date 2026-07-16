@@ -63,7 +63,10 @@ export const authorizeRoles = (...roles: UserRole[]) => {
 
     if (!roles.includes(req.user.role)) {
       return next(
-        new ApiError(403, `Access denied: Role '${req.user.role}' is not authorized to access this resource`)
+        new ApiError(
+          403,
+          `Access denied: Role '${req.user.role}' is not authorized to access this resource`,
+        ),
       );
     }
 

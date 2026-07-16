@@ -4,7 +4,10 @@ import { UserRole } from '../utils/constants';
 export const registerSchema = z.object({
   body: z
     .object({
-      fullName: z.string({ required_error: 'Full name is required' }).trim().min(1, 'Full name is required'),
+      fullName: z
+        .string({ required_error: 'Full name is required' })
+        .trim()
+        .min(1, 'Full name is required'),
       username: z
         .string({ required_error: 'Username is required' })
         .trim()
@@ -17,7 +20,10 @@ export const registerSchema = z.object({
         .regex(/[0-9]/, 'Password must contain at least one number'),
       confirmPassword: z.string({ required_error: 'Confirm password is required' }),
       phone: z.string().trim().optional(),
-      country: z.string({ required_error: 'Country is required' }).trim().min(1, 'Country is required'),
+      country: z
+        .string({ required_error: 'Country is required' })
+        .trim()
+        .min(1, 'Country is required'),
       state: z.string().trim().optional(),
       city: z.string().trim().optional(),
       language: z.string().trim().optional(),

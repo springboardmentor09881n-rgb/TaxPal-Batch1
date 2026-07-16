@@ -55,7 +55,7 @@ const transactionSchema = new Schema<ITransactionDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const Transaction = mongoose.model<ITransactionDocument>('Transaction', transactionSchema);

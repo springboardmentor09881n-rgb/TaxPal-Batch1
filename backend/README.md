@@ -164,6 +164,37 @@ All routes require **Authentication**.
 
 ---
 
+### 📊 Transaction Routes (`/api/transactions`)
+
+All routes require **Authentication**.
+
+| Method | Endpoint | Access | Description | Request Body Example |
+| :--- | :--- | :--- | :--- | :--- |
+| **POST** | `/` | Authenticated | Creates a new transaction (Income/Expense). | `{"type": "Expense", "description": "Cloud hosting", "category": "Software", "amount": 150, "transactionDate": "2026-07-16T12:00:00.000Z", "notes": "AWS billing"}` |
+| **GET** | `/` | Authenticated | Retrieves all transactions for the logged-in user. | *None* |
+| **GET** | `/category-summary` | Authenticated | Retrieves total spending grouped by category. | *None* |
+| **GET** | `/chart-data` | Authenticated | Retrieves monthly historical income vs. expense stats (last 6 months). | *None* |
+| **GET** | `/:id` | Authenticated | Retrieves a single transaction by ID. | *None* |
+| **PUT** | `/:id` | Authenticated | Updates an existing transaction. | `{"amount": 180, "description": "Updated Cloud bill"}` |
+| **DELETE** | `/:id` | Authenticated | Deletes a transaction by ID. | *None* |
+
+---
+
+### 💰 Budget Routes (`/api/budget`)
+
+All routes require **Authentication**.
+
+| Method | Endpoint | Access | Description | Request Body Example |
+| :--- | :--- | :--- | :--- | :--- |
+| **POST** | `/` | Authenticated | Creates a new monthly budget limit for a category. | `{"category": "Software", "limit": 500, "month": "2026-07"}` |
+| **GET** | `/` | Authenticated | Retrieves all budgets for the logged-in user. | *None* |
+| **GET** | `/progress` | Authenticated | Retrieves budget limits, spend progress, and status for a month (defaults to current month). | *None (Query parameter: `?month=2026-07`)* |
+| **GET** | `/:id` | Authenticated | Retrieves a single budget by ID. | *None* |
+| **PUT** | `/:id` | Authenticated | Updates a budget's limit or category. | `{"limit": 600}` |
+| **DELETE** | `/:id` | Authenticated | Deletes a budget by ID. | *None* |
+
+---
+
 ## 📬 Standard Response Formats
 
 ### Successful Response Format (HTTP Status 200/201)

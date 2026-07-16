@@ -11,7 +11,7 @@ export const errorHandler = (
   req: Request,
   res: Response,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
@@ -30,7 +30,12 @@ export const errorHandler = (
       statusCode = 400;
       const duplicatedField = Object.keys(err.keyValue)[0];
       message = `A record with this ${duplicatedField} already exists`;
-      errors = [{ field: duplicatedField, message: `Value '${err.keyValue[duplicatedField]}' is already taken` }];
+      errors = [
+        {
+          field: duplicatedField,
+          message: `Value '${err.keyValue[duplicatedField]}' is already taken`,
+        },
+      ];
     }
     // Validation constraint failed
     else if (err.name === 'ValidationError') {

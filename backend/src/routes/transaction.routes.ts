@@ -15,6 +15,8 @@ router.use(authenticate);
 
 router.post('/', validate(createTransactionSchema), TransactionController.createTransaction);
 router.get('/', TransactionController.getTransactions);
+router.get('/category-summary', TransactionController.getCategorySummary);
+router.get('/chart-data', TransactionController.getChartData);
 router.get('/:id', validate(transactionIdParamSchema), TransactionController.getTransactionById);
 router.put('/:id', validate(updateTransactionSchema), TransactionController.updateTransaction);
 router.delete('/:id', validate(transactionIdParamSchema), TransactionController.deleteTransaction);

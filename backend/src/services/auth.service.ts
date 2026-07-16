@@ -210,7 +210,9 @@ export class AuthService {
   /**
    * Refresh the access and refresh token pair
    */
-  public static async refreshTokens(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
+  public static async refreshTokens(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     let decodedPayload: IUserPayload;
     try {
       decodedPayload = jwt.verify(refreshToken, env.REFRESH_SECRET) as IUserPayload;

@@ -6,8 +6,14 @@ export const createTransactionSchema = z.object({
       required_error: 'Type is required',
       invalid_type_error: 'Type must be Income or Expense',
     }),
-    description: z.string({ required_error: 'Description is required' }).trim().min(1, 'Description is required'),
-    category: z.string({ required_error: 'Category is required' }).trim().min(1, 'Category is required'),
+    description: z
+      .string({ required_error: 'Description is required' })
+      .trim()
+      .min(1, 'Description is required'),
+    category: z
+      .string({ required_error: 'Category is required' })
+      .trim()
+      .min(1, 'Category is required'),
     amount: z.number({ required_error: 'Amount is required' }).min(0, 'Amount cannot be negative'),
     transactionDate: z.coerce.date({
       required_error: 'Transaction date is required',
@@ -23,9 +29,11 @@ export const updateTransactionSchema = z.object({
     description: z.string().trim().min(1).optional(),
     category: z.string().trim().min(1).optional(),
     amount: z.number().min(0).optional(),
-    transactionDate: z.coerce.date({
-      invalid_type_error: 'Invalid date format',
-    }).optional(),
+    transactionDate: z.coerce
+      .date({
+        invalid_type_error: 'Invalid date format',
+      })
+      .optional(),
     notes: z.string().trim().optional(),
   }),
   params: z.object({
