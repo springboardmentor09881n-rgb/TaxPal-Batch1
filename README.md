@@ -69,7 +69,7 @@ TaxPal-Batch1/
 3. Configure environment parameters by copying `.env.example` to `.env`:
    ```env
    PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/salary-management
+   MONGODB_URI=mongodb:<connection-string>
    JWT_SECRET=your_jwt_access_secret_key
    JWT_EXPIRES=15m
    REFRESH_SECRET=your_jwt_refresh_secret_key
