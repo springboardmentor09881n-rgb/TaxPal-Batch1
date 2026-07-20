@@ -52,7 +52,7 @@ TaxPal-Batch1/
 
 ### Prerequisites
 - Node.js (v18.x or above)
-- MongoDB running locally (e.g. `mongodb://localhost:27017`) or a MongoDB Atlas connection string.
+- MongoDB running globally.
 
 ---
 
