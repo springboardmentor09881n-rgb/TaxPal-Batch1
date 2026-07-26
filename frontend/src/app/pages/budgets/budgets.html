@@ -1,0 +1,233 @@
+<div class="budgets-container">
+  
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <h2>TaxPal</h2>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+        </span>
+        <a routerLink="/dashboard" class="sidebar-link">Dashboard</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </span>
+        <span>Transactions</span>
+      </li>
+      <li class="active">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </span>
+        <a routerLink="/budgets" class="sidebar-link">Budgets</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="2" ry="2"></rect><rect x="10" y="8" width="4" height="13" rx="2" ry="2"></rect><rect x="2" y="13" width="4" height="8" rx="2" ry="2"></rect></svg>
+        </span>
+        <span>Tax Estimator</span>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </span>
+        <span>Reports</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button (click)="toggleTheme()" class="btn-theme" title="Toggle theme">
+        <span class="menu-icon">
+          <!-- Sun icon for dark mode (switch to light) -->
+          @if (!isLightTheme) {
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          }
+          <!-- Moon icon for light mode (switch to dark) -->
+          @if (isLightTheme) {
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          }
+        </span>
+        <span>Theme</span>
+      </button>
+      <a routerLink="/profile" class="btn-profile">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </span>
+        <span>Profile</span>
+      </a>
+      <button (click)="logout()" class="btn-logout">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-wrapper">
+    <div class="top-nav">
+      <div class="greeting-section">
+        <h1>Monthly Budgets</h1>
+        <p>Set spending thresholds by category and watch your visual progress.</p>
+      </div>
+    </div>
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    <!-- Budget Section -->
+    <div class="budget-section card-box">
+      <div class="card-header">
+        <h2>Category Budgets</h2>
+        <p>Track spent vs limit for the current month</p>
+      </div>
+
+      <!-- Add New Budget Form -->
+      <form (submit)="createNewBudget(); $event.preventDefault()" class="add-budget-form">
+        <div class="add-budget-row">
+          <div class="input-control">
+            <input 
+              type="text" 
+              [(ngModel)]="newCategory" 
+              name="newCategory"
+              placeholder="New category name"
+              class="budget-input">
+          </div>
+          <div class="input-control">
+            <input 
+              type="number" 
+              [(ngModel)]="newBudgetLimit" 
+              name="newBudgetLimit"
+              placeholder="Monthly limit (₹)"
+              class="budget-input">
+          </div>
+          <button type="submit" class="btn btn-primary btn-add-budget" [disabled]="isCreatingBudget">
+            @if (isCreatingBudget) {
+              <span class="spinner"></span> Adding...
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Add Budget
+            }
+          </button>
+        </div>
+      </form>
+
+      @if (isLoading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading budget limits...</p>
+        </div>
+      } @else {
+        <div class="budget-items-list">
+          @for (b of budgets; track b.category) {
+            <div class="budget-item" [class.exceeded]="b.limit > 0 && b.spent > b.limit">
+              <div class="item-meta">
+                <div class="cat-details">
+                  <span class="category-name">{{ b.category }}</span>
+                  @if (b.limit > 0) {
+                    <span class="limit-status" [class.warning]="b.percentage >= 70 && b.percentage <= 100" [class.danger]="b.percentage > 100">
+                      {{ b.percentage }}% Used
+                    </span>
+                  } @else {
+                    <span class="limit-status neutral">No Limit Set</span>
+                  }
+                </div>
+                <div class="actions">
+                  <button (click)="startEditBudget(b.category, b.limit)" class="btn-action-edit" title="Set/Modify budget">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                  </button>
+                  @if (b.limit > 0) {
+                    <button (click)="deleteBudgetLimit(b.category)" class="btn-action-delete" title="Remove budget limit">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <!-- Values Info -->
+              <div class="item-values">
+                <span class="spent-value">{{ formatCurrency(b.spent) }} spent</span>
+                @if (b.limit > 0) {
+                  <span class="limit-value">of {{ formatCurrency(b.limit) }} limit</span>
+                }
+              </div>
+
+              <!-- Visual Progress Bar -->
+              <div class="progress-bar-container">
+                <div 
+                  class="progress-bar-fill" 
+                  [style.width.%]="b.limit > 0 ? (b.percentage > 100 ? 100 : b.percentage) : 0"
+                  [class.bar-ok]="b.limit > 0 && b.percentage < 70"
+                  [class.bar-warning]="b.limit > 0 && b.percentage >= 70 && b.percentage <= 100"
+                  [class.bar-danger]="b.limit > 0 && b.percentage > 100">
+                </div>
+              </div>
+
+              @if (b.limit > 0) {
+                <div class="remaining-text" [class.negative]="b.remaining < 0">
+                  @if (b.remaining >= 0) {
+                    {{ formatCurrency(b.remaining) }} remaining
+                  } @else {
+                    Over budget by {{ formatCurrency(-b.remaining) }}!
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+  </div>
+</div>
+
+<!-- Edit Budget Inline Modal Popup -->
+@if (editingCategory) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Set Budget Limit</h2>
+        <button (click)="cancelEditBudget()" class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Define a monthly spending ceiling for <strong>{{ editingCategory }}</strong>.</p>
+        
+        <div class="input-group">
+          <label for="limitInput">Monthly Limit (INR)</label>
+          <input 
+            id="limitInput"
+            type="number" 
+            [(ngModel)]="editingLimit" 
+            placeholder="e.g. 5000"
+            name="editingLimit"
+            focus>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="cancelEditBudget()" class="btn btn-secondary">Cancel</button>
+        <button (click)="saveBudgetLimit()" class="btn btn-primary" [disabled]="isSavingBudget">
+          @if (isSavingBudget) {
+            <span class="spinner"></span> Saving...
+          } @else {
+            Save Limit
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

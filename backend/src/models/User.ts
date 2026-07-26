@@ -15,6 +15,8 @@ export interface IUser {
   language?: string;
   incomeBracket?: string;
   refreshTokens: string[];
+  autoCategorizeEnabled: boolean;
+  categoryMappings: Array<{ keyword: string; category: string }>;
   comparePassword(candidatePassword: string): Promise<boolean>;
   createdAt: Date;
   updatedAt: Date;
@@ -80,6 +82,42 @@ const userSchema = new Schema<IUserDocument>(
     refreshTokens: {
       type: [String],
       default: [],
+    },
+    autoCategorizeEnabled: {
+      type: Boolean,
+      default: true,
+    },
+    categoryMappings: {
+      type: [
+        {
+          keyword: { type: String, required: true },
+          category: { type: String, required: true },
+        }
+      ],
+      default: [
+        { keyword: 'adobe', category: 'Software/SaaS' },
+        { keyword: 'figma', category: 'Software/SaaS' },
+        { keyword: 'aws', category: 'Software/SaaS' },
+        { keyword: 'github', category: 'Software/SaaS' },
+        { keyword: 'slack', category: 'Software/SaaS' },
+        { keyword: 'uber', category: 'Travel/Meals' },
+        { keyword: 'taxi', category: 'Travel/Meals' },
+        { keyword: 'hotel', category: 'Travel/Meals' },
+        { keyword: 'food', category: 'Travel/Meals' },
+        { keyword: 'meals', category: 'Travel/Meals' },
+        { keyword: 'ads', category: 'Marketing/Ads' },
+        { keyword: 'facebook', category: 'Marketing/Ads' },
+        { keyword: 'google', category: 'Marketing/Ads' },
+        { keyword: 'marketing', category: 'Marketing/Ads' },
+        { keyword: 'macbook', category: 'Hardware/Gadgets' },
+        { keyword: 'laptop', category: 'Hardware/Gadgets' },
+        { keyword: 'monitor', category: 'Hardware/Gadgets' },
+        { keyword: 'phone', category: 'Hardware/Gadgets' },
+        { keyword: 'paper', category: 'Office Supplies' },
+        { keyword: 'notebook', category: 'Office Supplies' },
+        { keyword: 'pen', category: 'Office Supplies' },
+        { keyword: 'office', category: 'Office Supplies' }
+      ]
     },
   },
   {

@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api';
 
 @Component({
   selector: 'app-signup',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, CommonModule],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
-export class Signup {
+export class Signup implements OnInit {
 
   username = '';
   fullName = '';
@@ -37,10 +38,34 @@ export class Signup {
   passwordStrengthText = '';
   passwordStrengthClass = '';
 
+  isLightTheme = false;
+
   constructor(
     private api: ApiService,
     private router: Router
   ) {}
+
+  ngOnInit() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      this.isLightTheme = true;
+      document.body.classList.add('light-theme');
+    } else {
+      this.isLightTheme = false;
+      document.body.classList.remove('light-theme');
+    }
+  }
+
+  toggleTheme() {
+    this.isLightTheme = !this.isLightTheme;
+    if (this.isLightTheme) {
+      document.body.classList.add('light-theme');
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.body.classList.remove('light-theme');
+      localStorage.setItem('theme', 'dark');
+    }
+  }
 
   checkPasswordStrength() {
     const p = this.password;
