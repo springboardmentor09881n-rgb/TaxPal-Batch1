@@ -19,6 +19,8 @@ interface AuthResponse {
     city?: string;
     language?: string;
     incomeBracket?: string;
+    autoCategorizeEnabled?: boolean;
+    categoryMappings?: Array<{ keyword: string; category: string }>;
   };
   accessToken: string;
   refreshToken: string;
@@ -92,6 +94,8 @@ export class AuthService {
         city: user.city,
         language: user.language,
         incomeBracket: user.incomeBracket,
+        autoCategorizeEnabled: user.autoCategorizeEnabled,
+        categoryMappings: user.categoryMappings,
       },
       accessToken,
       refreshToken,
@@ -142,6 +146,8 @@ export class AuthService {
         city: user.city,
         language: user.language,
         incomeBracket: user.incomeBracket,
+        autoCategorizeEnabled: user.autoCategorizeEnabled,
+        categoryMappings: user.categoryMappings,
       },
       accessToken,
       refreshToken,
@@ -191,6 +197,8 @@ export class AuthService {
     if (data.city !== undefined) user.city = data.city;
     if (data.language !== undefined) user.language = data.language;
     if (data.incomeBracket !== undefined) user.incomeBracket = data.incomeBracket;
+    if (data.autoCategorizeEnabled !== undefined) user.autoCategorizeEnabled = data.autoCategorizeEnabled;
+    if (data.categoryMappings !== undefined) user.categoryMappings = data.categoryMappings;
 
     await user.save();
     return user;

@@ -54,5 +54,12 @@ export const updateProfileSchema = z.object({
     city: z.string().trim().optional(),
     language: z.string().trim().optional(),
     incomeBracket: z.string().trim().optional(),
+    autoCategorizeEnabled: z.boolean().optional(),
+    categoryMappings: z.array(
+      z.object({
+        keyword: z.string().trim().min(1),
+        category: z.string().trim().min(1),
+      })
+    ).optional(),
   }),
 });

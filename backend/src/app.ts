@@ -8,6 +8,8 @@ import rateLimit from 'express-rate-limit';
 
 import authRoutes from './routes/auth.routes';
 import transactionRoutes from './routes/transaction.routes';
+import budgetRoutes from './routes/budget.routes';
+import categoryRoutes from './routes/category.routes';
 
 import { errorHandler } from './middleware/error.middleware';
 import { ApiError } from './utils/ApiError';
@@ -57,6 +59,8 @@ app.use('/api', apiLimiter);
 // Register routes
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/budgets', budgetRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
