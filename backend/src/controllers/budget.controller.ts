@@ -14,7 +14,8 @@ export class BudgetController {
         throw new ApiError(401, 'Unauthorized: User context missing');
       }
 
-      const budgetData = await BudgetService.getBudgetsAndSpending(userId);
+      const month = req.query.month as string;
+      const budgetData = await BudgetService.getBudgetsAndSpending(userId, month);
       res.status(200).json(new ApiResponse(budgetData, 'Budgets and spending metrics retrieved successfully'));
     } catch (error) {
       next(error);
@@ -31,8 +32,8 @@ export class BudgetController {
         throw new ApiError(401, 'Unauthorized: User context missing');
       }
 
-      const { category, limit } = req.body;
-      const budget = await BudgetService.setBudgetLimit(userId, category, limit);
+      const { category, limit, month, description } = req.body;
+      const budget = await BudgetService.setBudgetLimit(userId, category, limit, month, description);
       res.status(200).json(new ApiResponse(budget, 'Budget limit updated successfully'));
     } catch (error) {
       next(error);
@@ -50,11 +51,12 @@ export class BudgetController {
       }
 
       const { category } = req.params;
+      const month = req.query.month as string;
       if (!category) {
         throw new ApiError(400, 'Category parameter is required');
       }
 
-      await BudgetService.deleteBudgetLimit(userId, category);
+      await BudgetService.deleteBudgetLimit(userId, category, month);
       res.status(200).json(new ApiResponse(null, 'Budget limit deleted successfully'));
     } catch (error) {
       next(error);
