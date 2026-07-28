@@ -42,16 +42,18 @@ export class ApiService {
     return this.http.delete(`${this.baseUrl}/transactions/${id}`, this.getOptions());
   }
 
-  getBudgets() {
-    return this.http.get(`${this.baseUrl}/budgets`, this.getOptions());
+  getBudgets(month?: string) {
+    const url = month ? `${this.baseUrl}/budgets?month=${month}` : `${this.baseUrl}/budgets`;
+    return this.http.get(url, this.getOptions());
   }
 
-  updateBudget(data: { category: string; limit: number }) {
+  updateBudget(data: { category: string; limit: number; month?: string; description?: string }) {
     return this.http.post(`${this.baseUrl}/budgets`, data, this.getOptions());
   }
 
-  deleteBudget(category: string) {
-    return this.http.delete(`${this.baseUrl}/budgets/${category}`, this.getOptions());
+  deleteBudget(category: string, month?: string) {
+    const url = month ? `${this.baseUrl}/budgets/${category}?month=${month}` : `${this.baseUrl}/budgets/${category}`;
+    return this.http.delete(url, this.getOptions());
   }
 
   updateProfile(data: any) {

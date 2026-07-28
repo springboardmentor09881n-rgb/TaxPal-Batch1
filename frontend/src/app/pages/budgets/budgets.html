@@ -92,40 +92,24 @@
 
     <!-- Budget Section -->
     <div class="budget-section card-box">
-      <div class="card-header">
-        <h2>Category Budgets</h2>
-        <p>Track spent vs limit for the current month</p>
-      </div>
-
-      <!-- Add New Budget Form -->
-      <form (submit)="createNewBudget(); $event.preventDefault()" class="add-budget-form">
-        <div class="add-budget-row">
-          <div class="input-control">
-            <input 
-              type="text" 
-              [(ngModel)]="newCategory" 
-              name="newCategory"
-              placeholder="New category name"
-              class="budget-input">
-          </div>
-          <div class="input-control">
-            <input 
-              type="number" 
-              [(ngModel)]="newBudgetLimit" 
-              name="newBudgetLimit"
-              placeholder="Monthly limit (₹)"
-              class="budget-input">
-          </div>
-          <button type="submit" class="btn btn-primary btn-add-budget" [disabled]="isCreatingBudget">
-            @if (isCreatingBudget) {
-              <span class="spinner"></span> Adding...
-            } @else {
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              Add Budget
-            }
+      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+        <div>
+          <h2>Category Budgets</h2>
+          <p>Track spent vs limit for {{ formatMonthDisplay(selectedViewMonth) }}</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <input 
+            type="month" 
+            [(ngModel)]="selectedViewMonth" 
+            (change)="onViewMonthChange()" 
+            class="budget-input"
+            style="padding: 6px 12px; height: 38px;">
+          <button (click)="openCreateModal()" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Create New Budget
           </button>
         </div>
-      </form>
+      </div>
 
       @if (isLoading) {
         <div class="loading-state">
@@ -158,6 +142,12 @@
                   }
                 </div>
               </div>
+
+              @if (b.description) {
+                <div class="description-text" style="font-size: 13px; color: var(--text-secondary); margin: -4px 0 10px 0; font-style: italic;">
+                  {{ b.description }}
+                </div>
+              }
 
               <!-- Values Info -->
               <div class="item-values">
@@ -196,6 +186,90 @@
   </div>
 </div>
 
+<!-- Create New Budget Modal Popup -->
+@if (showCreateModal) {
+  <div class="modal-overlay">
+    <div class="modal-card" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2>Create New Budget</h2>
+        <button (click)="closeCreateModal()" class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form (submit)="createNewBudget(); $event.preventDefault()">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+            <div class="input-group">
+              <label for="newCategorySelect">Category</label>
+              <select 
+                id="newCategorySelect" 
+                [(ngModel)]="newCategory" 
+                name="newCategory"
+                class="budget-input"
+                style="width: 100%; height: 42px; background-color: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+                <option value="" disabled selected>Select a category</option>
+                @for (cat of getAvailableCategories(); track cat) {
+                  <option [value]="cat">{{ cat }}</option>
+                }
+              </select>
+              @if (getAvailableCategories().length === 0) {
+                <span style="font-size: 11px; color: #f43f5e; margin-top: 4px;">All categories budgeted.</span>
+              }
+            </div>
+            
+            <div class="input-group">
+              <label for="newBudgetLimitInput">Budget Amount</label>
+              <div style="position: relative; display: flex; align-items: center;">
+                <span style="position: absolute; left: 12px; color: var(--text-muted); font-size: 15px;">₹</span>
+                <input 
+                  id="newBudgetLimitInput"
+                  type="number" 
+                  [(ngModel)]="newBudgetLimit" 
+                  placeholder="0.00"
+                  name="newBudgetLimit"
+                  class="budget-input"
+                  style="padding-left: 28px; width: 100%; height: 42px;">
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group" style="margin-bottom: 16px;">
+            <label for="newMonthInput">Month</label>
+            <input 
+              id="newMonthInput"
+              type="month" 
+              [(ngModel)]="newMonth" 
+              name="newMonth"
+              [min]="minMonthStr"
+              class="budget-input"
+              style="width: 100%; height: 42px;">
+          </div>
+
+          <div class="input-group" style="margin-bottom: 16px;">
+            <label for="newDescriptionInput">Description (Optional)</label>
+            <textarea 
+              id="newDescriptionInput"
+              [(ngModel)]="newDescription" 
+              placeholder="Add any additional details..."
+              name="newDescription"
+              class="budget-input"
+              style="width: 100%; height: 80px; resize: vertical;"></textarea>
+          </div>
+          
+          <div class="modal-footer" style="padding: 16px 0 0 0; border-top: none;">
+            <button type="button" (click)="closeCreateModal()" class="btn btn-secondary" style="height: 42px;">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="height: 42px; min-width: 120px;" [disabled]="isCreatingBudget || getAvailableCategories().length === 0">
+              @if (isCreatingBudget) {
+                <span class="spinner"></span> Creating...
+              } @else {
+                Create Budget
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}
+
 <!-- Edit Budget Inline Modal Popup -->
 @if (editingCategory) {
   <div class="modal-overlay">
@@ -216,6 +290,17 @@
             placeholder="e.g. 5000"
             name="editingLimit"
             focus>
+        </div>
+
+        <div class="input-group" style="margin-top: 16px;">
+          <label for="editDescriptionInput">Description (Optional)</label>
+          <textarea 
+            id="editDescriptionInput"
+            [(ngModel)]="editingDescription" 
+            placeholder="Add any additional details..."
+            name="editingDescription"
+            class="budget-input"
+            style="width: 100%; height: 80px; resize: vertical;"></textarea>
         </div>
       </div>
       <div class="modal-footer">

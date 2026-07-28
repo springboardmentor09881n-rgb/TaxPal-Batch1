@@ -6,6 +6,12 @@ export const connectDB = async (): Promise<void> => {
   try {
     const conn = await mongoose.connect(env.MONGODB_URI);
     logger.info(`MongoDB Connected: ${conn.connection.host}`);
+    try {
+      await conn.connection.db?.collection('budgets').dropIndex('userId_1_category_1');
+      logger.info('Dropped old unique index userId_1_category_1 successfully');
+    } catch (e) {
+      // Index might not exist, which is fine
+    }
   } catch (error) {
     logger.error('Error connecting to MongoDB:', error);
     process.exit(1);

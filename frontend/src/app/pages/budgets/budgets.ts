@@ -19,16 +19,24 @@ export class Budgets implements OnInit {
   // Budget Editor properties
   editingCategory = '';
   editingLimit: number | null = null;
+  editingDescription = '';
   isSavingBudget = false;
 
   // New budget creation
   newCategory = '';
   newBudgetLimit: number | null = null;
+  newMonth = '';
+  newDescription = '';
   isCreatingBudget = false;
 
   // Available categories for selector
   expenseCategories: string[] = [];
   incomeCategories: string[] = [];
+
+  // Monthly navigation properties
+  selectedViewMonth = '';
+  minMonthStr = '';
+  showCreateModal = false;
 
   constructor(
     private api: ApiService,
@@ -56,6 +64,14 @@ export class Budgets implements OnInit {
       }
     }
     
+    // Set default month to current month
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+    this.selectedViewMonth = `${currentYear}-${currentMonth}`;
+    this.minMonthStr = `${currentYear}-${currentMonth}`;
+    this.newMonth = this.selectedViewMonth;
+
     this.loadBudgetsAndSettings();
   }
 
@@ -123,36 +139,14 @@ export class Budgets implements OnInit {
   }
 
   fetchBudgetsAndMap() {
-    this.api.getBudgets().subscribe({
+    this.api.getBudgets(this.selectedViewMonth).subscribe({
       next: (res: any) => {
         this.isLoading = false;
         if (res && res.data) {
           const fetchedBudgets = res.data.budgets || [];
           
-          // Ensure all active expense categories are represented, even if limit is 0
-          this.budgets = this.expenseCategories.map(cat => {
-            const found = fetchedBudgets.find((b: any) => b.category === cat);
-            return found || {
-              category: cat,
-              limit: 0,
-              spent: 0,
-              remaining: 0,
-              percentage: 0
-            };
-          });
-
-          // Also make sure any fetched budgets that don't match our current list (if any edge cases exist) are included
-          fetchedBudgets.forEach((b: any) => {
-            if (!this.expenseCategories.includes(b.category)) {
-              this.budgets.push({
-                category: b.category,
-                limit: b.limit,
-                spent: b.spent,
-                remaining: b.remaining,
-                percentage: b.percentage
-              });
-            }
-          });
+          // Filter to only display budgets that have a set limit (added by the user)
+          this.budgets = fetchedBudgets.filter((b: any) => b.limit > 0);
 
           // Sort budgets so that set limits appear first
           this.budgets.sort((a, b) => b.limit - a.limit);
@@ -176,11 +170,16 @@ export class Budgets implements OnInit {
   startEditBudget(category: string, currentLimit: number) {
     this.editingCategory = category;
     this.editingLimit = currentLimit > 0 ? currentLimit : null;
+    
+    // Find description
+    const found = this.budgets.find(b => b.category === category);
+    this.editingDescription = found ? (found.description || '') : '';
   }
 
   cancelEditBudget() {
     this.editingCategory = '';
     this.editingLimit = null;
+    this.editingDescription = '';
   }
 
   saveBudgetLimit() {
@@ -192,7 +191,9 @@ export class Budgets implements OnInit {
     this.isSavingBudget = true;
     const payload = {
       category: this.editingCategory,
-      limit: Number(this.editingLimit)
+      limit: Number(this.editingLimit),
+      month: this.selectedViewMonth,
+      description: this.editingDescription
     };
 
     this.api.updateBudget(payload).subscribe({
@@ -200,6 +201,7 @@ export class Budgets implements OnInit {
         this.isSavingBudget = false;
         this.editingCategory = '';
         this.editingLimit = null;
+        this.editingDescription = '';
         this.loadBudgetsAndSettings();
       },
       error: (err: any) => {
@@ -212,7 +214,7 @@ export class Budgets implements OnInit {
 
   deleteBudgetLimit(category: string) {
     if (confirm(`Are you sure you want to remove the budget limit for ${category}?`)) {
-      this.api.deleteBudget(category).subscribe({
+      this.api.deleteBudget(category, this.selectedViewMonth).subscribe({
         next: () => {
           this.loadBudgetsAndSettings();
         },
@@ -224,10 +226,52 @@ export class Budgets implements OnInit {
     }
   }
 
-  // Create new budget category
+  openCreateModal() {
+    this.showCreateModal = true;
+    this.newCategory = '';
+    this.newBudgetLimit = null;
+    this.newMonth = this.selectedViewMonth;
+    this.newDescription = '';
+  }
+
+  closeCreateModal() {
+    this.showCreateModal = false;
+  }
+
+  getCurrentMonthStr(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+  }
+
+  getAvailableCategories(): string[] {
+    // Filter expense categories to only show those that do not currently have a set budget limit > 0
+    return this.expenseCategories.filter(cat => {
+      const budget = this.budgets.find(b => b.category === cat);
+      return !budget || budget.limit === 0;
+    });
+  }
+
+  onViewMonthChange() {
+    this.loadBudgetsAndSettings();
+  }
+
+  formatMonthDisplay(monthStr: string): string {
+    if (!monthStr || !monthStr.includes('-')) return monthStr;
+    const parts = monthStr.split('-');
+    const year = parts[0];
+    const monthNum = parseInt(parts[1], 10);
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return `${monthNames[monthNum - 1]} ${year}`;
+  }
+
   createNewBudget() {
-    if (!this.newCategory.trim()) {
-      alert('Please enter a category name');
+    if (!this.newCategory) {
+      alert('Please select a category');
       return;
     }
 
@@ -236,43 +280,37 @@ export class Budgets implements OnInit {
       return;
     }
 
+    if (!this.newMonth) {
+      alert('Please select a month');
+      return;
+    }
+
+    const currentMonth = this.getCurrentMonthStr();
+    if (this.newMonth < currentMonth) {
+      alert('You can only create budgets for the current month or future months');
+      return;
+    }
+
     this.isCreatingBudget = true;
     const payload = {
-      category: this.newCategory.trim(),
-      limit: Number(this.newBudgetLimit)
+      category: this.newCategory,
+      limit: Number(this.newBudgetLimit),
+      month: this.newMonth,
+      description: this.newDescription || ''
     };
 
-    // First check if the category already exists in expenseCategories
-    const categoryExists = this.expenseCategories.some(
-      (cat: string) => cat.toLowerCase() === this.newCategory.trim().toLowerCase()
-    );
-
-    if (!categoryExists) {
-      // Create the category first, then set the budget limit
-      this.api.createCategory({
-        name: this.newCategory.trim(),
-        type: 'expense'
-      }).subscribe({
-        next: () => {
-          this.saveBudgetLimitOnCreation(payload);
-        },
-        error: (err: any) => {
-          console.error('Error creating category during budget creation:', err);
-          // If it fails (maybe already exists in DB but not loaded), still try to set the budget limit
-          this.saveBudgetLimitOnCreation(payload);
-        }
-      });
-    } else {
-      this.saveBudgetLimitOnCreation(payload);
-    }
+    this.saveBudgetLimitOnCreation(payload);
   }
 
-  saveBudgetLimitOnCreation(payload: { category: string; limit: number }) {
+  saveBudgetLimitOnCreation(payload: { category: string; limit: number; month: string; description: string }) {
     this.api.updateBudget(payload).subscribe({
       next: () => {
         this.isCreatingBudget = false;
+        this.showCreateModal = false;
         this.newCategory = '';
         this.newBudgetLimit = null;
+        this.newMonth = '';
+        this.newDescription = '';
         this.loadBudgetsAndSettings();
       },
       error: (err: any) => {

@@ -7,15 +7,26 @@ export class BudgetService {
   /**
    * Retrieve budgets merged with spending status for the current month
    */
-  public static async getBudgetsAndSpending(userId: string): Promise<any> {
+  public static async getBudgetsAndSpending(userId: string, monthStr?: string): Promise<any> {
     const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+    let year = now.getFullYear();
+    let month = now.getMonth(); // 0-11
 
-    // Get all user budget limits
-    const budgets = await Budget.find({ userId });
+    if (monthStr && /^\d{4}-\d{2}$/.test(monthStr)) {
+      const parts = monthStr.split('-');
+      year = parseInt(parts[0], 10);
+      month = parseInt(parts[1], 10) - 1;
+    } else {
+      monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
+    }
 
-    // Group expenses for the current month by category
+    const startOfMonth = new Date(year, month, 1);
+    const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59, 999);
+
+    // Get all user budget limits for this month
+    const budgets = await Budget.find({ userId, month: monthStr });
+
+    // Group expenses for the selected month by category
     const spendingAggregation = await Transaction.aggregate([
       {
         $match: {
@@ -57,6 +68,8 @@ export class BudgetService {
         spent,
         remaining,
         percentage,
+        month: b.month,
+        description: b.description || '',
       });
       processedCategories.add(category);
     });
@@ -70,6 +83,8 @@ export class BudgetService {
           spent,
           remaining: -spent,
           percentage: 0,
+          month: monthStr,
+          description: '',
         });
       }
     });
@@ -89,10 +104,14 @@ export class BudgetService {
   /**
    * Set or update budget limit for a category
    */
-  public static async setBudgetLimit(userId: string, category: string, limit: number): Promise<any> {
+  public static async setBudgetLimit(userId: string, category: string, limit: number, month?: string, description?: string): Promise<any> {
+    if (!month) {
+      const now = new Date();
+      month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    }
     const budget = await Budget.findOneAndUpdate(
-      { userId, category },
-      { $set: { limit } },
+      { userId, category, month },
+      { $set: { limit, description: description || '' } },
       { new: true, upsert: true, runValidators: true }
     );
     return budget;
@@ -101,7 +120,14 @@ export class BudgetService {
   /**
    * Delete a budget limit for a category
    */
-  public static async deleteBudgetLimit(userId: string, category: string): Promise<void> {
-    await Budget.findOneAndDelete({ userId, category });
+  public static async deleteBudgetLimit(userId: string, category: string, monthStr?: string): Promise<void> {
+    const query: any = { userId, category };
+    if (monthStr) {
+      query.month = monthStr;
+    } else {
+      const now = new Date();
+      query.month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    }
+    await Budget.findOneAndDelete(query);
   }
 }
