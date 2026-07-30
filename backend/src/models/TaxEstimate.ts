@@ -92,6 +92,8 @@ const taxEstimateSchema = new Schema<ITaxEstimateDocument>(
 );
 
 // Index to ensure efficient querying per user and quarter
-taxEstimateSchema.index({ userId: 1, quarter: 1 });
-
-export const TaxEstimate = mongoose.model<ITaxEstimateDocument>('TaxEstimate', taxEstimateSchema);
+export const TaxEstimate = mongoose.model<ITaxEstimateDocument>(
+  'TaxEstimate',
+  taxEstimateSchema,
+  'taxEstimates'
+);
