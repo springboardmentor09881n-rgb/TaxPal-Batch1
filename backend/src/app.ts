@@ -9,6 +9,9 @@ import rateLimit from 'express-rate-limit';
 import authRoutes from './routes/auth.routes';
 import transactionRoutes from './routes/transaction.routes';
 import budgetRoutes from './routes/budget.routes';
+import categoryRoutes from './routes/category.routes';
+import taxEstimateRoutes from './routes/taxEstimate.routes';
+import alertRoutes from './routes/alert.routes';
 
 import { errorHandler } from './middleware/error.middleware';
 import { ApiError } from './utils/ApiError';
@@ -24,7 +27,7 @@ app.use(
   cors({
     origin: true, // Echo origin to simplify testing/integration, restrict in production
     credentials: true,
-  }),
+  })
 );
 
 // Morgan logger for HTTP requests
@@ -58,7 +61,10 @@ app.use('/api', apiLimiter);
 // Register routes
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
-app.use('/api/budget', budgetRoutes);
+app.use('/api/budgets', budgetRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/tax-estimates', taxEstimateRoutes);
+app.use('/api/alerts', alertRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

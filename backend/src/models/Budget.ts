@@ -5,7 +5,7 @@ export interface IBudget {
   category: string;
   limit: number;
   month: string;
-  spent: number;
+  description?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,21 +32,23 @@ const budgetSchema = new Schema<IBudgetDocument>(
     month: {
       type: String,
       required: [true, 'Month is required'],
-      trim: true,
-      match: [/^\d{4}-(0[1-9]|1[0-2])$/, 'Please fill a valid month format (YYYY-MM)'],
+      default: () => {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      },
     },
-    spent: {
-      type: Number,
-      default: 0,
-      min: [0, 'Spent amount cannot be negative'],
+    description: {
+      type: String,
+      trim: true,
+      default: '',
     },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-// Ensure index for unique budget per user, category, and month combination
+// A user can only have one budget per category per month
 budgetSchema.index({ userId: 1, category: 1, month: 1 }, { unique: true });
 
 export const Budget = mongoose.model<IBudgetDocument>('Budget', budgetSchema);

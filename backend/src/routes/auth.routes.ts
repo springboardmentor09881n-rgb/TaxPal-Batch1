@@ -1,12 +1,7 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/auth.controller';
 import { validate } from '../middleware/validation.middleware';
-import {
-  registerSchema,
-  loginSchema,
-  refreshTokenSchema,
-  updateProfileSchema,
-} from '../validators/auth.validator';
+import { registerSchema, loginSchema, refreshTokenSchema, updateProfileSchema } from '../validators/auth.validator';
 import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();

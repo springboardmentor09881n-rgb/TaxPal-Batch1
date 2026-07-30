@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthService } from '../services/auth.service';
+import { CategoryService } from '../services/category.service';
 import { ApiResponse } from '../utils/ApiResponse';
 import { ApiError } from '../utils/ApiError';
 
@@ -37,9 +38,12 @@ export class AuthController {
         incomeBracket,
       });
 
+      // Initialize default categories for the new user
+      await CategoryService.initializeDefaultCategories(result.user.id);
+
       // Set cookie options
       const isProduction = process.env.NODE_ENV === 'production';
-
+      
       res.cookie('accessToken', result.accessToken, {
         httpOnly: true,
         secure: isProduction,
@@ -110,11 +114,7 @@ export class AuthController {
   /**
    * Update current user profile handler
    */
-  public static async updateProfile(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public static async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       if (!userId) {

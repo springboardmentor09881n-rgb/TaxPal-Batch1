@@ -5,129 +5,59 @@ import { ApiError } from '../utils/ApiError';
 
 export class BudgetController {
   /**
-   * Create budget handler
+   * Get all user budgets and month-to-date spending
    */
-  public static async createBudget(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public static async getBudgets(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       if (!userId) {
         throw new ApiError(401, 'Unauthorized: User context missing');
       }
 
-      const budget = await BudgetService.createBudget(userId, req.body);
-      res.status(201).json(new ApiResponse(budget, 'Budget created successfully'));
+      const month = req.query.month as string;
+      const budgetData = await BudgetService.getBudgetsAndSpending(userId, month);
+      res.status(200).json(new ApiResponse(budgetData, 'Budgets and spending metrics retrieved successfully'));
     } catch (error) {
       next(error);
     }
   }
 
   /**
-   * Get all user budgets handler
+   * Set or update a category budget limit
    */
-  public static async getAllBudgets(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public static async setBudget(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       if (!userId) {
         throw new ApiError(401, 'Unauthorized: User context missing');
       }
 
-      const budgets = await BudgetService.getAllBudgets(userId);
-      res.status(200).json(new ApiResponse(budgets, 'Budgets retrieved successfully'));
+      const { category, limit, month, description } = req.body;
+      const budget = await BudgetService.setBudgetLimit(userId, category, limit, month, description);
+      res.status(200).json(new ApiResponse(budget, 'Budget limit updated successfully'));
     } catch (error) {
       next(error);
     }
   }
 
   /**
-   * Get single budget handler
-   */
-  public static async getBudgetById(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const userId = req.user?.id;
-      const { id: budgetId } = req.params;
-
-      if (!userId) {
-        throw new ApiError(401, 'Unauthorized: User context missing');
-      }
-
-      const budget = await BudgetService.getBudgetById(userId, budgetId);
-      res.status(200).json(new ApiResponse(budget, 'Budget retrieved successfully'));
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Update budget handler
-   */
-  public static async updateBudget(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const userId = req.user?.id;
-      const { id: budgetId } = req.params;
-
-      if (!userId) {
-        throw new ApiError(401, 'Unauthorized: User context missing');
-      }
-
-      const budget = await BudgetService.updateBudget(userId, budgetId, req.body);
-      res.status(200).json(new ApiResponse(budget, 'Budget updated successfully'));
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Delete budget handler
+   * Delete a category budget limit
    */
   public static async deleteBudget(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
-      const { id: budgetId } = req.params;
-
       if (!userId) {
         throw new ApiError(401, 'Unauthorized: User context missing');
       }
 
-      await BudgetService.deleteBudget(userId, budgetId);
-      res.status(200).json(new ApiResponse(null, 'Budget deleted successfully'));
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Get budget progress summary handler
-   */
-  public static async getBudgetProgress(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        throw new ApiError(401, 'Unauthorized: User context missing');
+      const { category } = req.params;
+      const month = req.query.month as string;
+      if (!category) {
+        throw new ApiError(400, 'Category parameter is required');
       }
 
-      // Default to current UTC month (YYYY-MM) if not specified
-      const currentMonth = new Date().toISOString().substring(0, 7);
-      const month = (req.query.month as string) || currentMonth;
-
-      // Validate month format (YYYY-MM)
-      if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) {
-        throw new ApiError(400, 'Invalid month format. Please use YYYY-MM.');
-      }
-
-      const progress = await BudgetService.getBudgetProgress(userId, month);
-      res.status(200).json(new ApiResponse(progress, 'Budget progress retrieved successfully'));
+      await BudgetService.deleteBudgetLimit(userId, category, month);
+      res.status(200).json(new ApiResponse(null, 'Budget limit deleted successfully'));
     } catch (error) {
       next(error);
     }

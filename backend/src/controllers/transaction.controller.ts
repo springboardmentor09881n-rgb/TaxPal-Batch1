@@ -7,11 +7,7 @@ export class TransactionController {
   /**
    * Create transaction handler
    */
-  public static async createTransaction(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public static async createTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       if (!userId) {
@@ -28,11 +24,7 @@ export class TransactionController {
   /**
    * Get all user transactions handler
    */
-  public static async getTransactions(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public static async getTransactions(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       if (!userId) {
@@ -49,11 +41,7 @@ export class TransactionController {
   /**
    * Get single transaction handler
    */
-  public static async getTransactionById(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public static async getTransactionById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       const { id: transactionId } = req.params;
@@ -72,11 +60,7 @@ export class TransactionController {
   /**
    * Update transaction handler
    */
-  public static async updateTransaction(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public static async updateTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       const { id: transactionId } = req.params;
@@ -85,11 +69,7 @@ export class TransactionController {
         throw new ApiError(401, 'Unauthorized: User context missing');
       }
 
-      const transaction = await TransactionService.updateTransaction(
-        userId,
-        transactionId,
-        req.body,
-      );
+      const transaction = await TransactionService.updateTransaction(userId, transactionId, req.body);
       res.status(200).json(new ApiResponse(transaction, 'Transaction updated successfully'));
     } catch (error) {
       next(error);
@@ -99,11 +79,7 @@ export class TransactionController {
   /**
    * Delete transaction handler
    */
-  public static async deleteTransaction(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+  public static async deleteTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?.id;
       const { id: transactionId } = req.params;
@@ -114,44 +90,6 @@ export class TransactionController {
 
       await TransactionService.deleteTransaction(userId, transactionId);
       res.status(200).json(new ApiResponse(null, 'Transaction deleted successfully'));
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Get total spending grouped by category handler
-   */
-  public static async getCategorySummary(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        throw new ApiError(401, 'Unauthorized: User context missing');
-      }
-
-      const summary = await TransactionService.getCategorySummary(userId);
-      res.status(200).json(new ApiResponse(summary, 'Category summary retrieved successfully'));
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Get monthly historical income vs expense chart data handler
-   */
-  public static async getChartData(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        throw new ApiError(401, 'Unauthorized: User context missing');
-      }
-
-      const chartData = await TransactionService.getChartData(userId);
-      res.status(200).json(new ApiResponse(chartData, 'Monthly chart data retrieved successfully'));
     } catch (error) {
       next(error);
     }

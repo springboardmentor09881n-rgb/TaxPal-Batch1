@@ -1,122 +1,133 @@
-import { Budget, IBudgetDocument } from '../models/Budget';
+import mongoose from 'mongoose';
+import { Budget } from '../models/Budget';
 import { Transaction } from '../models/Transaction';
-import { ApiError } from '../utils/ApiError';
+import { User } from '../models/User';
 
 export class BudgetService {
   /**
-   * Create a new budget for a user
+   * Retrieve budgets merged with spending status for the current month
    */
-  public static async createBudget(userId: string, data: any): Promise<IBudgetDocument> {
-    try {
-      const budget = new Budget({
-        userId,
-        ...data,
+  public static async getBudgetsAndSpending(userId: string, monthStr?: string): Promise<any> {
+    const now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth(); // 0-11
+
+    if (monthStr && /^\d{4}-\d{2}$/.test(monthStr)) {
+      const parts = monthStr.split('-');
+      year = parseInt(parts[0], 10);
+      month = parseInt(parts[1], 10) - 1;
+    } else {
+      monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
+    }
+
+    const startOfMonth = new Date(year, month, 1);
+    const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59, 999);
+
+    // Get all user budget limits for this month
+    const budgets = await Budget.find({ userId, month: monthStr });
+
+    // Group expenses for the selected month by category
+    const spendingAggregation = await Transaction.aggregate([
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+          type: 'Expense',
+          transactionDate: { $gte: startOfMonth, $lte: endOfMonth },
+        },
+      },
+      {
+        $group: {
+          _id: '$category',
+          totalSpent: { $sum: '$amount' },
+        },
+      },
+    ]);
+
+    // Create a spending lookup map
+    const spendingMap = new Map<string, number>();
+    spendingAggregation.forEach((item) => {
+      spendingMap.set(item._id, item.totalSpent);
+    });
+
+    // Merge budgets and current spending
+    const budgetList: any[] = [];
+    const processedCategories = new Set<string>();
+
+    // Add categories with budget limits
+    budgets.forEach((b) => {
+      const category = b.category;
+      const limit = b.limit;
+      const spent = spendingMap.get(category) || 0;
+      const remaining = limit - spent;
+      const percentage = limit > 0 ? Math.round((spent / limit) * 100) : 0;
+
+      budgetList.push({
+        _id: b._id,
+        category,
+        limit,
+        spent,
+        remaining,
+        percentage,
+        month: b.month,
+        description: b.description || '',
       });
-      return await budget.save();
-    } catch (error: any) {
-      if (error.code === 11000) {
-        throw new ApiError(400, 'A budget for this category and month already exists');
+      processedCategories.add(category);
+    });
+
+    // Add categories with spending but NO budget limits
+    spendingMap.forEach((spent, category) => {
+      if (!processedCategories.has(category)) {
+        budgetList.push({
+          category,
+          limit: 0,
+          spent,
+          remaining: -spent,
+          percentage: 0,
+          month: monthStr,
+          description: '',
+        });
       }
-      throw error;
-    }
+    });
+
+    // Fetch user settings for auto-categorization
+    const user = await User.findById(userId);
+
+    return {
+      budgets: budgetList,
+      settings: {
+        autoCategorizeEnabled: user?.autoCategorizeEnabled ?? true,
+        categoryMappings: user?.categoryMappings ?? [],
+      },
+    };
   }
 
   /**
-   * Retrieve all budgets for a user
+   * Set or update budget limit for a category
    */
-  public static async getAllBudgets(userId: string): Promise<IBudgetDocument[]> {
-    return await Budget.find({ userId }).sort({ month: -1, category: 1 });
-  }
-
-  /**
-   * Retrieve a single budget by ID and verify user ownership
-   */
-  public static async getBudgetById(userId: string, budgetId: string): Promise<IBudgetDocument> {
-    const budget = await Budget.findOne({ _id: budgetId, userId });
-    if (!budget) {
-      throw new ApiError(404, 'Budget not found or unauthorized');
+  public static async setBudgetLimit(userId: string, category: string, limit: number, month?: string, description?: string): Promise<any> {
+    if (!month) {
+      const now = new Date();
+      month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     }
+    const budget = await Budget.findOneAndUpdate(
+      { userId, category, month },
+      { $set: { limit, description: description || '' } },
+      { new: true, upsert: true, runValidators: true }
+    );
     return budget;
   }
 
   /**
-   * Update a budget by ID and verify user ownership
+   * Delete a budget limit for a category
    */
-  public static async updateBudget(
-    userId: string,
-    budgetId: string,
-    data: any,
-  ): Promise<IBudgetDocument> {
-    try {
-      const budget = await Budget.findOneAndUpdate(
-        { _id: budgetId, userId },
-        { $set: data },
-        { new: true, runValidators: true },
-      );
-      if (!budget) {
-        throw new ApiError(404, 'Budget not found or unauthorized');
-      }
-      return budget;
-    } catch (error: any) {
-      if (error.code === 11000) {
-        throw new ApiError(400, 'A budget for this category and month already exists');
-      }
-      throw error;
+  public static async deleteBudgetLimit(userId: string, category: string, monthStr?: string): Promise<void> {
+    const query: any = { userId, category };
+    if (monthStr) {
+      query.month = monthStr;
+    } else {
+      const now = new Date();
+      query.month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     }
-  }
-
-  /**
-   * Delete a budget by ID and verify user ownership
-   */
-  public static async deleteBudget(userId: string, budgetId: string): Promise<void> {
-    const result = await Budget.findOneAndDelete({ _id: budgetId, userId });
-    if (!result) {
-      throw new ApiError(404, 'Budget not found or unauthorized');
-    }
-  }
-
-  /**
-   * Get budget progress summary for a specific month
-   */
-  public static async getBudgetProgress(
-    userId: string,
-    monthStr: string,
-  ): Promise<{
-    totalBudget: number;
-    totalSpent: number;
-    remainingBudget: number;
-    percentageUsed: number;
-    status: string;
-  }> {
-    // 1. Fetch all budgets for the user in the selected month
-    const budgets = await Budget.find({ userId, month: monthStr });
-    const totalBudget = budgets.reduce((sum, b) => sum + b.limit, 0);
-
-    // 2. Parse the target month into Date boundaries (UTC)
-    const [year, month] = monthStr.split('-').map((val) => parseInt(val, 10));
-    const startDate = new Date(Date.UTC(year, month - 1, 1));
-    const endDate = new Date(Date.UTC(year, month, 1));
-
-    // 3. Query all expense transactions for the user in the date range
-    const transactions = await Transaction.find({
-      userId,
-      type: 'Expense',
-      transactionDate: { $gte: startDate, $lt: endDate },
-    });
-
-    const totalSpent = transactions.reduce((sum, t) => sum + t.amount, 0);
-
-    // 4. Calculate metrics
-    const remainingBudget = totalBudget - totalSpent;
-    const percentageUsed = totalBudget > 0 ? Math.round((totalSpent / totalBudget) * 100) : 0;
-    const status = totalSpent > totalBudget ? 'Over Budget' : 'On Track';
-
-    return {
-      totalBudget,
-      totalSpent,
-      remainingBudget,
-      percentageUsed,
-      status,
-    };
+    await Budget.findOneAndDelete(query);
   }
 }
