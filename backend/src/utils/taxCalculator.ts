@@ -4,7 +4,7 @@
 
 export interface ITaxCalculationInput {
   country: string;
-  quarter: string;
+  quarter?: string;
   grossIncomeForQuarter: number;
   businessExpenses?: number;
   retirementContribution?: number;
@@ -14,12 +14,28 @@ export interface ITaxCalculationInput {
 }
 
 export interface ITaxCalculationResult {
+  quarter: string;
   taxableIncome: number;
   annualTaxableIncome: number;
   annualEstimatedTax: number;
   estimatedTax: number;
   dueDate: Date;
 }
+
+/**
+ * Auto-detects the current financial quarter based on the current date:
+ * - Apr to Jun  → Q1
+ * - Jul to Sep  → Q2
+ * - Oct to Dec  → Q3
+ * - Jan to Mar  → Q4
+ */
+export const getCurrentQuarter = (date: Date = new Date()): string => {
+  const month = date.getUTCMonth() + 1; // 1 to 12
+  if (month >= 4 && month <= 6) return 'Q1';
+  if (month >= 7 && month <= 9) return 'Q2';
+  if (month >= 10 && month <= 12) return 'Q3';
+  return 'Q4';
+};
 
 /**
  * Step 1, 2 & 3: Calculate Quarterly & Annual Taxable Income
@@ -216,22 +232,25 @@ export const calculateDueDate = (quarter: string, year?: number): Date => {
 
 /**
  * Master utility function executing all steps:
- * 1. Annual Income = Gross Income For Quarter * 4
- * 2. Annual Taxable Income = Annual Income - Annual Deductions
- * 3. Apply Indian/Country Income Tax Slabs (Progressive Calculation)
- * 4. Calculate Annual Estimated Tax
- * 5. Quarterly Estimated Tax = Annual Estimated Tax / 4
- * 6. Generates Due Date based on quarter
+ * 1. Auto-detects quarter if not provided
+ * 2. Annual Income = Gross Income For Quarter * 4
+ * 3. Annual Taxable Income = Annual Income - Annual Deductions
+ * 4. Apply Indian/Country Income Tax Slabs (Progressive Calculation)
+ * 5. Calculate Annual Estimated Tax
+ * 6. Quarterly Estimated Tax = Annual Estimated Tax / 4
+ * 7. Generates Due Date based on quarter
  */
 export const computeTaxEstimate = (input: ITaxCalculationInput): ITaxCalculationResult => {
+  const quarter = input.quarter || getCurrentQuarter();
   const { quarterlyTaxableIncome, annualTaxableIncome } = calculateTaxableIncome(input);
   const annualEstimatedTax = calculateAnnualEstimatedTax(input.country, annualTaxableIncome);
   
   // Step 5: Quarterly Estimated Tax = Annual Estimated Tax ÷ 4
   const estimatedTax = Number((annualEstimatedTax / 4).toFixed(2));
-  const dueDate = calculateDueDate(input.quarter, input.year);
+  const dueDate = calculateDueDate(quarter, input.year);
 
   return {
+    quarter,
     taxableIncome: quarterlyTaxableIncome,
     annualTaxableIncome,
     annualEstimatedTax,

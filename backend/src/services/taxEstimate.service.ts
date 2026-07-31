@@ -5,7 +5,7 @@ import { AlertService } from './alert.service';
 
 export interface ICreateTaxEstimateDTO {
   country: string;
-  quarter: string;
+  quarter?: string;
   grossIncomeForQuarter: number;
   businessExpenses?: number;
   retirementContribution?: number;
@@ -49,7 +49,7 @@ export class TaxEstimateService {
     const taxEstimate = new TaxEstimate({
       userId,
       country: data.country,
-      quarter: data.quarter,
+      quarter: calculation.quarter, // Uses auto-detected quarter if quarter was omitted
       grossIncomeForQuarter: data.grossIncomeForQuarter,
       businessExpenses: data.businessExpenses ?? 0,
       retirementContribution: data.retirementContribution ?? 0,
@@ -65,7 +65,7 @@ export class TaxEstimateService {
 
     // Automatically generate quarterly tax reminder alert
     try {
-      await AlertService.createTaxReminderAlert(userId, data.quarter, calculation.dueDate);
+      await AlertService.createTaxReminderAlert(userId, calculation.quarter, calculation.dueDate);
     } catch (alertError) {
       // Log alert creation error without failing tax estimate creation
       console.error('Failed to auto-generate tax reminder alert:', alertError);
@@ -130,7 +130,7 @@ export class TaxEstimateService {
 
     // Update document fields
     existingEstimate.country = country;
-    existingEstimate.quarter = quarter;
+    existingEstimate.quarter = calculation.quarter;
     existingEstimate.grossIncomeForQuarter = grossIncomeForQuarter;
     existingEstimate.businessExpenses = businessExpenses;
     existingEstimate.retirementContribution = retirementContribution;
