@@ -1,0 +1,251 @@
+<div class="transactions-container">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <h2>TaxPal</h2>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+        </span>
+        <a routerLink="/dashboard" style="text-decoration: none; color: inherit; display: block; width: 100%;">Dashboard</a>
+      </li>
+      <li class="active">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </span>
+        <a routerLink="/transactions" style="text-decoration: none; color: inherit; display: block; width: 100%;">Transactions</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </span>
+        <a routerLink="/budgets" style="text-decoration: none; color: inherit; display: block; width: 100%;">Budgets</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="2" ry="2"></rect><rect x="10" y="8" width="4" height="13" rx="2" ry="2"></rect><rect x="2" y="13" width="4" height="8" rx="2" ry="2"></rect></svg>
+        </span>
+        <span>Tax Estimator</span>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </span>
+        <span>Reports</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button (click)="toggleTheme()" class="btn-theme" title="Toggle theme">
+        <span class="menu-icon">
+          <!-- Sun icon for dark mode (switch to light) -->
+          <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <!-- Moon icon for light mode (switch to dark) -->
+          <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </span>
+        <span>Theme</span>
+      </button>
+      <a routerLink="/profile" class="btn-profile">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </span>
+        <span>Profile</span>
+      </a>
+      <button (click)="logout()" class="btn-logout">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-wrapper">
+    <div class="top-nav">
+      <div class="greeting-section">
+        <h1>Transactions</h1>
+        <p>Manage all your income and expense transactions in one place</p>
+      </div>
+      <div class="actions-section">
+        <button (click)="showAddForm = !showAddForm" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>Add Transaction</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Error state -->
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    <!-- Add Transaction Form -->
+    @if (showAddForm) {
+      <div class="form-card">
+        <div class="form-header">
+          <h2>Add New Transaction</h2>
+          <button (click)="resetForm()" class="btn-close">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <form (submit)="saveTransaction(); $event.preventDefault()" class="transaction-form">
+          <!-- Transaction Type -->
+          <div class="input-group">
+            <label>Type</label>
+            <div class="type-selector">
+              <button type="button" (click)="transactionType = 'Income'; onTransactionTypeChange()" [class.active]="transactionType === 'Income'" class="type-btn income">Income</button>
+              <button type="button" (click)="transactionType = 'Expense'; onTransactionTypeChange()" [class.active]="transactionType === 'Expense'" class="type-btn expense">Expense</button>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="input-group" [class.has-error]="descriptionError">
+            <label for="description">Description</label>
+            <input id="description" type="text" placeholder="e.g. Website Development" [(ngModel)]="description" name="description">
+            @if (descriptionError) { <span class="error-text">{{ descriptionError }}</span> }
+          </div>
+
+          <!-- Amount -->
+          <div class="input-group" [class.has-error]="amountError">
+            <label for="amount">Amount (INR)</label>
+            <input id="amount" type="number" placeholder="e.g. 15000" [(ngModel)]="amount" name="amount">
+            @if (amountError) { <span class="error-text">{{ amountError }}</span> }
+          </div>
+
+          <!-- Category Select -->
+          <div class="input-group" [class.has-error]="categoryError">
+            <label for="category">Category</label>
+            <select id="category" [(ngModel)]="category" name="category">
+              @if (transactionType === 'Income') {
+                @for (cat of incomeCategories; track cat.name) {
+                  <option [value]="cat.name">{{ cat.name }}</option>
+                }
+              } @else {
+                @for (cat of expenseCategories; track cat.name) {
+                  <option [value]="cat.name">{{ cat.name }}</option>
+                }
+              }
+            </select>
+            @if (categoryError) { <span class="error-text">{{ categoryError }}</span> }
+          </div>
+
+          <!-- Transaction Date -->
+          <div class="input-group" [class.has-error]="dateError">
+            <label for="transactionDate">Date</label>
+            <input id="transactionDate" type="date" [(ngModel)]="transactionDate" name="transactionDate">
+            @if (dateError) { <span class="error-text">{{ dateError }}</span> }
+          </div>
+
+          <!-- Notes (Optional) -->
+          <div class="input-group">
+            <label for="notes">Notes (Optional)</label>
+            <textarea id="notes" rows="3" placeholder="Add any extra details..." [(ngModel)]="notes" name="notes"></textarea>
+          </div>
+
+          <!-- Submit and Cancel Actions -->
+          <div class="action-buttons">
+            <button type="submit" class="btn btn-submit" [disabled]="isFormLoading">
+              @if (isFormLoading) {
+                <span class="spinner"></span>
+                <span>Saving...</span>
+              } @else {
+                <span>Save Transaction</span>
+              }
+            </button>
+            <button type="button" (click)="resetForm()" class="btn-cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Transactions Table -->
+    <div class="table-card">
+      <div class="table-header">
+        <h2>All Transactions</h2>
+        <span class="count-badge">{{ transactions.length }} transactions</span>
+      </div>
+
+      @if (isLoading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading transactions...</p>
+        </div>
+      } @else if (transactions.length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <h3>No transactions yet</h3>
+          <p>Click "Add Transaction" to record your first entry</p>
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (t of transactions; track t._id) {
+                <tr>
+                  <td>
+                    <div class="cell-description">
+                      <span class="title">{{ t.description }}</span>
+                      @if (t.notes) { <span class="notes">{{ t.notes }}</span> }
+                    </div>
+                  </td>
+                  <td><span class="category-pill">{{ t.category }}</span></td>
+                  <td>{{ formatDate(t.transactionDate) }}</td>
+                  <td>
+                    <span class="type-badge" [class.badge-income]="t.type === 'Income'" [class.badge-expense]="t.type === 'Expense'">
+                      {{ t.type }}
+                    </span>
+                  </td>
+                  <td class="amount-cell" [class.income-val]="t.type === 'Income'" [class.expense-val]="t.type === 'Expense'">
+                    {{ t.type === 'Income' ? '+' : '-' }}{{ formatCurrency(t.amount) }}
+                  </td>
+                  <td class="actions-cell">
+                    <button (click)="deleteTransaction(t._id)" class="btn-delete" title="Delete transaction">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</div>
