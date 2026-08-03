@@ -184,6 +184,12 @@ export const calculateUSAAnnualTax = (annualTaxableIncome: number): number => {
       (250525 - 197300) * 0.32 +
       (626350 - 250525) * 0.35 +
       (annualTaxableIncome - 626350) * 0.37;
+  if (annualTaxableIncome <= 11000) {
+    tax = annualTaxableIncome * 0.10;
+  } else if (annualTaxableIncome <= 44600) {
+    tax = 11000 * 0.10 + (annualTaxableIncome - 11000) * 0.12;
+  } else {
+    tax = 11000 * 0.10 + (44600 - 11000) * 0.12 + (annualTaxableIncome - 44600) * 0.22;
   }
 
   return Number(tax.toFixed(2));
