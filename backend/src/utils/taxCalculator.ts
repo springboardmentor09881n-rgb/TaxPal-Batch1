@@ -142,6 +142,48 @@ export const calculateUSAAnnualTax = (annualTaxableIncome: number): number => {
   if (annualTaxableIncome <= 0) return 0;
 
   let tax = 0;
+
+  if (annualTaxableIncome <= 11925) {
+    tax = annualTaxableIncome * 0.10;
+  } else if (annualTaxableIncome <= 48475) {
+    tax =
+      11925 * 0.10 +
+      (annualTaxableIncome - 11925) * 0.12;
+  } else if (annualTaxableIncome <= 103350) {
+    tax =
+      11925 * 0.10 +
+      (48475 - 11925) * 0.12 +
+      (annualTaxableIncome - 48475) * 0.22;
+  } else if (annualTaxableIncome <= 197300) {
+    tax =
+      11925 * 0.10 +
+      (48475 - 11925) * 0.12 +
+      (103350 - 48475) * 0.22 +
+      (annualTaxableIncome - 103350) * 0.24;
+  } else if (annualTaxableIncome <= 250525) {
+    tax =
+      11925 * 0.10 +
+      (48475 - 11925) * 0.12 +
+      (103350 - 48475) * 0.22 +
+      (197300 - 103350) * 0.24 +
+      (annualTaxableIncome - 197300) * 0.32;
+  } else if (annualTaxableIncome <= 626350) {
+    tax =
+      11925 * 0.10 +
+      (48475 - 11925) * 0.12 +
+      (103350 - 48475) * 0.22 +
+      (197300 - 103350) * 0.24 +
+      (250525 - 197300) * 0.32 +
+      (annualTaxableIncome - 250525) * 0.35;
+  } else {
+    tax =
+      11925 * 0.10 +
+      (48475 - 11925) * 0.12 +
+      (103350 - 48475) * 0.22 +
+      (197300 - 103350) * 0.24 +
+      (250525 - 197300) * 0.32 +
+      (626350 - 250525) * 0.35 +
+      (annualTaxableIncome - 626350) * 0.37;
   if (annualTaxableIncome <= 11000) {
     tax = annualTaxableIncome * 0.10;
   } else if (annualTaxableIncome <= 44600) {

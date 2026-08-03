@@ -88,4 +88,27 @@ export class ApiService {
   initializeDefaultCategories() {
     return this.http.post(`${this.baseUrl}/categories/initialize-default`, {}, this.getOptions());
   }
+
+  // Tax Estimate endpoints
+  getTaxEstimates() {
+    return this.http.get(`${this.baseUrl}/tax-estimates`, this.getOptions());
+  }
+
+  createTaxEstimate(data: any) {
+    return this.http.post(`${this.baseUrl}/tax-estimates`, data, this.getOptions());
+  }
+
+  deleteTaxEstimate(id: string) {
+    return this.http.delete(`${this.baseUrl}/tax-estimates/${id}`, this.getOptions());
+  }
+
+  // Alert endpoints
+  getAlerts(isRead?: boolean) {
+    const url = isRead !== undefined ? `${this.baseUrl}/alerts?isRead=${isRead}` : `${this.baseUrl}/alerts`;
+    return this.http.get(url, this.getOptions());
+  }
+
+  markAlertAsRead(id: string) {
+    return this.http.put(`${this.baseUrl}/alerts/${id}/read`, {}, this.getOptions());
+  }
 }
