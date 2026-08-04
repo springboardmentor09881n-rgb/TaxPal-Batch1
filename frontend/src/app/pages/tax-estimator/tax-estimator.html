@@ -105,22 +105,17 @@
                   <option value="United States">United States</option>
                   <option value="India">India</option>
                   <option value="United Kingdom">United Kingdom</option>
+                  <option value="China">China</option>
+                  <option value="Germany">Germany</option>
+                  <option value="Japan">Japan</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Australia">Australia</option>
+                  <option value="France">France</option>
+                  <option value="Singapore">Singapore</option>
+                  <option value="Switzerland">Switzerland</option>
                 </select>
               </div>
 
-              <div class="input-group">
-                <label for="state">State/Province</label>
-                <select id="state" [(ngModel)]="selectedState" name="selectedState" [disabled]="selectedCountry !== 'United States'">
-                  <option value="California">California</option>
-                  <option value="New York">New York</option>
-                  <option value="Texas">Texas</option>
-                  <option value="Florida">Florida</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-row">
               <div class="input-group">
                 <label for="filingStatus">Filing Status</label>
                 <select id="filingStatus" [(ngModel)]="selectedFilingStatus" name="selectedFilingStatus">
@@ -130,8 +125,10 @@
                   <option value="Head of Household">Head of Household</option>
                 </select>
               </div>
+            </div>
 
-              <div class="input-group">
+            <div class="form-row">
+              <div class="input-group" style="max-width: calc(50% - 10px);">
                 <label for="quarter">Quarter</label>
                 <select id="quarter" [(ngModel)]="selectedQuarter" name="selectedQuarter">
                   <option value="Q1">Q2 (Apr-Jun 2025)</option>
@@ -146,7 +143,7 @@
             <div class="input-group full-width">
               <label for="grossIncome">Gross Income for Quarter</label>
               <div class="input-with-icon">
-                <span class="currency-symbol">{{ selectedCountry === 'India' ? '₹' : '$' }}</span>
+                <span class="currency-symbol">{{ getCurrencySymbol(selectedCountry) }}</span>
                 <input id="grossIncome" type="number" [(ngModel)]="grossIncome" name="grossIncome" min="0" step="100" placeholder="0.00">
               </div>
             </div>
@@ -156,7 +153,7 @@
               <div class="input-group">
                 <label for="businessExpenses">Business Expenses</label>
                 <div class="input-with-icon">
-                  <span class="currency-symbol">{{ selectedCountry === 'India' ? '₹' : '$' }}</span>
+                  <span class="currency-symbol">{{ getCurrencySymbol(selectedCountry) }}</span>
                   <input id="businessExpenses" type="number" [(ngModel)]="businessExpenses" name="businessExpenses" min="0" placeholder="0.00">
                 </div>
               </div>
@@ -164,7 +161,7 @@
               <div class="input-group">
                 <label for="retirementContribution">Retirement Contributions</label>
                 <div class="input-with-icon">
-                  <span class="currency-symbol">{{ selectedCountry === 'India' ? '₹' : '$' }}</span>
+                  <span class="currency-symbol">{{ getCurrencySymbol(selectedCountry) }}</span>
                   <input id="retirementContribution" type="number" [(ngModel)]="retirementContribution" name="retirementContribution" min="0" placeholder="0.00">
                 </div>
               </div>
@@ -174,7 +171,7 @@
               <div class="input-group">
                 <label for="healthInsurance">Health Insurance Premiums</label>
                 <div class="input-with-icon">
-                  <span class="currency-symbol">{{ selectedCountry === 'India' ? '₹' : '$' }}</span>
+                  <span class="currency-symbol">{{ getCurrencySymbol(selectedCountry) }}</span>
                   <input id="healthInsurance" type="number" [(ngModel)]="healthInsurance" name="healthInsurance" min="0" placeholder="0.00">
                 </div>
               </div>
@@ -182,7 +179,7 @@
               <div class="input-group">
                 <label for="homeOfficeDeduction">Home Office Deduction</label>
                 <div class="input-with-icon">
-                  <span class="currency-symbol">{{ selectedCountry === 'India' ? '₹' : '$' }}</span>
+                  <span class="currency-symbol">{{ getCurrencySymbol(selectedCountry) }}</span>
                   <input id="homeOfficeDeduction" type="number" [(ngModel)]="homeOfficeDeduction" name="homeOfficeDeduction" min="0" placeholder="0.00">
                 </div>
               </div>
