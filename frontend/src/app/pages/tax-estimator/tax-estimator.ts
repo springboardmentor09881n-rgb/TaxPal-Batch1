@@ -22,7 +22,6 @@ export class TaxEstimator implements OnInit {
 
   // Form Parameters
   selectedCountry = 'United States';
-  selectedState = 'California';
   selectedFilingStatus = 'Single';
   selectedQuarter = 'Q1'; // maps to Q2 (Apr-Jun 2025)
 
@@ -188,13 +187,24 @@ export class TaxEstimator implements OnInit {
     });
   }
 
+  getCurrencySymbol(country: string): string {
+    const c = (country || '').trim().toLowerCase();
+    if (c === 'india' || c === 'in') return '₹';
+    if (c === 'japan' || c === 'jp' || c === 'china' || c === 'cn') return '¥';
+    if (c === 'germany' || c === 'de' || c === 'france' || c === 'fr') return '€';
+    if (c === 'united kingdom' || c === 'uk' || c === 'gb' || c === 'united kingdom') return '£';
+    if (c === 'switzerland' || c === 'ch') return 'CHF';
+    if (c === 'singapore' || c === 'sg') return 'S$';
+    return '$';
+  }
+
   formatCurrency(amount: number): string {
-    const symbol = this.selectedCountry.toLowerCase() === 'india' || this.selectedCountry.toLowerCase() === 'in' ? '₹' : '$';
+    const symbol = this.getCurrencySymbol(this.selectedCountry);
     return symbol + ' ' + (amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   formatCurrencyWithCountry(amount: number, country: string): string {
-    const symbol = country.toLowerCase() === 'india' || country.toLowerCase() === 'in' ? '₹' : '$';
+    const symbol = this.getCurrencySymbol(country);
     return symbol + ' ' + (amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 

@@ -35,7 +35,6 @@ export class TaxEstimateService {
     userId: string,
     data: ICreateTaxEstimateDTO
   ): Promise<ITaxEstimateDocument> {
-    // Calculate taxable income, estimated tax, and due date using the utility
     const calculation = computeTaxEstimate({
       country: data.country,
       quarter: data.quarter,
@@ -44,6 +43,7 @@ export class TaxEstimateService {
       retirementContribution: data.retirementContribution,
       healthInsurancePremiums: data.healthInsurancePremiums,
       homeOfficeDeduction: data.homeOfficeDeduction,
+      filingStatus: data.filingStatus,
     });
 
     const taxEstimate = new TaxEstimate({
@@ -117,6 +117,8 @@ export class TaxEstimateService {
     const healthInsurancePremiums = data.healthInsurancePremiums ?? existingEstimate.healthInsurancePremiums;
     const homeOfficeDeduction = data.homeOfficeDeduction ?? existingEstimate.homeOfficeDeduction;
 
+    const filingStatus = data.filingStatus ?? existingEstimate.filingStatus;
+
     // Recalculate using tax utility
     const calculation = computeTaxEstimate({
       country,
@@ -126,6 +128,7 @@ export class TaxEstimateService {
       retirementContribution,
       healthInsurancePremiums,
       homeOfficeDeduction,
+      filingStatus,
     });
 
     // Update document fields

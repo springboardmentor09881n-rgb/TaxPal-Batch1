@@ -13,6 +13,9 @@ export interface ITaxEstimate {
   retirementContribution: number;
   healthInsurancePremiums: number;
   homeOfficeDeduction: number;
+  taxableIncome?: number;
+  annualTaxableIncome?: number;
+  annualEstimatedTax?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -88,8 +91,35 @@ const taxEstimateSchema = new Schema<ITaxEstimateDocument>(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
+
+// Virtual properties computed on-the-fly for frontend serialization
+taxEstimateSchema.virtual('taxableIncome').get(function (this: ITaxEstimateDocument) {
+  const gross = this.grossIncomeForQuarter || 0;
+  const business = this.businessExpenses || 0;
+  const retirement = this.retirementContribution || 0;
+  const health = this.healthInsurancePremiums || 0;
+  const homeOffice = this.homeOfficeDeduction || 0;
+  const quarterlyDeductions = business + retirement + health + homeOffice;
+  return Math.max(0, gross - quarterlyDeductions);
+});
+
+taxEstimateSchema.virtual('annualTaxableIncome').get(function (this: ITaxEstimateDocument) {
+  const gross = this.grossIncomeForQuarter || 0;
+  const business = this.businessExpenses || 0;
+  const retirement = this.retirementContribution || 0;
+  const health = this.healthInsurancePremiums || 0;
+  const homeOffice = this.homeOfficeDeduction || 0;
+  const quarterlyDeductions = business + retirement + health + homeOffice;
+  return Math.max(0, gross * 4 - quarterlyDeductions * 4);
+});
+
+taxEstimateSchema.virtual('annualEstimatedTax').get(function (this: ITaxEstimateDocument) {
+  return this.estimatedTax * 4;
+});
 
 // Index to ensure efficient querying per user and quarter
 export const TaxEstimate = mongoose.model<ITaxEstimateDocument>(
