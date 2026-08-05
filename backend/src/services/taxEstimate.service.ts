@@ -5,7 +5,9 @@ import { AlertService } from './alert.service';
 
 export interface ICreateTaxEstimateDTO {
   country: string;
+  state?: string;
   quarter?: string;
+  year?: number;
   grossIncomeForQuarter: number;
   businessExpenses?: number;
   retirementContribution?: number;
@@ -17,7 +19,9 @@ export interface ICreateTaxEstimateDTO {
 
 export interface IUpdateTaxEstimateDTO {
   country?: string;
+  state?: string;
   quarter?: string;
+  year?: number;
   grossIncomeForQuarter?: number;
   businessExpenses?: number;
   retirementContribution?: number;
@@ -37,7 +41,9 @@ export class TaxEstimateService {
   ): Promise<ITaxEstimateDocument> {
     const calculation = computeTaxEstimate({
       country: data.country,
+      state: data.state,
       quarter: data.quarter,
+      year: data.year,
       grossIncomeForQuarter: data.grossIncomeForQuarter,
       businessExpenses: data.businessExpenses,
       retirementContribution: data.retirementContribution,
@@ -49,6 +55,7 @@ export class TaxEstimateService {
     const taxEstimate = new TaxEstimate({
       userId,
       country: data.country,
+      state: data.state || '',
       quarter: calculation.quarter, // Uses auto-detected quarter if quarter was omitted
       grossIncomeForQuarter: data.grossIncomeForQuarter,
       businessExpenses: data.businessExpenses ?? 0,
@@ -110,6 +117,7 @@ export class TaxEstimateService {
 
     // Merge incoming values with existing values for recalculation
     const country = data.country ?? existingEstimate.country;
+    const state = data.state ?? existingEstimate.state;
     const quarter = data.quarter ?? existingEstimate.quarter;
     const grossIncomeForQuarter = data.grossIncomeForQuarter ?? existingEstimate.grossIncomeForQuarter;
     const businessExpenses = data.businessExpenses ?? existingEstimate.businessExpenses;
@@ -120,9 +128,17 @@ export class TaxEstimateService {
     const filingStatus = data.filingStatus ?? existingEstimate.filingStatus;
 
     // Recalculate using tax utility
+    const getCalculationYear = (q: string, date: Date): number => {
+      const dueYear = date.getUTCFullYear();
+      return q === 'Q4' ? dueYear - 1 : dueYear;
+    };
+    const year = data.year ?? getCalculationYear(existingEstimate.quarter, existingEstimate.dueDate);
+
     const calculation = computeTaxEstimate({
       country,
+      state,
       quarter,
+      year,
       grossIncomeForQuarter,
       businessExpenses,
       retirementContribution,
@@ -133,6 +149,7 @@ export class TaxEstimateService {
 
     // Update document fields
     existingEstimate.country = country;
+    existingEstimate.state = state || '';
     existingEstimate.quarter = calculation.quarter;
     existingEstimate.grossIncomeForQuarter = grossIncomeForQuarter;
     existingEstimate.businessExpenses = businessExpenses;

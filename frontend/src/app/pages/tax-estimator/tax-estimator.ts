@@ -24,6 +24,89 @@ export class TaxEstimator implements OnInit {
   selectedCountry = 'United States';
   selectedFilingStatus = 'Single';
   selectedQuarter = 'Q1'; // maps to Q2 (Apr-Jun 2025)
+  quarterOptions: any[] = [];
+  selectedQuarterKey = '';
+
+  // Mapping of countries to their allowed filing statuses
+  countryFilingStatuses: Record<string, string[]> = {
+    'United States': ['Single', 'Married Filing Jointly', 'Married Filing Separately', 'Head of Household'],
+    'Germany': ['Single', 'Married Filing Jointly', 'Married Filing Separately'],
+    'Switzerland': ['Single', 'Married Filing Jointly'],
+    'France': ['Single', 'Married Filing Jointly'],
+    'India': ['Single'],
+    'United Kingdom': ['Single'],
+    'China': ['Single'],
+    'Japan': ['Single'],
+    'Canada': ['Single'],
+    'Australia': ['Single'],
+    'Singapore': ['Single']
+  };
+
+  getFilingStatusesForSelectedCountry(): string[] {
+    return this.countryFilingStatuses[this.selectedCountry] || ['Single'];
+  }
+
+  selectedState = 'California';
+
+  hasStateSelect(country: string): boolean {
+    const targets = ['United States', 'Canada', 'Switzerland', 'United Kingdom', 'Japan'];
+    return targets.includes(country);
+  }
+
+  getStateLabel(country: string): string {
+    switch (country) {
+      case 'United States':
+        return 'State';
+      case 'Canada':
+        return 'Province/Territory';
+      case 'Switzerland':
+        return 'Canton';
+      case 'United Kingdom':
+        return 'Taxpayer Region';
+      case 'Japan':
+        return 'Prefecture (Local Inhabitant Tax)';
+      default:
+        return 'State/Province';
+    }
+  }
+
+  getStateOptions(country: string): string[] {
+    switch (country) {
+      case 'United States':
+        return ['California', 'New York', 'Texas', 'Florida', 'Illinois', 'Pennsylvania', 'Ohio', 'Georgia', 'North Carolina', 'New Jersey'];
+      case 'Canada':
+        return ['Ontario', 'Quebec', 'British Columbia', 'Alberta'];
+      case 'Switzerland':
+        return ['Zurich', 'Geneva', 'Vaud', 'Bern'];
+      case 'United Kingdom':
+        return ['England / Wales / Northern Ireland', 'Scotland'];
+      case 'Japan':
+        return ['None (Federal Tax Only)', 'Tokyo', 'Osaka', 'Kyoto'];
+      default:
+        return [];
+    }
+  }
+
+  onCountryChange() {
+    const allowed = this.getFilingStatusesForSelectedCountry();
+    if (!allowed.includes(this.selectedFilingStatus)) {
+      this.selectedFilingStatus = allowed[0];
+    }
+
+    if (this.selectedCountry === 'United States') {
+      this.selectedState = 'California';
+    } else if (this.selectedCountry === 'Canada') {
+      this.selectedState = 'Ontario';
+    } else if (this.selectedCountry === 'Switzerland') {
+      this.selectedState = 'Zurich';
+    } else if (this.selectedCountry === 'United Kingdom') {
+      this.selectedState = 'England / Wales / Northern Ireland';
+    } else if (this.selectedCountry === 'Japan') {
+      this.selectedState = 'None (Federal Tax Only)';
+    } else {
+      this.selectedState = '';
+    }
+  }
 
   grossIncome = 0;
   businessExpenses = 0;
@@ -45,6 +128,8 @@ export class TaxEstimator implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.generateQuarterOptions();
+
     // Sync theme
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light') {
@@ -67,6 +152,50 @@ export class TaxEstimator implements OnInit {
     }
 
     this.loadEstimates();
+  }
+
+  generateQuarterOptions() {
+    const now = new Date();
+    const currentMonth = now.getUTCMonth(); // 0-11
+    const currentYear = now.getUTCFullYear();
+    const currentCalQuarter = Math.floor(currentMonth / 3); // 0-3
+
+    const options = [];
+    for (let i = 0; i < 4; i++) {
+      const targetCalQuarter = (currentCalQuarter + i) % 4;
+      const yearOffset = Math.floor((currentCalQuarter + i) / 4);
+      const targetCalYear = currentYear + yearOffset;
+
+      let quarter = '';
+      let year = targetCalYear;
+      let label = '';
+
+      if (targetCalQuarter === 0) { // Jan-Mar
+        quarter = 'Q4';
+        year = targetCalYear - 1;
+        label = `Q1 (Jan-Mar ${targetCalYear})`;
+      } else if (targetCalQuarter === 1) { // Apr-Jun
+        quarter = 'Q1';
+        year = targetCalYear;
+        label = `Q2 (Apr-Jun ${targetCalYear})`;
+      } else if (targetCalQuarter === 2) { // Jul-Sep
+        quarter = 'Q2';
+        year = targetCalYear;
+        label = `Q3 (Jul-Sep ${targetCalYear})`;
+      } else if (targetCalQuarter === 3) { // Oct-Dec
+        quarter = 'Q3';
+        year = targetCalYear;
+        label = `Q4 (Oct-Dec ${targetCalYear})`;
+      }
+
+      const key = `${quarter}_${year}`;
+      options.push({ key, quarter, year, label });
+    }
+
+    this.quarterOptions = options;
+    if (options.length > 0) {
+      this.selectedQuarterKey = options[0].key;
+    }
   }
 
   toggleTheme() {
@@ -116,9 +245,22 @@ export class TaxEstimator implements OnInit {
     this.isCalculating = true;
     this.errorMessage = '';
 
+    let quarter = this.selectedQuarter;
+    let year = new Date().getUTCFullYear();
+
+    if (this.selectedQuarterKey) {
+      const parts = this.selectedQuarterKey.split('_');
+      if (parts.length === 2) {
+        quarter = parts[0];
+        year = Number(parts[1]);
+      }
+    }
+
     const payload = {
       country: this.selectedCountry,
-      quarter: this.selectedQuarter, // Sends Q1, Q2, Q3, or Q4
+      state: this.hasStateSelect(this.selectedCountry) ? this.selectedState : '',
+      quarter: quarter,
+      year: year,
       grossIncomeForQuarter: Number(this.grossIncome),
       businessExpenses: Number(this.businessExpenses),
       retirementContribution: Number(this.retirementContribution),
@@ -160,12 +302,16 @@ export class TaxEstimator implements OnInit {
     }
   }
 
-  // Mappings and UI helpers
-  getUIQuarterLabel(quarter: string): string {
-    if (quarter === 'Q1') return 'Q2 (Apr-Jun)';
-    if (quarter === 'Q2') return 'Q3 (Jul-Sep)';
-    if (quarter === 'Q3') return 'Q4 (Oct-Dec)';
-    if (quarter === 'Q4') return 'Q1 (Jan-Mar)';
+  getUIQuarterLabel(quarter: string, dueDate?: string | Date): string {
+    let yearSuffix = '';
+    if (dueDate) {
+      const year = new Date(dueDate).getUTCFullYear();
+      yearSuffix = ` ${year}`;
+    }
+    if (quarter === 'Q1') return `Q2 (Apr-Jun${yearSuffix})`;
+    if (quarter === 'Q2') return `Q3 (Jul-Sep${yearSuffix})`;
+    if (quarter === 'Q3') return `Q4 (Oct-Dec${yearSuffix})`;
+    if (quarter === 'Q4') return `Q1 (Jan-Mar${yearSuffix})`;
     return quarter;
   }
 
@@ -196,6 +342,13 @@ export class TaxEstimator implements OnInit {
     if (c === 'switzerland' || c === 'ch') return 'CHF';
     if (c === 'singapore' || c === 'sg') return 'S$';
     return '$';
+  }
+
+  getInputPaddingLeft(country: string): string {
+    const symbol = this.getCurrencySymbol(country);
+    if (symbol.length === 3) return '56px';
+    if (symbol.length === 2) return '45px';
+    return '36px';
   }
 
   formatCurrency(amount: number): string {

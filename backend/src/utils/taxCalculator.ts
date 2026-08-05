@@ -12,6 +12,7 @@ export interface ITaxCalculationInput {
   homeOfficeDeduction?: number;
   year?: number;
   filingStatus?: string;
+  state?: string;
 }
 
 export interface ITaxCalculationResult {
@@ -139,105 +140,150 @@ export const calculateIndiaAnnualTax = (annualTaxableIncome: number): number => 
 /**
  * Annual Progressive tax calculator for USA
  */
-export const calculateUSAAnnualTax = (annualTaxableIncome: number, filingStatus?: string): number => {
+const calculateUSAStateTax = (income: number, state?: string): number => {
+  const normState = (state || '').trim().toLowerCase();
+  if (normState === 'california') {
+    const limits = [0, 10000, 25000, 40000, 55000, 70000, 350000, 420000, 700000, Infinity];
+    const rates = [1, 2, 4, 6, 8, 9.3, 10.3, 11.3, 13.3];
+    let tax = 0;
+    for (let i = 0; i < rates.length; i++) {
+      const from = limits[i];
+      const to = limits[i + 1];
+      if (income > from) {
+        const taxable = Math.min(income, to) - from;
+        tax += taxable * (rates[i] / 100);
+      }
+    }
+    return tax;
+  }
+  if (normState === 'new york') {
+    const limits = [0, 12000, 25000, 80000, 215000, 1000000, 5000000, Infinity];
+    const rates = [4, 4.5, 5.85, 6.25, 6.85, 9.65, 10.9];
+    let tax = 0;
+    for (let i = 0; i < rates.length; i++) {
+      const from = limits[i];
+      const to = limits[i + 1];
+      if (income > from) {
+        const taxable = Math.min(income, to) - from;
+        tax += taxable * (rates[i] / 100);
+      }
+    }
+    return tax;
+  }
+  if (normState === 'illinois') {
+    return income * 0.0495;
+  }
+  if (normState === 'pennsylvania') {
+    return income * 0.0307;
+  }
+  if (normState === 'ohio') {
+    const limits = [0, 26050, 46100, 100000, Infinity];
+    const rates = [0, 1.38, 2.25, 2.75];
+    let tax = 0;
+    for (let i = 0; i < rates.length; i++) {
+      const from = limits[i];
+      const to = limits[i + 1];
+      if (income > from) {
+        const taxable = Math.min(income, to) - from;
+        tax += taxable * (rates[i] / 100);
+      }
+    }
+    return tax;
+  }
+  if (normState === 'georgia') {
+    return income * 0.0519;
+  }
+  if (normState === 'north carolina') {
+    return income * 0.0399;
+  }
+  if (normState === 'new jersey') {
+    const limits = [0, 20000, 35000, 40000, 75000, 500000, 1000000, Infinity];
+    const rates = [1.4, 1.75, 3.5, 5.525, 6.37, 8.97, 10.75];
+    let tax = 0;
+    for (let i = 0; i < rates.length; i++) {
+      const from = limits[i];
+      const to = limits[i + 1];
+      if (income > from) {
+        const taxable = Math.min(income, to) - from;
+        tax += taxable * (rates[i] / 100);
+      }
+    }
+    return tax;
+  }
+  return 0;
+};
+
+export const calculateUSAAnnualTax = (annualTaxableIncome: number, filingStatus?: string, state?: string): number => {
   if (annualTaxableIncome <= 0) return 0;
 
-  let tax = 0;
   const status = (filingStatus || '').trim().toLowerCase();
+  let rateKey = 'single';
+  if (status.includes('joint') || status === 'married') {
+    rateKey = 'mfj';
+  } else if (status.includes('separat')) {
+    rateKey = 'mfs';
+  } else if (status.includes('head') || status.includes('hoh')) {
+    rateKey = 'hoh';
+  }
 
-  if (status === 'married filing jointly' || status === 'married') {
-    if (annualTaxableIncome <= 24800) {
-      tax = annualTaxableIncome * 0.10;
-    } else if (annualTaxableIncome <= 100800) {
-      tax = 24800 * 0.10 + (annualTaxableIncome - 24800) * 0.12;
-    } else if (annualTaxableIncome <= 211400) {
-      tax = 24800 * 0.10 + (100800 - 24800) * 0.12 + (annualTaxableIncome - 100800) * 0.22;
-    } else if (annualTaxableIncome <= 403550) {
-      tax = 24800 * 0.10 + (100800 - 24800) * 0.12 + (211400 - 100800) * 0.22 + (annualTaxableIncome - 211400) * 0.24;
-    } else if (annualTaxableIncome <= 512450) {
-      tax = 24800 * 0.10 + (100800 - 24800) * 0.12 + (211400 - 100800) * 0.22 + (403550 - 211400) * 0.24 + (annualTaxableIncome - 403550) * 0.32;
-    } else if (annualTaxableIncome <= 768700) {
-      tax = 24800 * 0.10 + (100800 - 24800) * 0.12 + (211400 - 100800) * 0.22 + (403550 - 211400) * 0.24 + (512450 - 403550) * 0.32 + (annualTaxableIncome - 512450) * 0.35;
-    } else {
-      tax = 24800 * 0.10 + (100800 - 24800) * 0.12 + (211400 - 100800) * 0.22 + (403550 - 211400) * 0.24 + (512450 - 403550) * 0.32 + (768700 - 512450) * 0.35 + (annualTaxableIncome - 768700) * 0.37;
-    }
-  } else if (status === 'head of household') {
-    if (annualTaxableIncome <= 17700) {
-      tax = annualTaxableIncome * 0.10;
-    } else if (annualTaxableIncome <= 67450) {
-      tax = 17700 * 0.10 + (annualTaxableIncome - 17700) * 0.12;
-    } else if (annualTaxableIncome <= 105700) {
-      tax = 17700 * 0.10 + (67450 - 17700) * 0.12 + (annualTaxableIncome - 67450) * 0.22;
-    } else if (annualTaxableIncome <= 201775) {
-      tax = 17700 * 0.10 + (67450 - 17700) * 0.12 + (105700 - 67450) * 0.22 + (annualTaxableIncome - 105700) * 0.24;
-    } else if (annualTaxableIncome <= 256200) {
-      tax = 17700 * 0.10 + (67450 - 17700) * 0.12 + (105700 - 67450) * 0.22 + (201775 - 105700) * 0.24 + (annualTaxableIncome - 201775) * 0.32;
-    } else if (annualTaxableIncome <= 640600) {
-      tax = 17700 * 0.10 + (67450 - 17700) * 0.12 + (105700 - 67450) * 0.22 + (201775 - 105700) * 0.24 + (256200 - 201775) * 0.32 + (annualTaxableIncome - 256200) * 0.35;
-    } else {
-      tax = 17700 * 0.10 + (67450 - 17700) * 0.12 + (105700 - 67450) * 0.22 + (201775 - 105700) * 0.24 + (256200 - 201775) * 0.32 + (640600 - 256200) * 0.35 + (annualTaxableIncome - 640600) * 0.37;
-    }
-  } else {
-    if (annualTaxableIncome <= 12400) {
-      tax = annualTaxableIncome * 0.10;
-    } else if (annualTaxableIncome <= 50400) {
-      tax = 12400 * 0.10 + (annualTaxableIncome - 12400) * 0.12;
-    } else if (annualTaxableIncome <= 105700) {
-      tax = 12400 * 0.10 + (50400 - 12400) * 0.12 + (annualTaxableIncome - 50400) * 0.22;
-    } else if (annualTaxableIncome <= 201775) {
-      tax = 12400 * 0.10 + (50400 - 12400) * 0.12 + (105700 - 50400) * 0.22 + (annualTaxableIncome - 105700) * 0.24;
-    } else if (annualTaxableIncome <= 256225) {
-      tax = 12400 * 0.10 + (50400 - 12400) * 0.12 + (105700 - 50400) * 0.22 + (201775 - 105700) * 0.24 + (annualTaxableIncome - 201775) * 0.32;
-    } else if (annualTaxableIncome <= 640600) {
-      tax = 12400 * 0.10 + (50400 - 12400) * 0.12 + (105700 - 50400) * 0.22 + (201775 - 105700) * 0.24 + (256225 - 201775) * 0.32 + (annualTaxableIncome - 256225) * 0.35;
-    } else {
-      tax = 12400 * 0.10 + (50400 - 12400) * 0.12 + (105700 - 50400) * 0.22 + (201775 - 105700) * 0.24 + (256225 - 201775) * 0.32 + (640600 - 256225) * 0.35 + (annualTaxableIncome - 640600) * 0.37;
+  const USA_LIMITS = [0, 12400, 24800, 50400, 100800, 105700, 201775, 211400, 256225, 403550, 512450, 640600, 768700, Infinity];
+
+  const USA_RATES: Record<string, number[]> = {
+    single: [10, 12, 12, 22, 22, 24, 32, 32, 35, 35, 37, 37, 37],
+    mfj: [10, 10, 12, 22, 22, 22, 24, 24, 32, 35, 35, 37, 37],
+    mfs: [10, 12, 12, 22, 22, 24, 32, 32, 35, 37, 37, 37, 37],
+    hoh: [10, 10, 12, 12, 22, 22, 24, 24, 32, 35, 35, 37, 37]
+  };
+
+  const rates = USA_RATES[rateKey];
+  let tax = 0;
+  for (let i = 0; i < rates.length; i++) {
+    const from = USA_LIMITS[i];
+    const to = USA_LIMITS[i + 1];
+    const rate = rates[i];
+    if (annualTaxableIncome > from) {
+      const taxable = Math.min(annualTaxableIncome, to) - from;
+      tax += taxable * (rate / 100);
     }
   }
 
-  return Number(tax.toFixed(2));
+  const federalTax = Number(tax.toFixed(2));
+  const stateTax = calculateUSAStateTax(annualTaxableIncome, state);
+  return Number((federalTax + stateTax).toFixed(2));
 };
 
 /**
  * Annual Progressive tax calculator for UK
  */
-export const calculateUKAnnualTax = (annualTaxableIncome: number): number => {
+export const calculateUKAnnualTax = (annualTaxableIncome: number, filingStatus?: string, state?: string): number => {
   if (annualTaxableIncome <= 0) return 0;
 
-  let tax = 0;
+  const isScotland = (state || '').trim().toLowerCase().includes('scotland');
 
-  if (annualTaxableIncome <= 12570) {
-    tax = 0;
-  } else if (annualTaxableIncome <= 16537) {
-    tax = (annualTaxableIncome - 12570) * 0.19;
-  } else if (annualTaxableIncome <= 29526) {
-    tax = (16537 - 12570) * 0.19 + (annualTaxableIncome - 16537) * 0.20;
-  } else if (annualTaxableIncome <= 43662) {
-    tax =
-      (16537 - 12570) * 0.19 +
-      (29526 - 16537) * 0.20 +
-      (annualTaxableIncome - 29526) * 0.21;
-  } else if (annualTaxableIncome <= 75000) {
-    tax =
-      (16537 - 12570) * 0.19 +
-      (29526 - 16537) * 0.20 +
-      (43662 - 29526) * 0.21 +
-      (annualTaxableIncome - 43662) * 0.42;
-  } else if (annualTaxableIncome <= 125140) {
-    tax =
-      (16537 - 12570) * 0.19 +
-      (29526 - 16537) * 0.20 +
-      (43662 - 29526) * 0.21 +
-      (75000 - 43662) * 0.42 +
-      (annualTaxableIncome - 75000) * 0.45;
+  let tax = 0;
+  if (isScotland) {
+    const limits = [0, 12570, 16537, 29526, 43662, 75000, 125140, Infinity];
+    const rates = [0, 19, 20, 21, 42, 45, 48];
+    for (let i = 0; i < rates.length; i++) {
+      const from = limits[i];
+      const to = limits[i + 1];
+      if (annualTaxableIncome > from) {
+        const taxable = Math.min(annualTaxableIncome, to) - from;
+        tax += taxable * (rates[i] / 100);
+      }
+    }
   } else {
-    tax =
-      (16537 - 12570) * 0.19 +
-      (29526 - 16537) * 0.20 +
-      (43662 - 29526) * 0.21 +
-      (75000 - 43662) * 0.42 +
-      (125140 - 75000) * 0.45 +
-      (annualTaxableIncome - 125140) * 0.48;
+    const limits = [0, 12570, 50270, 125140, Infinity];
+    const rates = [0, 20, 40, 45];
+    for (let i = 0; i < rates.length; i++) {
+      const from = limits[i];
+      const to = limits[i + 1];
+      const rate = rates[i];
+      if (annualTaxableIncome > from) {
+        const taxable = Math.min(annualTaxableIncome, to) - from;
+        tax += taxable * (rate / 100);
+      }
+    }
   }
 
   return Number(tax.toFixed(2));
@@ -295,19 +341,29 @@ export const calculateChinaAnnualTax = (annualTaxableIncome: number): number => 
 /**
  * Annual Progressive tax calculator for Germany
  */
-export const calculateGermanyAnnualTax = (annualTaxableIncome: number): number => {
+const calculateGermanySingleTax = (income: number): number => {
+  if (income <= 12348) return 0;
+  if (income <= 68480) {
+    const diff = income - 12348;
+    return diff * 0.14 + (diff * diff * 0.14) / 56132;
+  }
+  if (income <= 277825) {
+    return 15716.96 + (income - 68480) * 0.42;
+  }
+  return 103641.86 + (income - 277825) * 0.45;
+};
+
+export const calculateGermanyAnnualTax = (annualTaxableIncome: number, filingStatus?: string, state?: string): number => {
   if (annualTaxableIncome <= 0) return 0;
 
+  const status = (filingStatus || '').trim().toLowerCase();
   let tax = 0;
 
-  if (annualTaxableIncome <= 12348) {
-    tax = 0;
-  } else if (annualTaxableIncome <= 17799) {
-    tax = (annualTaxableIncome - 12348) * 0.14;
-  } else if (annualTaxableIncome <= 277825) {
-    tax = (17799 - 12348) * 0.14 + (annualTaxableIncome - 17799) * 0.42;
+  if (status.includes('joint') || status === 'married') {
+    const halfIncome = annualTaxableIncome / 2;
+    tax = calculateGermanySingleTax(halfIncome) * 2;
   } else {
-    tax = (17799 - 12348) * 0.14 + (277825 - 17799) * 0.42 + (annualTaxableIncome - 277825) * 0.45;
+    tax = calculateGermanySingleTax(annualTaxableIncome);
   }
 
   return Number(tax.toFixed(2));
@@ -316,7 +372,7 @@ export const calculateGermanyAnnualTax = (annualTaxableIncome: number): number =
 /**
  * Annual Progressive tax calculator for Japan
  */
-export const calculateJapanAnnualTax = (annualTaxableIncome: number): number => {
+export const calculateJapanAnnualTax = (annualTaxableIncome: number, filingStatus?: string, state?: string): number => {
   if (annualTaxableIncome <= 0) return 0;
 
   let tax = 0;
@@ -359,13 +415,81 @@ export const calculateJapanAnnualTax = (annualTaxableIncome: number): number => 
       (annualTaxableIncome - 40000000) * 0.45;
   }
 
-  return Number(tax.toFixed(2));
+  const federalTax = Number(tax.toFixed(2));
+  const normState = (state || '').trim().toLowerCase();
+  let localTax = 0;
+  if (normState === 'tokyo' || normState === 'osaka' || normState === 'kyoto') {
+    localTax = annualTaxableIncome * 0.10;
+  }
+
+  return Number((federalTax + localTax).toFixed(2));
+};
+
+const calculateCanadaProvincialTax = (income: number, province?: string): number => {
+  const normProv = (province || '').trim().toLowerCase();
+  if (normProv === 'ontario') {
+    const limits = [0, 50000, 100000, Infinity];
+    const rates = [5.05, 9.15, 11.16];
+    let tax = 0;
+    for (let i = 0; i < rates.length; i++) {
+      const from = limits[i];
+      const to = limits[i + 1];
+      if (income > from) {
+        const taxable = Math.min(income, to) - from;
+        tax += taxable * (rates[i] / 100);
+      }
+    }
+    return tax;
+  }
+  if (normProv === 'quebec') {
+    const limits = [0, 50000, 100000, Infinity];
+    const rates = [14, 19, 24];
+    let tax = 0;
+    for (let i = 0; i < rates.length; i++) {
+      const from = limits[i];
+      const to = limits[i + 1];
+      if (income > from) {
+        const taxable = Math.min(income, to) - from;
+        tax += taxable * (rates[i] / 100);
+      }
+    }
+    return tax;
+  }
+  if (normProv === 'british columbia') {
+    const limits = [0, 50000, 100000, Infinity];
+    const rates = [5.06, 7.7, 10.5];
+    let tax = 0;
+    for (let i = 0; i < rates.length; i++) {
+      const from = limits[i];
+      const to = limits[i + 1];
+      if (income > from) {
+        const taxable = Math.min(income, to) - from;
+        tax += taxable * (rates[i] / 100);
+      }
+    }
+    return tax;
+  }
+  if (normProv === 'alberta') {
+    const limits = [0, 150000, Infinity];
+    const rates = [10, 12];
+    let tax = 0;
+    for (let i = 0; i < rates.length; i++) {
+      const from = limits[i];
+      const to = limits[i + 1];
+      if (income > from) {
+        const taxable = Math.min(income, to) - from;
+        tax += taxable * (rates[i] / 100);
+      }
+    }
+    return tax;
+  }
+  return 0;
 };
 
 /**
  * Annual Progressive tax calculator for Canada
  */
-export const calculateCanadaAnnualTax = (annualTaxableIncome: number): number => {
+export const calculateCanadaAnnualTax = (annualTaxableIncome: number, filingStatus?: string, state?: string): number => {
   if (annualTaxableIncome <= 0) return 0;
 
   let tax = 0;
@@ -391,7 +515,9 @@ export const calculateCanadaAnnualTax = (annualTaxableIncome: number): number =>
       (annualTaxableIncome - 258482) * 0.33;
   }
 
-  return Number(tax.toFixed(2));
+  const federalTax = Number(tax.toFixed(2));
+  const provincialTax = calculateCanadaProvincialTax(annualTaxableIncome, state);
+  return Number((federalTax + provincialTax).toFixed(2));
 };
 
 /**
@@ -420,25 +546,34 @@ export const calculateAustraliaAnnualTax = (annualTaxableIncome: number): number
 /**
  * Annual Progressive tax calculator for France
  */
-export const calculateFranceAnnualTax = (annualTaxableIncome: number): number => {
-  if (annualTaxableIncome <= 0) return 0;
+const calculateFranceSingleTax = (income: number): number => {
+  const FRANCE_LIMITS = [0, 11497, 29315, 83823, 180294, Infinity];
+  const FRANCE_RATES = [0, 11, 30, 41, 45];
 
   let tax = 0;
+  for (let i = 0; i < FRANCE_RATES.length; i++) {
+    const from = FRANCE_LIMITS[i];
+    const to = FRANCE_LIMITS[i + 1];
+    const rate = FRANCE_RATES[i];
+    if (income > from) {
+      const taxable = Math.min(income, to) - from;
+      tax += taxable * (rate / 100);
+    }
+  }
+  return tax;
+};
 
-  if (annualTaxableIncome <= 11600) {
-    tax = 0;
-  } else if (annualTaxableIncome <= 29579) {
-    tax = (annualTaxableIncome - 11600) * 0.11;
-  } else if (annualTaxableIncome <= 84577) {
-    tax = (29579 - 11600) * 0.11 + (annualTaxableIncome - 29579) * 0.30;
-  } else if (annualTaxableIncome <= 181917) {
-    tax = (29579 - 11600) * 0.11 + (84577 - 29579) * 0.30 + (annualTaxableIncome - 84577) * 0.41;
+export const calculateFranceAnnualTax = (annualTaxableIncome: number, filingStatus?: string): number => {
+  if (annualTaxableIncome <= 0) return 0;
+
+  const status = (filingStatus || '').trim().toLowerCase();
+  let tax = 0;
+
+  if (status.includes('joint') || status === 'married') {
+    const halfIncome = annualTaxableIncome / 2;
+    tax = calculateFranceSingleTax(halfIncome) * 2;
   } else {
-    tax =
-      (29579 - 11600) * 0.11 +
-      (84577 - 29579) * 0.30 +
-      (181917 - 84577) * 0.41 +
-      (annualTaxableIncome - 181917) * 0.45;
+    tax = calculateFranceSingleTax(annualTaxableIncome);
   }
 
   return Number(tax.toFixed(2));
@@ -486,36 +621,66 @@ export const calculateSingaporeAnnualTax = (annualTaxableIncome: number): number
 /**
  * Annual Progressive tax calculator for Switzerland
  */
-export const calculateSwitzerlandAnnualTax = (annualTaxableIncome: number): number => {
+const calculateSwitzerlandCantonalTax = (income: number, canton?: string): number => {
+  const normCanton = (canton || '').trim().toLowerCase();
+  if (normCanton === 'zurich') {
+    return income * 0.085;
+  }
+  if (normCanton === 'geneva') {
+    return income * 0.19;
+  }
+  if (normCanton === 'vaud') {
+    return income * 0.15;
+  }
+  if (normCanton === 'bern') {
+    return income * 0.12;
+  }
+  return 0;
+};
+
+export const calculateSwitzerlandAnnualTax = (annualTaxableIncome: number, filingStatus?: string, state?: string): number => {
   if (annualTaxableIncome <= 0) return 0;
 
+  const status = (filingStatus || '').trim().toLowerCase();
   let tax = 0;
 
-  if (annualTaxableIncome <= 15200) {
-    tax = 0;
-  } else if (annualTaxableIncome <= 33200) {
-    tax = (annualTaxableIncome - 15200) * 0.0077;
-  } else if (annualTaxableIncome <= 43500) {
-    tax = 138.60 + (annualTaxableIncome - 33200) * 0.0088;
-  } else if (annualTaxableIncome <= 58000) {
-    tax = 229.20 + (annualTaxableIncome - 43500) * 0.0264;
-  } else if (annualTaxableIncome <= 76200) {
-    tax = 612.00 + (annualTaxableIncome - 58000) * 0.0297;
-  } else if (annualTaxableIncome <= 82100) {
-    tax = 1152.50 + (annualTaxableIncome - 76200) * 0.066;
-  } else if (annualTaxableIncome <= 108900) {
-    tax = 1502.95 + (annualTaxableIncome - 82100) * 0.066;
-  } else if (annualTaxableIncome <= 141500) {
-    tax = 3271.75 + (annualTaxableIncome - 108900) * 0.088;
-  } else if (annualTaxableIncome <= 185100) {
-    tax = 6140.55 + (annualTaxableIncome - 141500) * 0.11;
-  } else if (annualTaxableIncome <= 793900) {
-    tax = 10936.55 + (annualTaxableIncome - 185100) * 0.132;
+  if (status.includes('joint') || status === 'married') {
+    if (annualTaxableIncome > 895800) {
+      tax = annualTaxableIncome * 0.115;
+    } else {
+      const limits = [0, 28300, 50900, 58400, 75300, 90300, 103400, 114700, 124200, 131800, 137500, 141200, 143100, 145000, 895800];
+      const rates = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13];
+      for (let i = 0; i < rates.length; i++) {
+        const from = limits[i];
+        const to = limits[i + 1];
+        const rate = rates[i];
+        if (annualTaxableIncome > from) {
+          const taxable = Math.min(annualTaxableIncome, to) - from;
+          tax += taxable * (rate / 100);
+        }
+      }
+    }
   } else {
-    tax = 91298.15;
+    if (annualTaxableIncome > 783200) {
+      tax = annualTaxableIncome * 0.115;
+    } else {
+      const limits = [0, 18300, 32000, 42000, 56000, 74000, 105000, 140000, 180000, 783200];
+      const rates = [0, 0.77, 0.88, 2.64, 2.97, 6.6, 8.8, 11, 13.2];
+      for (let i = 0; i < rates.length; i++) {
+        const from = limits[i];
+        const to = limits[i + 1];
+        const rate = rates[i];
+        if (annualTaxableIncome > from) {
+          const taxable = Math.min(annualTaxableIncome, to) - from;
+          tax += taxable * (rate / 100);
+        }
+      }
+    }
   }
 
-  return Number(tax.toFixed(2));
+  const federalTax = Number(tax.toFixed(2));
+  const cantonalTax = calculateSwitzerlandCantonalTax(annualTaxableIncome, state);
+  return Number((federalTax + cantonalTax).toFixed(2));
 };
 
 /**
@@ -531,7 +696,7 @@ export const calculateDefaultAnnualTax = (annualTaxableIncome: number): number =
  */
 export const countryAnnualTaxCalculators: Record<
   string,
-  (annualTaxableIncome: number, filingStatus?: string) => number
+  (annualTaxableIncome: number, filingStatus?: string, state?: string) => number
 > = {
   india: calculateIndiaAnnualTax,
   in: calculateIndiaAnnualTax,
@@ -561,10 +726,10 @@ export const countryAnnualTaxCalculators: Record<
 /**
  * Calculates Annual Estimated Tax based on country
  */
-export const calculateAnnualEstimatedTax = (country: string, annualTaxableIncome: number, filingStatus?: string): number => {
+export const calculateAnnualEstimatedTax = (country: string, annualTaxableIncome: number, filingStatus?: string, state?: string): number => {
   const normalizedCountry = (country || '').trim().toLowerCase();
   const calculator = countryAnnualTaxCalculators[normalizedCountry] || calculateDefaultAnnualTax;
-  return calculator(annualTaxableIncome, filingStatus);
+  return calculator(annualTaxableIncome, filingStatus, state);
 };
 
 /**
@@ -609,8 +774,8 @@ export const calculateDueDate = (quarter: string, year?: number): Date => {
 export const computeTaxEstimate = (input: ITaxCalculationInput): ITaxCalculationResult => {
   const quarter = input.quarter || getCurrentQuarter();
   const { quarterlyTaxableIncome, annualTaxableIncome } = calculateTaxableIncome(input);
-  const annualEstimatedTax = calculateAnnualEstimatedTax(input.country, annualTaxableIncome, input.filingStatus);
-  
+  const annualEstimatedTax = calculateAnnualEstimatedTax(input.country, annualTaxableIncome, input.filingStatus, input.state);
+
   // Step 5: Quarterly Estimated Tax = Annual Estimated Tax ÷ 4
   const estimatedTax = Number((annualEstimatedTax / 4).toFixed(2));
   const dueDate = calculateDueDate(quarter, input.year);

@@ -101,7 +101,7 @@
             <div class="form-row">
               <div class="input-group">
                 <label for="country">Country/Region</label>
-                <select id="country" [(ngModel)]="selectedCountry" name="selectedCountry">
+                <select id="country" [(ngModel)]="selectedCountry" name="selectedCountry" (change)="onCountryChange()">
                   <option value="United States">United States</option>
                   <option value="India">India</option>
                   <option value="United Kingdom">United Kingdom</option>
@@ -119,10 +119,9 @@
               <div class="input-group">
                 <label for="filingStatus">Filing Status</label>
                 <select id="filingStatus" [(ngModel)]="selectedFilingStatus" name="selectedFilingStatus">
-                  <option value="Single">Single</option>
-                  <option value="Married Filing Jointly">Married Filing Jointly</option>
-                  <option value="Married Filing Separately">Married Filing Separately</option>
-                  <option value="Head of Household">Head of Household</option>
+                  <option *ngFor="let status of getFilingStatusesForSelectedCountry()" [value]="status">
+                    {{ status }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -130,11 +129,15 @@
             <div class="form-row">
               <div class="input-group" style="max-width: calc(50% - 10px);">
                 <label for="quarter">Quarter</label>
-                <select id="quarter" [(ngModel)]="selectedQuarter" name="selectedQuarter">
-                  <option value="Q1">Q2 (Apr-Jun 2025)</option>
-                  <option value="Q2">Q3 (Jul-Sep 2025)</option>
-                  <option value="Q3">Q4 (Oct-Dec 2025)</option>
-                  <option value="Q4">Q1 (Jan-Mar 2026)</option>
+                <select id="quarter" [(ngModel)]="selectedQuarterKey" name="selectedQuarter">
+                  <option *ngFor="let opt of quarterOptions" [value]="opt.key">{{ opt.label }}</option>
+                </select>
+              </div>
+
+              <div class="input-group" *ngIf="hasStateSelect(selectedCountry)" style="max-width: calc(50% - 10px);">
+                <label for="state">{{ getStateLabel(selectedCountry) }}</label>
+                <select id="state" [(ngModel)]="selectedState" name="selectedState">
+                  <option *ngFor="let opt of getStateOptions(selectedCountry)" [value]="opt">{{ opt }}</option>
                 </select>
               </div>
             </div>
@@ -144,7 +147,7 @@
               <label for="grossIncome">Gross Income for Quarter</label>
               <div class="input-with-icon">
                 <span class="currency-symbol">{{ getCurrencySymbol(selectedCountry) }}</span>
-                <input id="grossIncome" type="number" [(ngModel)]="grossIncome" name="grossIncome" min="0" step="100" placeholder="0.00">
+                <input id="grossIncome" type="number" [(ngModel)]="grossIncome" name="grossIncome" min="0" step="100" placeholder="0.00" [style.padding-left]="getInputPaddingLeft(selectedCountry)">
               </div>
             </div>
 
@@ -154,7 +157,7 @@
                 <label for="businessExpenses">Business Expenses</label>
                 <div class="input-with-icon">
                   <span class="currency-symbol">{{ getCurrencySymbol(selectedCountry) }}</span>
-                  <input id="businessExpenses" type="number" [(ngModel)]="businessExpenses" name="businessExpenses" min="0" placeholder="0.00">
+                  <input id="businessExpenses" type="number" [(ngModel)]="businessExpenses" name="businessExpenses" min="0" placeholder="0.00" [style.padding-left]="getInputPaddingLeft(selectedCountry)">
                 </div>
               </div>
 
@@ -162,7 +165,7 @@
                 <label for="retirementContribution">Retirement Contributions</label>
                 <div class="input-with-icon">
                   <span class="currency-symbol">{{ getCurrencySymbol(selectedCountry) }}</span>
-                  <input id="retirementContribution" type="number" [(ngModel)]="retirementContribution" name="retirementContribution" min="0" placeholder="0.00">
+                  <input id="retirementContribution" type="number" [(ngModel)]="retirementContribution" name="retirementContribution" min="0" placeholder="0.00" [style.padding-left]="getInputPaddingLeft(selectedCountry)">
                 </div>
               </div>
             </div>
@@ -172,7 +175,7 @@
                 <label for="healthInsurance">Health Insurance Premiums</label>
                 <div class="input-with-icon">
                   <span class="currency-symbol">{{ getCurrencySymbol(selectedCountry) }}</span>
-                  <input id="healthInsurance" type="number" [(ngModel)]="healthInsurance" name="healthInsurance" min="0" placeholder="0.00">
+                  <input id="healthInsurance" type="number" [(ngModel)]="healthInsurance" name="healthInsurance" min="0" placeholder="0.00" [style.padding-left]="getInputPaddingLeft(selectedCountry)">
                 </div>
               </div>
 
@@ -180,7 +183,7 @@
                 <label for="homeOfficeDeduction">Home Office Deduction</label>
                 <div class="input-with-icon">
                   <span class="currency-symbol">{{ getCurrencySymbol(selectedCountry) }}</span>
-                  <input id="homeOfficeDeduction" type="number" [(ngModel)]="homeOfficeDeduction" name="homeOfficeDeduction" min="0" placeholder="0.00">
+                  <input id="homeOfficeDeduction" type="number" [(ngModel)]="homeOfficeDeduction" name="homeOfficeDeduction" min="0" placeholder="0.00" [style.padding-left]="getInputPaddingLeft(selectedCountry)">
                 </div>
               </div>
             </div>
@@ -215,7 +218,12 @@
 
             <div class="metric-row">
               <span class="metric-label">Quarter</span>
-              <span class="metric-value">{{ getUIQuarterLabel(calculationResult.quarter) }}</span>
+              <span class="metric-value">{{ getUIQuarterLabel(calculationResult.quarter, calculationResult.dueDate) }}</span>
+            </div>
+
+            <div class="metric-row" *ngIf="calculationResult.state">
+              <span class="metric-label">{{ getStateLabel(calculationResult.country) }}</span>
+              <span class="metric-value">{{ calculationResult.state }}</span>
             </div>
 
             <div class="metric-row">
@@ -275,8 +283,13 @@
             <tbody>
               <tr *ngFor="let est of estimatesHistory">
                 <td>{{ formatDate(est.createdAt) }}</td>
-                <td class="capitalize">{{ est.country }}</td>
-                <td>{{ getUIQuarterLabel(est.quarter) }}</td>
+                <td class="capitalize">
+                  {{ est.country }}
+                  <span *ngIf="est.state" style="font-size: 0.85em; opacity: 0.85; display: block; font-weight: normal; margin-top: 2px;">
+                    ({{ est.state }})
+                  </span>
+                </td>
+                <td>{{ getUIQuarterLabel(est.quarter, est.dueDate) }}</td>
                 <td>{{ formatCurrencyWithCountry(est.grossIncomeForQuarter, est.country) }}</td>
                 <td>{{ formatCurrencyWithCountry(est.businessExpenses + est.retirementContribution + est.healthInsurancePremiums + est.homeOfficeDeduction, est.country) }}</td>
                 <td class="tax-amount-highlight">{{ formatCurrencyWithCountry(est.estimatedTax, est.country) }}</td>

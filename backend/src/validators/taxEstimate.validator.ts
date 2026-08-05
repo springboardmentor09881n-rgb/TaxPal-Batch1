@@ -6,10 +6,15 @@ export const createTaxEstimateSchema = z.object({
       .string({ required_error: 'Country is required' })
       .trim()
       .min(1, 'Country is required'),
+    state: z.string().trim().optional(),
     quarter: z
       .enum(['Q1', 'Q2', 'Q3', 'Q4'], {
         invalid_type_error: 'Quarter must be one of: Q1, Q2, Q3, Q4',
       })
+      .optional(),
+    year: z
+      .number({ invalid_type_error: 'Year must be a number' })
+      .int()
       .optional(),
     grossIncomeForQuarter: z
       .number({ required_error: 'Gross income for quarter is required' })
@@ -47,7 +52,9 @@ export const updateTaxEstimateSchema = z.object({
   }),
   body: z.object({
     country: z.string().trim().min(1, 'Country cannot be empty').optional(),
+    state: z.string().trim().optional(),
     quarter: z.enum(['Q1', 'Q2', 'Q3', 'Q4']).optional(),
+    year: z.number().int().optional(),
     grossIncomeForQuarter: z
       .number()
       .gt(0, 'Gross income for quarter must be greater than 0')
