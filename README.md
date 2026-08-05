@@ -1,100 +1,176 @@
-# TaxPal: Personal Finance & Tax Estimator for Freelancers
+#TaxPal – Batch 1
 
-TaxPal is a modern, high-fidelity web application designed to help freelancers manage their finances, log business expenses, monitor revenues, and estimate their tax obligations. 
+TaxPal
 
-The project is structured as a monorepo consisting of a secure backend API and a standalone Angular frontend application.
+TaxPal is a web-based personal finance management application built for freelancers and self-employed professionals. It helps users securely manage their financial records by tracking income, expenses, and transactions while providing a dashboard that summarizes their financial activity.
 
----
+The first batch focuses on establishing the application's core architecture, authentication system, transaction management, and dashboard.
 
-## 🏗️ Project Architecture
+🚀 Technology Stack
+Frontend
+Angular
+TypeScript
+HTML5
+CSS3
+Backend
+Node.js
+Express.js
+Database
+MongoDB Atlas
+Mongoose ODM
+📂 Project Directory
+TaxPal-Batch1
+│
+├── frontend/
+│
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   ├── validators/
+│   │   ├── app.js
+│   │   └── server.js
+│   │
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── .env.example
+│   └── .gitignore
+│
+└── README.md
 
-The workspace is organized into two primary directories:
+✨ Features
 
-```text
-TaxPal-Batch1/
-├── backend/       # Node.js, Express, TypeScript, & MongoDB API Server
-└── frontend/      # Angular v20 Standalone Component Client App
-```
+User Authentication
+User Registration
+Secure Login
+JWT-based Authentication
+Protected API Routes
+User Profile Retrieval
+Financial Management
+Income Recording
+Expense Recording
+Transaction CRUD Operations
+Transaction History
+Financial Summary
+Dashboard
+Overview of Income and Expenses
+Recent Transactions
+Balance Overview
+Financial Statistics
+System Features
+RESTful APIs
+MongoDB Atlas Integration
+Responsive Frontend
+Frontend and Backend Communication
+Authentication & Authorization
+📌 Milestone 1 Scope
 
-### 1. Backend Layer (`backend/`)
-- Built with **Node.js**, **Express.js**, **TypeScript**, and **Mongoose**.
-- Implements strict **MVC pattern** and modular API routing.
-- Secured using **Helmet.js**, CORS filters with credentials, **Express Rate Limits** (100 reqs/15m), and MongoDB input sanitization.
-- Features JWT access token cookies, session refresh routes, and Zod validator middlewares.
+The first milestone establishes the foundation of the application by implementing:
 
-### 2. Frontend Layer (`frontend/`)
-- Built with **Angular v20** Standalone Components.
-- Styled with premium, customized CSS featuring modern glassmorphism cards, radial gradient glow backdrops, and glowing inputs.
-- Form validations built reactively into inputs for immediate UX feedback.
-- Real-time calculations: card summaries dynamically display Monthly Income, Monthly Expenses, and Total Savings fetched from the database rather than hardcoded fake data.
+User registration and login
+JWT authentication
+Secure route protection
+Transaction management
+Income and expense tracking
+Dashboard module
+Database integration
+API development
+Angular frontend integration
+Application testing
 
----
+📈 Development Progress
+Completed Modules
 
-## 🌟 Key Application Features
+The following components have been successfully implemented:
 
-### Redesigned Login & Signup Pages
-- **Validation**: Strict client-side check for email formats and field presence.
-- **Confirm Password**: Instant equality comparison as the user types, highlighting mismatches dynamically.
-- **Password Strength Indicator**: A color-changing score bar (Red/Weak ➔ Yellow/Medium ➔ Green/Strong) evaluating minimum length (8+), uppercase, and digit rules.
-- **Conditional Formatting**: State/Province text input appears dynamically only if country is India, US, Canada, or Australia.
-- **No Role Selector**: Defaults securely to `Employee` for freelancers, eliminating employer roles from the UI.
-- **Backend Sync**: Connects directly to backend validation schemas, returning clear alert blocks if logins fail.
+Project initialization
+Frontend setup
+Backend setup
+MongoDB Atlas configuration
+Environment configuration
+Database schema creation
+Authentication module
+User management APIs
+JWT security implementation
+Transaction module
+Income management
+Expense management
+Dashboard APIs
+Responsive user interface
+Frontend-backend integration
+API testing using Postman
+End-to-end testing
+Performance improvements
+Bug fixing
+Project documentation
+Git version control workflow
 
-### Redesigned Financial Dashboard
-- **Dynamic Totals**: Loads transaction records and computes totals in real-time.
-- **Responsive Sidebar**: Styled dark navigation sidebar with vector SVG icons.
-- **CRUD Operations**: Connects "Add Income" and "Add Expense" forms to create database entries, and adds a deletion button next to records to instantly remove items and update card calculations.
-- **Empty States**: Display visual prompts when no transactions are recorded to guide users.
+📦 Deliverables
 
----
+The completed deliverables for Batch 1 include:
 
-## 🚀 Getting Started
+Authentication System
+User Registration & Login
+JWT Authorization
+Transaction Management
+Income Module
+Expense Module
+Dashboard
+REST API Services
+Angular Frontend
+MongoDB Atlas Database
+Frontend-Backend Integration
+API Testing
+End-to-End Testing
+Stable Application Foundation
 
-### Prerequisites
-- Node.js (v18.x or above)
-- MongoDB running globally.
+🏗 Architecture Overview
 
----
+The application follows a layered architecture consisting of:
 
-### Step 1: Run the Backend API
+Frontend: Angular application for user interaction.
+Backend: Express.js server exposing REST APIs.
+Database: MongoDB Atlas for persistent data storage.
+Authentication: JWT-based security for protected resources.
 
-1. Navigate to the `backend/` directory:
-   ```bash
-   cd backend
-   ```
-2. Install npm packages:
-   ```bash
-   npm install
-   ```
-3. Configure environment parameters by copying `.env.example` to `.env`:
-   ```env
-   PORT=5000
-   MONGODB_URI=mongodb:<connection-string>
-   JWT_SECRET=your_jwt_access_secret_key
-   JWT_EXPIRES=15m
-   REFRESH_SECRET=your_jwt_refresh_secret_key
-   REFRESH_EXPIRES=7d
-   NODE_ENV=development
-   ```
-4. Start the development server (runs on port `5000`):
-   ```bash
-   npm run dev
-   ```
+🧪 Testing
 
----
+The application has been verified through:
 
-### Step 2: Run the Frontend Client
+Authentication testing
+CRUD API testing
+Protected route testing
+Frontend integration testing
+Backend validation testing
+End-to-end workflow testing
+📊 Project Status
+✅ Batch 1 Successfully Completed
 
-1. Open a new terminal and navigate to the `frontend/` directory:
-   ```bash
-   cd frontend
-   ```
-2. Install packages:
-   ```bash
-   npm install
-   ```
-3. Start the Angular dev server (runs on `http://localhost:4200/`):
-   ```bash
-   ng serve
-   ```
-4. Open a browser page at `http://localhost:4200/` to explore.
+The core modules of TaxPal have been successfully developed and integrated.
+
+Highlights
+Core application architecture established.
+Secure authentication and authorization implemented.
+Income, expense, and transaction management fully operational.
+Interactive dashboard completed.
+MongoDB Atlas successfully integrated.
+REST APIs developed and tested.
+Frontend integrated with backend services.
+Application tested for functionality and stability.
+Source code managed using Git workflow.
+Project documentation completed.
+🚀 Next Phase
+
+The project is now ready for Batch 2, which expands the application with:
+
+Budget Management
+Category Management
+Budget Planning
+Category Suggestions
+Enhanced Validation
+Additional User Features
