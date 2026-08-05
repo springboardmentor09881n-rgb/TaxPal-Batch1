@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface ITaxEstimate {
   userId: mongoose.Types.ObjectId;
   country: string;
+  state?: string;
   quarter: string;
   estimatedTax: number;
   dueDate: Date;
@@ -34,6 +35,11 @@ const taxEstimateSchema = new Schema<ITaxEstimateDocument>(
       type: String,
       required: [true, 'Country is required'],
       trim: true,
+    },
+    state: {
+      type: String,
+      trim: true,
+      default: '',
     },
     quarter: {
       type: String,
