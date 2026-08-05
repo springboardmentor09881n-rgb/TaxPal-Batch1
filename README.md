@@ -1,25 +1,35 @@
-#TaxPal – Batch 1
+# TaxPal-Batch2
 
-TaxPal
+# TaxPal
 
 TaxPal is a web-based personal finance management application built for freelancers and self-employed professionals. It helps users securely manage their financial records by tracking income, expenses, and transactions while providing a dashboard that summarizes their financial activity.
 
 The first batch focuses on establishing the application's core architecture, authentication system, transaction management, and dashboard.
 
-🚀 Technology Stack
-Frontend
-Angular
-TypeScript
-HTML5
-CSS3
-Backend
-Node.js
-Express.js
-Database
-MongoDB Atlas
-Mongoose ODM
-📂 Project Directory
-TaxPal-Batch1
+---
+
+# 🚀 Technology Stack
+
+## Frontend
+- Angular
+- TypeScript
+- HTML
+- CSS
+
+## Backend
+- Node.js
+- Express.js
+
+## Database
+- MongoDB Atlas
+- Mongoose
+
+---
+
+# 📁 Project Structure
+
+```text
+TaxPal-Batch2
 │
 ├── frontend/
 │
@@ -38,139 +48,168 @@ TaxPal-Batch1
 │   │
 │   ├── package.json
 │   ├── package-lock.json
-│   ├── .env.example
-│   └── .gitignore
+│   ├── .gitignore
+│   └── .env.example
 │
 └── README.md
+```
 
-✨ Features
+---
 
-User Authentication
-User Registration
-Secure Login
-JWT-based Authentication
-Protected API Routes
-User Profile Retrieval
-Financial Management
-Income Recording
-Expense Recording
-Transaction CRUD Operations
-Transaction History
-Financial Summary
-Dashboard
-Overview of Income and Expenses
-Recent Transactions
-Balance Overview
-Financial Statistics
-System Features
-RESTful APIs
-MongoDB Atlas Integration
-Responsive Frontend
-Frontend and Backend Communication
-Authentication & Authorization
-📌 Milestone 1 Scope
+# 📌 Milestone 1 Features
 
-The first milestone establishes the foundation of the application by implementing:
+-  User Registration
+-  User Login with JWT Authentication
+-  Protected Routes
+-  Income Management
+-  Expense Management
+-  Transaction Management (CRUD)
+-  Financial Dashboard
+-  MongoDB Atlas Integration
+-  RESTful Backend APIs
+-  Frontend-Backend Integration
+-  Authentication & Authorization
+-  Responsive User Interface
 
-User registration and login
-JWT authentication
-Secure route protection
-Transaction management
-Income and expense tracking
-Dashboard module
-Database integration
-API development
-Angular frontend integration
-Application testing
+---
 
-📈 Development Progress
-Completed Modules
+# 📌 Milestone 2 Features
 
-The following components have been successfully implemented:
+-  Budget Management (CRUD)
+-  Budget Progress Tracking
+-  Category Management (CRUD)
+-  Default Categories
+-  Category Suggestion API
+-  Budget Planning
+-  JWT Authentication & Authorization
+-  Request Validation
+-  User Ownership Enforcement
+-  Frontend-Backend Integration
+-  API Testing
+-  End-to-End Testing
 
-Project initialization
-Frontend setup
-Backend setup
-MongoDB Atlas configuration
-Environment configuration
-Database schema creation
-Authentication module
-User management APIs
-JWT security implementation
-Transaction module
-Income management
-Expense management
-Dashboard APIs
-Responsive user interface
-Frontend-backend integration
-API testing using Postman
-End-to-end testing
-Performance improvements
-Bug fixing
-Project documentation
-Git version control workflow
+---
+# 📌 Milestone 3 Features
 
-📦 Deliverables
+-  Tax Estimation Module
+-  Country/Region Selection
+-  Tax Calculation Based on Regional Tax Slabs
+-  Quarterly Tax Estimation
+-  Tax Summary
+-  Quarterly Tax Reminder Management
+-  Calendar View for Tax Due Dates
+-  Alert & Reminder Management
+-  Tax Calculation APIs
+-  MongoDB Atlas Integration
+-  Frontend-Backend Integration
+-  API Testing
 
-The completed deliverables for Batch 1 include:
+---
 
-Authentication System
-User Registration & Login
-JWT Authorization
-Transaction Management
-Income Module
-Expense Module
-Dashboard
-REST API Services
-Angular Frontend
-MongoDB Atlas Database
-Frontend-Backend Integration
-API Testing
-End-to-End Testing
-Stable Application Foundation
+# 📊 Project Status
 
-🏗 Architecture Overview
+## ✅ Milestone 1 Completed
 
-The application follows a layered architecture consisting of:
+The following modules have been successfully completed :
 
-Frontend: Angular application for user interaction.
-Backend: Express.js server exposing REST APIs.
-Database: MongoDB Atlas for persistent data storage.
-Authentication: JWT-based security for protected resources.
+- Repository setup
+- Frontend project setup
+- Backend project setup
+- MongoDB Atlas configuration
+- Database models implementation
+- Authentication APIs (Register, Login & Current User)
+- JWT Authentication
+- Protected API routes
+- Transaction APIs (Create, Read, Update & Delete)
+- Dashboard API
+- Frontend UI implementation
+- Frontend and Backend integration
+- API integration testing
+- End-to-end application testing
+- Bug fixes and optimization
+- Project documentation
+- Git workflow implementation
 
-🧪 Testing
+---
 
-The application has been verified through:
+---
 
-Authentication testing
-CRUD API testing
-Protected route testing
-Frontend integration testing
-Backend validation testing
-End-to-end workflow testing
-📊 Project Status
-✅ Batch 1 Successfully Completed
+## ✅ Milestone 2 Completed
 
-The core modules of TaxPal have been successfully developed and integrated.
+The following modules have been successfully implemented and merged into the **main** branch:
 
-Highlights
-Core application architecture established.
-Secure authentication and authorization implemented.
-Income, expense, and transaction management fully operational.
-Interactive dashboard completed.
-MongoDB Atlas successfully integrated.
-REST APIs developed and tested.
-Frontend integrated with backend services.
-Application tested for functionality and stability.
-Source code managed using Git workflow.
-Project documentation completed.
-🚀 Next Phase
+- Frontend implementation completed
+- Budget module implementation
+- Budget CRUD APIs
+- Budget Progress API
+- Category module implementation
+- Category CRUD APIs
+- Default Categories API
+- Category Suggestion API
+- Budget Planning functionality
+- JWT Authentication integration
+- Request validation
+- User ownership enforcement
+- MongoDB Atlas integration
+- Frontend-Backend integration
+- Runtime API testing using Postman
+- Authentication & Authorization testing
+- End-to-End application testing
+- Bug fixes and optimization
+- Project documentation updated
 
-The project is now ready for Batch 2, which expands the application with:
+---
 
-Budget Management
-Category Management
-Budget Planning
-Category Suggestions
-Enhanced Validation
-Additional User Features
+## ✅ Milestone 3 Completed
+
+The following modules have been successfully implemented, tested, integrated, and merged into the **main** branch:
+
+- Frontend Tax Estimation module implementation
+- Tax Calculator Interface
+- Country and Region Selection
+- Tax Estimation Engine
+- Tax Slab Calculation Logic
+- Quarterly Tax Calculation
+- Tax Reminder Management
+- Calendar View with Quarterly Tax Reminders
+- Alert Management Module
+- Database models implementation
+- MongoDB Atlas integration
+- Frontend-Backend integration
+- Runtime API testing
+- Authentication & Authorization testing
+- Bug fixes and optimization
+- Git workflow implementation
+
+---
+
+# 🎯 Milestone 3 Deliverables
+
+- Tax Calculator Interface
+- Country & Region Selection
+- Tax Estimation Engine
+- Tax Slab-Based Calculation
+- Quarterly Tax Estimation
+- Tax Summary
+- Calendar View with Quarterly Tax Reminders
+- Alert & Reminder Management
+- Angular Frontend
+- RESTful Backend APIs
+- MongoDB Atlas Integration
+- Complete Frontend-Backend Integration
+- API Testing using Postman
+- End-to-End Testing
+
+---
+
+# ✅ Overall Project Status
+
+**Milestone 1, Milestone 2, and Milestone 3 have been successfully completed.**
+
+- ✅ All planned frontend, backend, and database functionalities have been successfully implemented.
+- ✅ User Authentication, Transaction Management, Dashboard, Budget Management, Category Management, and Tax Estimation modules are fully functional.
+- ✅ Quarterly Tax Reminder and Calendar features have been successfully implemented.
+- ✅ All APIs have been reviewed, tested, and validated.
+- ✅ Frontend and backend have been fully integrated.
+- ✅ MongoDB Atlas integration has been completed successfully.
+- ✅ All changes have been merged into the **main** branch following the team's Git workflow.
