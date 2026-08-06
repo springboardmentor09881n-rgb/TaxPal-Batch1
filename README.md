@@ -304,3 +304,13 @@ erDiagram
    npm start
    ```
    *The client app boots and is accessible at: `http://localhost:4200`*
+
+
+---
+
+## 👥 Development Team
+
+Developed as part of the **Infosys Springboard Internship Program** by:
+- **Team Leader**: K Sujay
+- **Backend Team**: Rohith, Dhanshri
+- **Frontend Team**: Afsana, Gowthami
