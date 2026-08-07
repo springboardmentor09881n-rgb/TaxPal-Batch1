@@ -13,7 +13,7 @@ The repository is organized into two primary project folders:
 - **`frontend/`**: An Angular client application utilizing Standalone Components, Signal-based state management, and modern CSS styling.
 
 ```text
-TaxPal-Batch1/
+TaxPal/
 ├── backend/                  # Node.js / Express.js Backend API (TypeScript)
 │   ├── src/
 │   │   ├── config/           # Database configuration, environment schema, logger
