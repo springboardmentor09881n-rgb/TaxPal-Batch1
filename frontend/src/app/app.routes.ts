@@ -8,6 +8,7 @@ import { Budgets } from './pages/budgets/budgets';
 import { Profile } from './pages/profile/profile';
 import { Transactions } from './pages/transactions/transactions';
 import { TaxEstimator } from './pages/tax-estimator/tax-estimator';
+import { Reports } from './pages/reports/reports';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -18,5 +19,6 @@ export const routes: Routes = [
   { path: 'budgets', component: Budgets },
   { path: 'profile', component: Profile },
   { path: 'transactions', component: Transactions },
-  { path: 'tax-estimator', component: TaxEstimator }
+  { path: 'tax-estimator', component: TaxEstimator },
+  { path: 'reports', component: Reports }
 ];
