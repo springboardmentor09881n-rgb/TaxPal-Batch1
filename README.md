@@ -249,7 +249,7 @@ erDiagram
   - Integrated regional tax engine supporting custom deductions (Home Office, Health Insurance, etc.).
   - Added quarterly estimation records.
   - Integrated Interactive Calendar view and due-date alerts.
-- **`[ ]` Milestone 4: Reporting & Export**
+- **`[x]` Milestone 4: Reporting & Export**
   - *Status: Planned Next Stage.*
   - Requirements: Generate and download summary financial reports. Monthly/quarterly summaries, PDF & CSV export capabilities.
 
