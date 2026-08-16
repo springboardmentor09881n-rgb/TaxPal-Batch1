@@ -13,7 +13,7 @@ The repository is organized into two primary project folders:
 - **`frontend/`**: An Angular client application utilizing Standalone Components, Signal-based state management, and modern CSS styling.
 
 ```text
-TaxPal-Batch1/
+TaxPal/
 ├── backend/                  # Node.js / Express.js Backend API (TypeScript)
 │   ├── src/
 │   │   ├── config/           # Database configuration, environment schema, logger
@@ -277,7 +277,7 @@ erDiagram
    Provide your local credentials:
    ```env
    PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/taxpal
+   MONGODB_URI=mongodb:your_db_connection_string
    JWT_SECRET=your_jwt_access_secret_key
    JWT_EXPIRES=15m
    REFRESH_SECRET=your_jwt_refresh_secret_key
@@ -305,6 +305,7 @@ erDiagram
    ```
    *The client app boots and is accessible at: `http://localhost:4200`*
 
+
 ---
 
 ## 👥 Development Team
@@ -313,4 +314,3 @@ Developed as part of the **Infosys Springboard Internship Program** by:
 - **Team Leader**: K Sujay
 - **Backend Team**: Rohith, Dhanshri
 - **Frontend Team**: Afsana, Gowthami
-
