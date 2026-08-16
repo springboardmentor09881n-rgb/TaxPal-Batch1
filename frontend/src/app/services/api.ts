@@ -111,4 +111,35 @@ export class ApiService {
   markAlertAsRead(id: string) {
     return this.http.put(`${this.baseUrl}/alerts/${id}/read`, {}, this.getOptions());
   }
+
+  // Reports endpoints
+  getReports() {
+    return this.http.get(`${this.baseUrl}/reports`, this.getOptions());
+  }
+
+  generateReport(data: { reportType: string; period: string; format: string; startDate?: string; endDate?: string }) {
+    return this.http.post(`${this.baseUrl}/reports`, data, this.getOptions());
+  }
+
+  getReportById(id: string) {
+    return this.http.get(`${this.baseUrl}/reports/${id}`, this.getOptions());
+  }
+
+  downloadReport(id: string, format?: string) {
+    const token = localStorage.getItem('accessToken');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    const url = format ? `${this.baseUrl}/reports/${id}/download?format=${format}` : `${this.baseUrl}/reports/${id}/download`;
+    return this.http.get(url, {
+      headers,
+      responseType: 'blob',
+      withCredentials: true,
+    });
+  }
+
+  deleteReport(id: string) {
+    return this.http.delete(`${this.baseUrl}/reports/${id}`, this.getOptions());
+  }
 }
