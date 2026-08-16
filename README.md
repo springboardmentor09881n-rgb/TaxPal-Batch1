@@ -13,7 +13,7 @@ The repository is organized into two primary project folders:
 - **`frontend/`**: An Angular client application utilizing Standalone Components, Signal-based state management, and modern CSS styling.
 
 ```text
-TaxPal/
+TaxPal-Batch1/
 ├── backend/                  # Node.js / Express.js Backend API (TypeScript)
 │   ├── src/
 │   │   ├── config/           # Database configuration, environment schema, logger
@@ -112,6 +112,8 @@ erDiagram
     User ||--o{ Category : creates
     User ||--o{ TaxEstimate : calculates
     User ||--o{ Alert : receives
+    User ||--o{ Report : generates
+
 
     User {
         ObjectId id
@@ -186,6 +188,21 @@ erDiagram
         date alertDate
         boolean isRead
     }
+
+    Report {
+        ObjectId id
+        ObjectId userId
+        string period
+        date periodStart
+        date periodEnd
+        string reportType
+        string format
+        number totalIncome
+        number totalExpenses
+        number netSavings
+        string filePath
+        object data
+    }
 ```
 
 ---
@@ -249,7 +266,7 @@ erDiagram
   - Integrated regional tax engine supporting custom deductions (Home Office, Health Insurance, etc.).
   - Added quarterly estimation records.
   - Integrated Interactive Calendar view and due-date alerts.
-- **`[x]` Milestone 4: Reporting & Export**
+- **`[ ]` Milestone 4: Reporting & Export**
   - *Status: Planned Next Stage.*
   - Requirements: Generate and download summary financial reports. Monthly/quarterly summaries, PDF & CSV export capabilities.
 
@@ -277,7 +294,7 @@ erDiagram
    Provide your local credentials:
    ```env
    PORT=5000
-   MONGODB_URI=mongodb:your_db_connection_string
+   MONGODB_URI=mongodb://localhost:27017/taxpal
    JWT_SECRET=your_jwt_access_secret_key
    JWT_EXPIRES=15m
    REFRESH_SECRET=your_jwt_refresh_secret_key
@@ -305,7 +322,6 @@ erDiagram
    ```
    *The client app boots and is accessible at: `http://localhost:4200`*
 
-
 ---
 
 ## 👥 Development Team
@@ -314,3 +330,4 @@ Developed as part of the **Infosys Springboard Internship Program** by:
 - **Team Leader**: K Sujay
 - **Backend Team**: Rohith, Dhanshri
 - **Frontend Team**: Afsana, Gowthami
+
