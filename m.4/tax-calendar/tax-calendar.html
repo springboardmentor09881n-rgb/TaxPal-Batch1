@@ -1,0 +1,158 @@
+<div class="calendar-container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <h2>TaxPal</h2>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li>
+        <a routerLink="/dashboard" class="sidebar-link">
+          <span class="menu-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+          </span>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/transactions" class="sidebar-link">
+          <span class="menu-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          </span>
+          <span>Transactions</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/budgets" class="sidebar-link">
+          <span class="menu-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+          <span>Budgets</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/tax-estimator" class="sidebar-link">
+          <span class="menu-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="2" ry="2"></rect><rect x="10" y="8" width="4" height="13" rx="2" ry="2"></rect><rect x="2" y="13" width="4" height="8" rx="2" ry="2"></rect></svg>
+          </span>
+          <span>Tax Estimator</span>
+        </a>
+      </li>
+      <li class="active">
+        <a routerLink="/tax-calendar" class="sidebar-link">
+          <span class="menu-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </span>
+          <span>Tax Calendar</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/receipt-scanner" class="sidebar-link">
+          <span class="menu-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+          </span>
+          <span>Receipt Scanner</span>
+        </a>
+      </li>
+      <li>
+        <div class="sidebar-link-disabled">
+          <span class="menu-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </span>
+          <span>Reports</span>
+        </div>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button (click)="toggleTheme()" class="btn-theme" title="Toggle theme">
+        <span class="menu-icon">
+          <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </span>
+        <span>Theme</span>
+      </button>
+      <a routerLink="/profile" class="btn-profile">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </span>
+        <span>Profile</span>
+      </a>
+      <button (click)="logout()" class="btn-logout">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-wrapper">
+    <div class="top-nav">
+      <div class="greeting-section">
+        <h1>Tax Calendar</h1>
+        <p>Never miss a deadline. View your upcoming tax payments and reminders.</p>
+      </div>
+      <div class="user-badge">
+        <span class="user-avatar">{{ userName[0] | uppercase }}</span>
+        <span class="user-name-text">{{ userName }}</span>
+      </div>
+    </div>
+
+    <!-- Loading & Error States -->
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading tax deadlines and events...</p>
+    </div>
+
+    <!-- Calendar View -->
+    <div *ngIf="!isLoading" class="calendar-timeline">
+      <div *ngFor="let monthGroup of groupedMonths" class="month-section">
+        <!-- Month Header -->
+        <h2 class="month-title">{{ monthGroup.monthName }}</h2>
+        
+        <!-- Events Grid -->
+        <div class="events-grid">
+          <div *ngFor="let event of monthGroup.events" class="event-card" [ngClass]="'card-' + event.type.toLowerCase()">
+            <!-- Left border or icon matching type -->
+            <div class="event-header">
+              <!-- Type Badges -->
+              <span class="badge" [ngClass]="event.type === 'Reminder' ? 'badge-reminder' : 'badge-payment'">
+                <span class="badge-dot"></span>
+                {{ event.type }}
+              </span>
+              
+              <span class="event-date">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="date-icon">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                {{ formatDateDisplay(event.date) }}
+              </span>
+            </div>
+
+            <h3 class="event-title">{{ event.title }}</h3>
+            <p class="event-description">{{ event.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,319 @@
+<div class="profile-container">
+  
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <h2>TaxPal</h2>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+        </span>
+        <a routerLink="/dashboard" class="sidebar-link">Dashboard</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </span>
+        <a routerLink="/transactions" class="sidebar-link">Transactions</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </span>
+        <a routerLink="/budgets" class="sidebar-link">Budgets</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="2" ry="2"></rect><rect x="10" y="8" width="4" height="13" rx="2" ry="2"></rect><rect x="2" y="13" width="4" height="8" rx="2" ry="2"></rect></svg>
+        </span>
+        <a routerLink="/tax-estimator" class="sidebar-link">Tax Estimator</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </span>
+        <a routerLink="/tax-calendar" class="sidebar-link">Tax Calendar</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </span>
+        <a routerLink="/receipt-scanner" class="sidebar-link">Receipt Scanner</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </span>
+        <span>Reports</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button (click)="toggleTheme()" class="btn-theme" title="Toggle theme">
+        <span class="menu-icon">
+          <!-- Sun icon for dark mode (switch to light) -->
+          <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <!-- Moon icon for light mode (switch to dark) -->
+          <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </span>
+        <span>Theme</span>
+      </button>
+      <button (click)="logout()" class="btn-logout">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-wrapper">
+    <div class="top-nav">
+      <div class="greeting-section">
+        <h1>Settings</h1>
+        <p>Manage your account preferences and configurations</p>
+      </div>
+    </div>
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="alert alert-success">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span>{{ successMessage }}</span>
+      </div>
+    }
+
+    <!-- Settings Card -->
+    <div class="settings-card card-box">
+      <!-- Tab Navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn" [class.active]="activeTab === 'profile'" (click)="setTab('profile')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          Profile
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'categories'" (click)="setTab('categories')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+          Categories
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'security'" (click)="setTab('security')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Security
+        </button>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        
+        <!-- Profile Tab -->
+        @if (activeTab === 'profile') {
+          <div class="tab-panel">
+            <div class="panel-header">
+              <h2>Profile Information</h2>
+              <p>Update your personal details and contact information</p>
+            </div>
+
+            <form (submit)="updateProfile(); $event.preventDefault()" class="settings-form">
+              <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input 
+                  id="fullName"
+                  type="text" 
+                  [(ngModel)]="fullName" 
+                  name="fullName"
+                  placeholder="Enter your full name"
+                  required>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input 
+                  id="email"
+                  type="email" 
+                  [(ngModel)]="email" 
+                  name="email"
+                  placeholder="Enter your email"
+                  required>
+              </div>
+
+              <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+                @if (isLoading) {
+                  <span class="spinner"></span> Saving...
+                } @else {
+                  Save Changes
+                }
+              </button>
+            </form>
+          </div>
+        }
+
+        <!-- Categories Tab -->
+        @if (activeTab === 'categories') {
+          <div class="tab-panel">
+            <div class="panel-header">
+              <h2>Category Management</h2>
+              <p>Manage your expense and income categories</p>
+              @if (expenseCategories.length === 0 && incomeCategories.length === 0) {
+                <button (click)="initializeDefaultCategories()" class="btn btn-sm btn-secondary" style="margin-top: 10px;">
+                  Initialize Default Categories
+                </button>
+              }
+            </div>
+
+            <!-- Expense Categories -->
+            <div class="category-section">
+              <div class="category-header">
+                <h3>Expense Categories</h3>
+                <form (submit)="addExpenseCategory(); $event.preventDefault()" class="add-category-form">
+                  <input 
+                    type="text" 
+                    [(ngModel)]="newExpenseCategory" 
+                    name="newExpenseCategory"
+                    placeholder="Add new category"
+                    class="category-input">
+                  <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                </form>
+              </div>
+
+              <div class="category-list">
+                @if (expenseCategories.length === 0) {
+                  <div class="empty-state">
+                    <p>No expense categories yet. Add your first category above.</p>
+                  </div>
+                }
+                @for (cat of expenseCategories; track cat._id) {
+                  <div class="category-item">
+                    <span class="category-name">{{ cat.name }}</span>
+                    <div class="category-actions">
+                      <button class="btn-icon btn-edit" title="Edit category">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                      </button>
+                      <button (click)="removeExpenseCategory(cat)" class="btn-icon btn-delete" title="Delete category">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Income Categories -->
+            <div class="category-section">
+              <div class="category-header">
+                <h3>Income Categories</h3>
+                <form (submit)="addIncomeCategory(); $event.preventDefault()" class="add-category-form">
+                  <input 
+                    type="text" 
+                    [(ngModel)]="newIncomeCategory" 
+                    name="newIncomeCategory"
+                    placeholder="Add new category"
+                    class="category-input">
+                  <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                </form>
+              </div>
+
+              <div class="category-list">
+                @if (incomeCategories.length === 0) {
+                  <div class="empty-state">
+                    <p>No income categories yet. Add your first category above.</p>
+                  </div>
+                }
+                @for (cat of incomeCategories; track cat._id) {
+                  <div class="category-item">
+                    <span class="category-name">{{ cat.name }}</span>
+                    <div class="category-actions">
+                      <button class="btn-icon btn-edit" title="Edit category">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                      </button>
+                      <button (click)="removeIncomeCategory(cat)" class="btn-icon btn-delete" title="Delete category">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Security Tab -->
+        @if (activeTab === 'security') {
+          <div class="tab-panel">
+            <div class="panel-header">
+              <h2>Security Settings</h2>
+              <p>Change your password and secure your account</p>
+            </div>
+
+            <form (submit)="changePassword(); $event.preventDefault()" class="settings-form">
+              <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input 
+                  id="currentPassword"
+                  type="password" 
+                  [(ngModel)]="currentPassword" 
+                  name="currentPassword"
+                  placeholder="Enter current password"
+                  required>
+              </div>
+
+              <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input 
+                  id="newPassword"
+                  type="password" 
+                  [(ngModel)]="newPassword" 
+                  name="newPassword"
+                  placeholder="Enter new password (min 6 characters)"
+                  required>
+              </div>
+
+              <div class="form-group">
+                <label for="confirmPassword">Confirm New Password</label>
+                <input 
+                  id="confirmPassword"
+                  type="password" 
+                  [(ngModel)]="confirmPassword" 
+                  name="confirmPassword"
+                  placeholder="Confirm new password"
+                  required>
+              </div>
+
+              <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+                @if (isLoading) {
+                  <span class="spinner"></span> Updating...
+                } @else {
+                  Change Password
+                }
+              </button>
+            </form>
+          </div>
+        }
+
+      </div>
+    </div>
+
+  </div>
+</div>

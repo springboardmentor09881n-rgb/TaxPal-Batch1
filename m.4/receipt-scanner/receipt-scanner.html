@@ -1,0 +1,357 @@
+<div class="receipt-scanner-container">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <h2>TaxPal</h2>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+        </span>
+        <a routerLink="/dashboard" style="text-decoration: none; color: inherit; display: block; width: 100%;">Dashboard</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </span>
+        <a routerLink="/transactions" style="text-decoration: none; color: inherit; display: block; width: 100%;">Transactions</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </span>
+        <a routerLink="/budgets" style="text-decoration: none; color: inherit; display: block; width: 100%;">Budgets</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="2" ry="2"></rect><rect x="10" y="8" width="4" height="13" rx="2" ry="2"></rect><rect x="2" y="13" width="4" height="8" rx="2" ry="2"></rect></svg>
+        </span>
+        <a routerLink="/tax-estimator" style="text-decoration: none; color: inherit; display: block; width: 100%;">Tax Estimator</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </span>
+        <a routerLink="/tax-calendar" style="text-decoration: none; color: inherit; display: block; width: 100%;">Tax Calendar</a>
+      </li>
+      <li class="active">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </span>
+        <a routerLink="/receipt-scanner" style="text-decoration: none; color: inherit; display: block; width: 100%;">Receipt Scanner</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </span>
+        <span>Reports</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button (click)="toggleTheme()" class="btn-theme" title="Toggle theme">
+        <span class="menu-icon">
+          <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </span>
+        <span>Theme</span>
+      </button>
+      <a routerLink="/profile" class="btn-profile">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </span>
+        <span>Profile</span>
+      </a>
+      <button (click)="logout()" class="btn-logout">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-wrapper">
+    <div class="top-nav">
+      <div class="greeting-section">
+        <h1>Smart Receipt Scanner</h1>
+        <p>Scan or upload a receipt to automatically create a transaction</p>
+      </div>
+    </div>
+
+    <!-- Error Alert Banner -->
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <div class="alert-content">
+          <span>{{ errorMessage }}</span>
+          <!-- Help user test easily when endpoint is not connected -->
+          @if (errorMessage.includes('Network error') || errorMessage.includes('OCR backend')) {
+            <button type="button" class="btn btn-demo-inline" (click)="runDemoOCR()">
+              Run Demo Scan (Simulate OCR)
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Success Message Banner -->
+    @if (successMessage) {
+      <div class="alert alert-success">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span>{{ successMessage }}</span>
+      </div>
+    }
+
+    <!-- Success Screen (Post transaction confirm) -->
+    @if (isSuccessState) {
+      <div class="success-card glass-card">
+        <div class="success-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h2>Transaction Recorded!</h2>
+        <p>Your receipt was successfully scanned, reviewed, and matching entry added to transactions.</p>
+        <div class="success-actions">
+          <button (click)="resetScanner()" class="btn btn-primary">Scan Another Receipt</button>
+          <button routerLink="/transactions" class="btn btn-secondary">View Registry</button>
+        </div>
+      </div>
+    } @else {
+      <!-- Main Scanner Workspace -->
+      <div class="scanner-grid">
+        
+        <!-- Left Panel: Upload / Capture / Preview -->
+        <div class="workspace-card glass-card">
+          <div class="card-header">
+            <h3>Receipt Source</h3>
+          </div>
+
+          <!-- Drag and drop zone (Hidden if camera is active or file preview is showing) -->
+          @if (!previewUrl && !showCamera) {
+            <div 
+              class="drag-drop-zone"
+              [class.dragging]="isDragging"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)"
+              (click)="fileInput.click()"
+            >
+              <div class="upload-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+              <p class="primary-text">Drag & drop your receipt here, or <span>browse</span></p>
+              <p class="secondary-text">Supported formats: JPG, JPEG, PNG (Max 5MB)</p>
+            </div>
+            
+            <input 
+              #fileInput 
+              type="file" 
+              class="hidden-file-input" 
+              accept="image/png, image/jpeg, image/jpg" 
+              (change)="onFileSelected($event)"
+            >
+
+            <div class="camera-actions">
+              <div class="separator"><span>OR</span></div>
+              <button (click)="startCamera()" class="btn btn-secondary btn-full">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                <span>Use Device Camera</span>
+              </button>
+            </div>
+          }
+
+          <!-- Camera Stream Interface -->
+          @if (showCamera) {
+            <div class="camera-feed-container">
+              <video #video autoplay playsinline class="video-preview"></video>
+              <canvas #canvas class="hidden-canvas"></canvas>
+              
+              <div class="camera-controls">
+                <button (click)="capturePhoto()" class="btn btn-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                  <span>Capture Frame</span>
+                </button>
+                <button (click)="stopCamera()" class="btn btn-cancel">Cancel</button>
+              </div>
+            </div>
+          }
+
+          <!-- Image Preview Interface -->
+          @if (previewUrl && !showCamera) {
+            <div class="image-preview-container">
+              <img [src]="previewUrl" alt="Receipt preview" class="receipt-image">
+              
+              <!-- Scanning Animated Laser Bar -->
+              @if (isScanning) {
+                <div class="scanning-laser"></div>
+                <div class="scanning-overlay">
+                  <div class="spinner"></div>
+                  <span>Scanning receipt...</span>
+                </div>
+              }
+
+              <div class="preview-controls">
+                <button 
+                  [disabled]="isScanning" 
+                  (click)="scanReceipt()" 
+                  class="btn btn-primary btn-scan-action"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  <span>Start API Scan</span>
+                </button>
+                <button 
+                  [disabled]="isScanning" 
+                  (click)="runDemoOCR()" 
+                  class="btn btn-demo-action"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                  <span>Demo Scan (Offline)</span>
+                </button>
+                <button 
+                  [disabled]="isScanning" 
+                  (click)="removeImage()" 
+                  class="btn btn-close-secondary"
+                >
+                  Remove Receipt
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Right Panel: Review & Edit fields -->
+        <div class="workspace-card glass-card">
+          <div class="card-header">
+            <h3>Review Transaction</h3>
+          </div>
+
+          @if (!showReview) {
+            <div class="form-empty-state">
+              <div class="empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+              </div>
+              <p>Upload a receipt and scan it to review transaction entries here.</p>
+            </div>
+          } @else {
+            <form (submit)="confirmTransaction(); $event.preventDefault()" class="transaction-form">
+              
+              <!-- Transaction Type -->
+              <div class="input-group">
+                <label>Type</label>
+                <div class="type-selector">
+                  <button type="button" (click)="transactionType = 'Income'; onTransactionTypeChange()" [class.active]="transactionType === 'Income'" class="type-btn income">Income</button>
+                  <button type="button" (click)="transactionType = 'Expense'; onTransactionTypeChange()" [class.active]="transactionType === 'Expense'" class="type-btn expense">Expense</button>
+                </div>
+              </div>
+
+              <!-- Merchant Name -->
+              <div class="input-group">
+                <label for="merchant">Merchant / Store Name</label>
+                <input id="merchant" type="text" placeholder="e.g. AWS, Walmart" [(ngModel)]="merchant" name="merchant">
+              </div>
+
+              <!-- Description -->
+              <div class="input-group" [class.has-error]="descriptionError">
+                <label for="description">Description</label>
+                <input id="description" type="text" placeholder="e.g. Server hosting" [(ngModel)]="description" name="description">
+                @if (descriptionError) { <span class="error-text">{{ descriptionError }}</span> }
+              </div>
+
+              <!-- Amount -->
+              <div class="input-group" [class.has-error]="amountError">
+                <label for="amount">Amount (INR)</label>
+                <input id="amount" type="number" placeholder="e.g. 560" [(ngModel)]="amount" name="amount">
+                @if (amountError) { <span class="error-text">{{ amountError }}</span> }
+              </div>
+
+              <!-- Category -->
+              <div class="input-group" [class.has-error]="categoryError">
+                <label for="category">Category</label>
+                <select id="category" [(ngModel)]="category" name="category">
+                  @if (transactionType === 'Income') {
+                    @for (cat of incomeCategories; track cat.name) {
+                      <option [value]="cat.name">{{ cat.name }}</option>
+                    }
+                  } @else {
+                    @for (cat of expenseCategories; track cat.name) {
+                      <option [value]="cat.name">{{ cat.name }}</option>
+                    }
+                  }
+                </select>
+                @if (categoryError) { <span class="error-text">{{ categoryError }}</span> }
+              </div>
+
+              <!-- Transaction Date -->
+              <div class="input-group" [class.has-error]="dateError">
+                <label for="transactionDate">Date</label>
+                <input id="transactionDate" type="date" [(ngModel)]="transactionDate" name="transactionDate">
+                @if (dateError) { <span class="error-text">{{ dateError }}</span> }
+              </div>
+
+              <!-- Payment Method -->
+              <div class="input-group">
+                <label for="paymentMethod">Payment Method</label>
+                <select id="paymentMethod" [(ngModel)]="paymentMethod" name="paymentMethod">
+                  <option value="Card">Card</option>
+                  <option value="Cash">Cash</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                  <option value="UPI">UPI</option>
+                </select>
+              </div>
+
+              <!-- Notes -->
+              <div class="input-group">
+                <label for="notes">Notes / Confidence</label>
+                <textarea id="notes" rows="2" placeholder="Extracted notes..." [(ngModel)]="notes" name="notes"></textarea>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <button type="submit" class="btn btn-submit" [disabled]="isSaving">
+                  @if (isSaving) {
+                    <span class="spinner"></span>
+                    <span>Recording...</span>
+                  } @else {
+                    <span>Confirm Transaction</span>
+                  }
+                </button>
+                <button type="button" (click)="resetScanner()" class="btn-cancel">Cancel</button>
+              </div>
+
+            </form>
+          }
+        </div>
+
+      </div>
+    }
+  </div>
+</div>
