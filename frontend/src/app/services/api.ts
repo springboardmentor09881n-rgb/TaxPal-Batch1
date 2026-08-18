@@ -38,6 +38,16 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/transactions`, data, this.getOptions());
   }
 
+  scanReceipt(file: File) {
+    const formData = new FormData();
+    formData.append('receipt', file);
+    return this.http.post(`${this.baseUrl}/receipts/scan`, formData, this.getOptions());
+  }
+
+  updateTransaction(id: string, data: any) {
+    return this.http.put(`${this.baseUrl}/transactions/${id}`, data, this.getOptions());
+  }
+
   deleteTransaction(id: string) {
     return this.http.delete(`${this.baseUrl}/transactions/${id}`, this.getOptions());
   }
@@ -87,5 +97,97 @@ export class ApiService {
 
   initializeDefaultCategories() {
     return this.http.post(`${this.baseUrl}/categories/initialize-default`, {}, this.getOptions());
+  }
+
+  // Tax Estimate endpoints
+  getTaxEstimates() {
+    return this.http.get(`${this.baseUrl}/tax-estimates`, this.getOptions());
+  }
+
+  createTaxEstimate(data: any) {
+    return this.http.post(`${this.baseUrl}/tax-estimates`, data, this.getOptions());
+  }
+
+  deleteTaxEstimate(id: string) {
+    return this.http.delete(`${this.baseUrl}/tax-estimates/${id}`, this.getOptions());
+  }
+
+  // Alert endpoints
+  getAlerts(isRead?: boolean) {
+    const url = isRead !== undefined ? `${this.baseUrl}/alerts?isRead=${isRead}` : `${this.baseUrl}/alerts`;
+    return this.http.get(url, this.getOptions());
+  }
+
+  markAlertAsRead(id: string) {
+    return this.http.put(`${this.baseUrl}/alerts/${id}/read`, {}, this.getOptions());
+  }
+
+  // Reports endpoints
+  getReports() {
+    return this.http.get(`${this.baseUrl}/reports`, this.getOptions());
+  }
+
+  generateReport(data: { reportType: string; period: string; format: string; startDate?: string; endDate?: string }) {
+    return this.http.post(`${this.baseUrl}/reports`, data, this.getOptions());
+  }
+
+  getReportById(id: string) {
+    return this.http.get(`${this.baseUrl}/reports/${id}`, this.getOptions());
+  }
+
+  downloadReport(id: string, format?: string) {
+    const token = localStorage.getItem('accessToken');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    const url = format ? `${this.baseUrl}/reports/${id}/download?format=${format}` : `${this.baseUrl}/reports/${id}/download`;
+    return this.http.get(url, {
+      headers,
+      responseType: 'blob',
+      withCredentials: true,
+    });
+  }
+
+  deleteReport(id: string) {
+    return this.http.delete(`${this.baseUrl}/reports/${id}`, this.getOptions());
+  }
+
+  // Chat endpoints
+  sendChatMessage(message: string) {
+    return this.http.post(`${this.baseUrl}/chat/message`, { message }, this.getOptions());
+  }
+
+  sendChatStream(message: string, sessionId?: string | null) {
+    const token = localStorage.getItem('accessToken');
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const body: any = { message };
+    if (sessionId) {
+      body.sessionId = sessionId;
+    }
+
+    return fetch(`${this.baseUrl}/chat/message`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body)
+    });
+  }
+
+  getChatSessions() {
+    return this.http.get(`${this.baseUrl}/chat/sessions`, this.getOptions());
+  }
+
+  getChatHistory(sessionId: string) {
+    return this.http.get(`${this.baseUrl}/chat/sessions/${sessionId}`, this.getOptions());
+  }
+
+  deleteChatSession(sessionId: string) {
+    return this.http.delete(`${this.baseUrl}/chat/sessions/${sessionId}`, this.getOptions());
   }
 }

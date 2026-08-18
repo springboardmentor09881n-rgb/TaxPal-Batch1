@@ -12,6 +12,14 @@ import budgetRoutes from './routes/budget.routes';
 import categoryRoutes from './routes/category.routes';
 import taxEstimateRoutes from './routes/taxEstimate.routes';
 import alertRoutes from './routes/alert.routes';
+import reportRoutes from './routes/report.routes';
+import chatRoutes from './routes/chat.routes';
+import documentRoutes from './routes/document.routes';
+import anomalyRoutes from './routes/anomaly.routes';
+import taxPlanningRoutes from './routes/taxPlanning.routes';
+import scamRoutes from './routes/scam.routes';
+import aiDataRoutes from './routes/aiData.routes';
+import receiptRoutes from './routes/receipt.routes';
 
 import { errorHandler } from './middleware/error.middleware';
 import { ApiError } from './utils/ApiError';
@@ -65,6 +73,14 @@ app.use('/api/budgets', budgetRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/tax-estimates', taxEstimateRoutes);
 app.use('/api/alerts', alertRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/documents', documentRoutes);
+app.use('/api/anomalies', anomalyRoutes);
+app.use('/api/tax-planning', taxPlanningRoutes);
+app.use('/api/scam-detection', scamRoutes);
+app.use('/api/ai-data', aiDataRoutes);
+app.use('/api/receipts', receiptRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

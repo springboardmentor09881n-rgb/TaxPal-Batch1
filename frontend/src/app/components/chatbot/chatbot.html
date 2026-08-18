@@ -1,0 +1,75 @@
+<div class="chatbot-container" [class.open]="isOpen()">
+  <!-- Chat Button -->
+  <button class="chat-toggle-btn" (click)="toggleChat()">
+    <span *ngIf="!isOpen()">💬</span>
+    <span *ngIf="isOpen()">❌</span>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" *ngIf="isOpen()">
+    <div class="chat-header">
+      <button class="menu-btn" (click)="toggleSidebar()">☰</button>
+      <h4>TaxPal Assistant</h4>
+      <div style="width: 24px;"></div> <!-- spacer -->
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="chat-sidebar" [class.open]="isSidebarOpen()">
+      <div class="sidebar-header">
+        <h5>Chat History</h5>
+        <button class="close-sidebar-btn" (click)="toggleSidebar()">✕</button>
+      </div>
+      <div class="sidebar-content">
+        <button class="new-chat-btn" (click)="startNewChat()">
+          ➕ New Chat
+        </button>
+        <div class="sessions-list">
+          <div *ngFor="let session of sessions()" 
+               class="history-item" 
+               [class.active]="currentSessionId() === session._id"
+               (click)="loadSession(session._id)">
+            <span class="session-title">{{ session.title || 'New Conversation' }}</span>
+            <button class="delete-session-btn" (click)="deleteSession(session._id, $event)" title="Delete Chat">🗑️</button>
+          </div>
+          <div *ngIf="sessions().length === 0" class="no-sessions">
+            No previous chats
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-messages" (click)="isSidebarOpen() ? toggleSidebar() : null">
+      <div *ngFor="let msg of messages()" class="message-wrapper" [class.user]="msg.role === 'user'">
+        <div class="message-bubble">
+          {{ msg.content }}
+        </div>
+      </div>
+      <div class="message-wrapper model" *ngIf="isLoading()">
+        <div class="message-bubble loading">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prebuilt Questions -->
+    <div class="prebuilt-questions">
+      <button class="chip" (click)="sendPrebuiltMessage('How much income did I earn recently?')">How much income did I earn?</button>
+      <button class="chip" (click)="sendPrebuiltMessage('What is my current budget for Food?')">What is my Food budget?</button>
+      <button class="chip" (click)="sendPrebuiltMessage('Please generate my monthly financial report.')">Generate financial report</button>
+      <button class="chip" (click)="sendPrebuiltMessage('Am I overspending my budgets based on recent transactions?')">Am I overspending?</button>
+      <button class="chip" (click)="sendPrebuiltMessage('What is my estimated tax for this quarter?')">What is my estimated tax?</button>
+      <button class="chip" (click)="sendPrebuiltMessage('What were my last 5 transactions?')">Show my recent transactions</button>
+    </div>
+
+    <div class="chat-input-area">
+      <input 
+        type="text" 
+        [(ngModel)]="userInput" 
+        (keyup.enter)="sendMessage()" 
+        placeholder="Ask me about your taxes or budget..." 
+        [disabled]="isLoading()"
+      />
+      <button (click)="sendMessage()" [disabled]="isLoading() || !userInput().trim()">Send</button>
+    </div>
+  </div>
+</div>

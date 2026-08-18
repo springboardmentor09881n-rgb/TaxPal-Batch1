@@ -7,6 +7,9 @@ import { Expense } from './pages/expense/expense';
 import { Budgets } from './pages/budgets/budgets';
 import { Profile } from './pages/profile/profile';
 import { Transactions } from './pages/transactions/transactions';
+import { TaxEstimator } from './pages/tax-estimator/tax-estimator';
+import { Reports } from './pages/reports/reports';
+import { ReceiptScanner } from './pages/receipt-scanner/receipt-scanner';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -16,5 +19,8 @@ export const routes: Routes = [
   { path: 'expense', component: Expense },
   { path: 'budgets', component: Budgets },
   { path: 'profile', component: Profile },
-  { path: 'transactions', component: Transactions }
+  { path: 'transactions', component: Transactions },
+  { path: 'scan-receipt', component: ReceiptScanner },
+  { path: 'tax-estimator', component: TaxEstimator },
+  { path: 'reports', component: Reports }
 ];
