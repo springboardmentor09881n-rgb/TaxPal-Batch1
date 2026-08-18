@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
+import { Router, NavigationEnd } from '@angular/router';
 
 interface ChatMessage {
   role: 'user' | 'model';
@@ -23,8 +24,22 @@ export class ChatbotComponent implements OnInit {
   userInput = signal('');
   sessions = signal<any[]>([]);
   currentSessionId = signal<string | null>(null);
+  currentUrl = signal('');
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.currentUrl.set(event.urlAfterRedirects);
+        // Automatically close chatbot on navigation
+        this.isOpen.set(false);
+      }
+    });
+  }
+
+  shouldShow(): boolean {
+    const url = this.currentUrl() || this.router.url;
+    return !url.includes('/login') && !url.includes('/signup');
+  }
 
   ngOnInit() {
     this.loadSessions();
