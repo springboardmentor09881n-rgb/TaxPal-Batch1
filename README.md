@@ -48,3 +48,19 @@ Users
  ├── Budgets
  ├── TaxEstimates
  └── Reports
+
+Application form
+
+Login / Register
+       ↓
+    Dashboard
+       ↓
+Income & Expenses
+       ↓
+Categories & Budgets
+       ↓
+   Tax Estimation
+       ↓
+Financial Reports
+       ↓
+    PDF / CSV
