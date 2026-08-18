@@ -12,7 +12,11 @@
     <div class="chat-header">
       <button class="menu-btn" (click)="toggleSidebar()">☰</button>
       <h4>TaxPal Assistant</h4>
-      <div style="width: 24px;"></div> <!-- spacer -->
+      <button class="minimize-btn" (click)="toggleChat()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
     </div>
     
     <!-- Sidebar -->

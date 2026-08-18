@@ -30,7 +30,7 @@ export const simulateTax = async (req: Request, res: Response): Promise<void> =>
           healthInsurancePremiums: latestEstimate.healthInsurancePremiums || 0,
           homeOfficeDeduction: latestEstimate.homeOfficeDeduction || 0,
           filingStatus: latestEstimate.filingStatus || 'single',
-          state: latestEstimate.state || '',
+          state: (latestEstimate as any).state || '',
         };
       } else {
         // Fallback default

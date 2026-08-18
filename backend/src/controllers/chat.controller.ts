@@ -4,6 +4,7 @@ import { Budget } from '../models/Budget';
 import { Transaction } from '../models/Transaction';
 import { TaxEstimate } from '../models/TaxEstimate';
 import { Chat } from '../models/Chat';
+import { User } from '../models/User';
 import { Types } from 'mongoose';
 
 // Initialize Gemini Client
@@ -29,6 +30,19 @@ export const sendMessage = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
+    const userRecord = await User.findById(userId);
+    const country = userRecord?.country?.toLowerCase() || 'india';
+    const currencySymbols: Record<string, string> = {
+      india: '₹',
+      usa: '$',
+      uk: '£',
+      australia: 'A$',
+      canada: 'C$',
+      euro: '€',
+    };
+    const currencySymbol = currencySymbols[country] || '₹';
+    const currencyName = country === 'usa' ? 'US Dollars' : (country === 'uk' ? 'British Pounds' : 'Indian Rupees');
+
     // 1. Intent-Based Routing: Decide if we need DB data
     const lowerMessage = message.toLowerCase();
     const needsFinancialData = /budget|spend|spent|transaction|expense|tax|report|income|earn|salary|money|revenue|profit|due|status|summary|calculate/i.test(lowerMessage);
@@ -48,13 +62,13 @@ export const sendMessage = async (req: Request, res: Response): Promise<void> =>
 
       financialContext = `
         CURRENT MONTH BUDGETS:
-        ${budgets.map(b => `- ${b.category}: Limit $${b.limit}`).join('\n')}
+        ${budgets.map(b => `- ${b.category}: Limit ${currencySymbol}${b.limit}`).join('\n')}
         
         RECENT TRANSACTIONS (Last 30 Days):
-        ${transactions.map(t => `- [${t.transactionDate.toISOString().split('T')[0]}] ${t.type} in ${t.category}: $${t.amount} (Desc: ${t.description})`).join('\n')}
+        ${transactions.map(t => `- [${t.transactionDate.toISOString().split('T')[0]}] ${t.type} in ${t.category}: ${currencySymbol}${t.amount} (Desc: ${t.description})`).join('\n')}
         
         LATEST TAX ESTIMATE:
-        ${latestTaxEstimate ? `Quarter: ${latestTaxEstimate.quarter}, Estimated Tax: $${latestTaxEstimate.estimatedTax}, Status: ${latestTaxEstimate.status}` : 'No estimate found.'}
+        ${latestTaxEstimate ? `Quarter: ${latestTaxEstimate.quarter}, Estimated Tax: ${currencySymbol}${latestTaxEstimate.estimatedTax}, Status: ${latestTaxEstimate.status}` : 'No estimate found.'}
       `;
     }
 
@@ -98,6 +112,7 @@ export const sendMessage = async (req: Request, res: Response): Promise<void> =>
       3. ZERO EXPLANATION POLICY: Give extremely direct, short, and brief answers. Do not over-explain. Do not give financial advice disclaimers. 
       4. Answer in a few sentences maximum. Speed and conciseness are your top priority.
       5. REPORT GENERATION: If the user explicitly asks you to generate, download, or create a report, you MUST include the exact text [ACTION: GENERATE_REPORT:PDF] or [ACTION: GENERATE_REPORT:CSV] at the very end of your response depending on the format they requested. If they did not specify a format, default to [ACTION: GENERATE_REPORT:PDF].
+      6. CURRENCY: Always format currency values in ${currencyName} (${currencySymbol}). Do NOT use other currencies unless explicitly asked.
 
       USER'S ANONYMIZED FINANCIAL CONTEXT:
       ${financialContext}

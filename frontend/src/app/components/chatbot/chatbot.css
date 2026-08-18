@@ -56,7 +56,7 @@
   font-weight: 600;
 }
 
-.menu-btn {
+.menu-btn, .minimize-btn {
   background: none;
   border: none;
   color: white;

@@ -38,7 +38,8 @@ export class ChatbotComponent implements OnInit {
 
   shouldShow(): boolean {
     const url = this.currentUrl() || this.router.url;
-    return !url.includes('/login') && !url.includes('/signup');
+    // Hide on login (root or /login) and signup pages
+    return url !== '/' && !url.startsWith('/?') && !url.includes('/login') && !url.includes('/signup');
   }
 
   ngOnInit() {
