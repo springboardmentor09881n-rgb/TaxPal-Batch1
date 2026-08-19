@@ -3,14 +3,43 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api';
+import { Dropdown } from '../../components/dropdown/dropdown';
 
 @Component({
   selector: 'app-transactions',
-  imports: [FormsModule, RouterLink, CommonModule],
+  imports: [FormsModule, RouterLink, CommonModule, Dropdown],
   templateUrl: './transactions.html',
   styleUrl: './transactions.css',
 })
 export class Transactions implements OnInit {
+
+  // Static/dynamic dropdown helpers
+  get currentCategoriesList(): any[] {
+    const list = this.transactionType === 'Expense' ? this.expenseCategories : this.incomeCategories;
+    return list.map((c: any) => ({ value: c.name, label: c.name }));
+  }
+
+  get editCategoriesList(): any[] {
+    const list = this.editTransactionType === 'Expense' ? this.expenseCategories : this.incomeCategories;
+    return list.map((c: any) => ({ value: c.name, label: c.name }));
+  }
+
+  get filterCategoriesList(): any[] {
+    const list = [{ value: '', label: 'All Categories' }];
+    this.incomeCategories.forEach(c => {
+      list.push({ value: c.name, label: `${c.name} (Income)` });
+    });
+    this.expenseCategories.forEach(c => {
+      list.push({ value: c.name, label: `${c.name} (Expense)` });
+    });
+    return list;
+  }
+
+  filterTypesList = [
+    { value: '', label: 'All Types' },
+    { value: 'Income', label: 'Income' },
+    { value: 'Expense', label: 'Expense' }
+  ];
 
   transactions: any[] = [];
   isLoading = false;
@@ -18,14 +47,51 @@ export class Transactions implements OnInit {
   userName = 'Freelancer';
   isLightTheme = false;
 
+  // Search & Filter controls
+  searchQuery = '';
+  filterType = '';
+  filterCategory = '';
+  filterStartDate = '';
+  filterEndDate = '';
+
   // Add transaction form
   showAddForm = false;
+  showSmartScan = false;
+  selectedFile: File | null = null;
+  filePreview: string | null = null;
+  isScanning = false;
+  scanError = '';
+  scanSuccess = false;
+
   transactionType = 'Income';
   description = '';
   amount: number | null = null;
   transactionDate = '';
   category = 'Freelance Project';
   notes = '';
+  receiptImage = '';
+
+  // Edit transaction state
+  isEditing = false;
+  editingTransactionId = '';
+  editTransactionType = 'Income';
+  editDescription = '';
+  editAmount: number | null = null;
+  editTransactionDate = '';
+  editCategory = '';
+  editNotes = '';
+
+  // Edit validations
+  editDescriptionError = '';
+  editAmountError = '';
+  editCategoryError = '';
+  editDateError = '';
+  isEditFormSubmitted = false;
+  isEditFormLoading = false;
+
+  // Receipt preview modal state
+  showPreviewModal = false;
+  previewReceiptImage = '';
 
   descriptionError = '';
   amountError = '';
@@ -215,7 +281,8 @@ export class Transactions implements OnInit {
       category: this.category,
       amount: Number(this.amount),
       transactionDate: this.transactionDate,
-      notes: this.notes.trim() || undefined
+      notes: this.notes.trim() || undefined,
+      receiptImage: this.receiptImage || undefined
     };
 
     this.api.createTransaction(payload).subscribe({
@@ -238,16 +305,79 @@ export class Transactions implements OnInit {
 
   resetForm() {
     this.showAddForm = false;
+    this.showSmartScan = false;
+    this.selectedFile = null;
+    this.filePreview = null;
+    this.isScanning = false;
+    this.scanError = '';
+    this.scanSuccess = false;
     this.description = '';
     this.amount = null;
     this.transactionDate = new Date().toISOString().split('T')[0];
     this.setDefaultCategory();
     this.notes = '';
+    this.receiptImage = '';
     this.descriptionError = '';
     this.amountError = '';
     this.categoryError = '';
     this.dateError = '';
     this.isFormSubmitted = false;
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.scanError = '';
+      this.scanSuccess = false;
+      
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.filePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  scanReceipt() {
+    if (!this.selectedFile) return;
+
+    this.isScanning = true;
+    this.scanError = '';
+    this.scanSuccess = false;
+
+    this.api.scanReceipt(this.selectedFile).subscribe({
+      next: (res: any) => {
+        this.isScanning = false;
+        if (res.success && res.data) {
+          this.scanSuccess = true;
+          
+          // Pre-fill the Add Transaction form
+          this.transactionType = res.data.transactionType || 'Expense';
+          this.description = res.data.description || '';
+          this.amount = res.data.amount || null;
+          this.transactionDate = res.data.date || new Date().toISOString().split('T')[0];
+          this.notes = 'Scanned from receipt: ' + this.selectedFile?.name;
+          this.receiptImage = this.filePreview || '';
+
+          // Set category in the next tick to prevent Angular binding race condition
+          setTimeout(() => {
+            this.category = res.data.category || 'Other';
+          }, 0);
+
+          // Open the Add Transaction form so they can see and review the details
+          this.showAddForm = true;
+          this.showSmartScan = false; // close scanner panel
+          this.selectedFile = null; // reset
+        } else {
+          this.scanError = 'Failed to extract data. Please manually enter the details.';
+        }
+      },
+      error: (err: any) => {
+        this.isScanning = false;
+        this.scanError = err.error?.message || 'Error scanning receipt. Make sure the file is clear and < 5MB.';
+      }
+    });
   }
 
   deleteTransaction(id: string) {
@@ -271,6 +401,140 @@ export class Transactions implements OnInit {
   formatDate(dateStr: string): string {
     if (!dateStr) return '';
     return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  get filteredTransactions(): any[] {
+    return this.transactions.filter(t => {
+      // 1. Text Search by description/notes
+      if (this.searchQuery.trim()) {
+        const query = this.searchQuery.toLowerCase();
+        const descMatch = t.description?.toLowerCase().includes(query);
+        const notesMatch = t.notes?.toLowerCase().includes(query);
+        if (!descMatch && !notesMatch) return false;
+      }
+
+      // 2. Filter by Type
+      if (this.filterType) {
+        if (t.type !== this.filterType) return false;
+      }
+
+      // 3. Filter by Category
+      if (this.filterCategory) {
+        if (t.category !== this.filterCategory) return false;
+      }
+
+      // 4. Filter by Date Range
+      if (this.filterStartDate) {
+        const start = new Date(this.filterStartDate);
+        const tDate = new Date(t.transactionDate);
+        if (tDate < start) return false;
+      }
+      if (this.filterEndDate) {
+        const end = new Date(this.filterEndDate);
+        end.setHours(23, 59, 59, 999);
+        const tDate = new Date(t.transactionDate);
+        if (tDate > end) return false;
+      }
+
+      return true;
+    });
+  }
+
+  openEditModal(t: any) {
+    this.isEditing = true;
+    this.editingTransactionId = t._id;
+    this.editTransactionType = t.type;
+    this.editDescription = t.description;
+    this.editAmount = t.amount;
+    
+    if (t.transactionDate) {
+      const dateObj = new Date(t.transactionDate);
+      const yyyy = dateObj.getFullYear();
+      const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const dd = String(dateObj.getDate()).padStart(2, '0');
+      this.editTransactionDate = `${yyyy}-${mm}-${dd}`;
+    } else {
+      this.editTransactionDate = '';
+    }
+    
+    this.editCategory = t.category;
+    this.editNotes = t.notes || '';
+
+    this.editDescriptionError = '';
+    this.editAmountError = '';
+    this.editCategoryError = '';
+    this.editDateError = '';
+    this.isEditFormSubmitted = false;
+  }
+
+  closeEditModal() {
+    this.isEditing = false;
+    this.editingTransactionId = '';
+    this.isEditFormSubmitted = false;
+  }
+
+  validateEditForm(): boolean {
+    this.editDescriptionError = '';
+    this.editAmountError = '';
+    this.editCategoryError = '';
+    this.editDateError = '';
+
+    if (!this.editDescription.trim()) {
+      this.editDescriptionError = 'Description is required';
+    }
+    if (this.editAmount === null || this.editAmount === undefined || this.editAmount <= 0) {
+      this.editAmountError = 'Please enter a valid positive amount';
+    }
+    if (!this.editCategory.trim()) {
+      this.editCategoryError = 'Category is required';
+    }
+    if (!this.editTransactionDate) {
+      this.editDateError = 'Transaction date is required';
+    }
+
+    return !this.editDescriptionError && !this.editAmountError && !this.editCategoryError && !this.editDateError;
+  }
+
+  updateTransaction() {
+    this.isEditFormSubmitted = true;
+    if (!this.validateEditForm()) {
+      return;
+    }
+
+    this.isEditFormLoading = true;
+    this.errorMessage = '';
+
+    const payload = {
+      type: this.editTransactionType,
+      description: this.editDescription.trim(),
+      category: this.editCategory,
+      amount: Number(this.editAmount),
+      transactionDate: this.editTransactionDate,
+      notes: this.editNotes.trim() || undefined
+    };
+
+    this.api.updateTransaction(this.editingTransactionId, payload).subscribe({
+      next: () => {
+        this.isEditFormLoading = false;
+        this.closeEditModal();
+        this.loadTransactions();
+      },
+      error: (err: any) => {
+        this.isEditFormLoading = false;
+        console.error('Error updating transaction:', err);
+        this.errorMessage = err.error?.message || 'Failed to update transaction. Please try again.';
+      }
+    });
+  }
+
+  openReceiptPreview(image: string) {
+    this.previewReceiptImage = image;
+    this.showPreviewModal = true;
+  }
+
+  closeReceiptPreview() {
+    this.showPreviewModal = false;
+    this.previewReceiptImage = '';
   }
 
   logout() {

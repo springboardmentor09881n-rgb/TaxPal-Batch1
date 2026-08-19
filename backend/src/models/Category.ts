@@ -7,6 +7,8 @@ export interface ICategory {
   color: string;
   icon: string;
   isDefault: boolean;
+  taxDeductible: boolean;
+  sortOrder: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -46,6 +48,14 @@ const categorySchema = new Schema<ICategoryDocument>(
     isDefault: {
       type: Boolean,
       default: false,
+    },
+    taxDeductible: {
+      type: Boolean,
+      default: true,
+    },
+    sortOrder: {
+      type: Number,
+      default: 0,
     },
   },
   {

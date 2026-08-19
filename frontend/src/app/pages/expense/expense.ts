@@ -3,14 +3,18 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api';
+import { Dropdown } from '../../components/dropdown/dropdown';
 
 @Component({
   selector: 'app-expense',
-  imports: [FormsModule, RouterLink, CommonModule],
+  imports: [FormsModule, RouterLink, CommonModule, Dropdown],
   templateUrl: './expense.html',
   styleUrl: './expense.css',
 })
 export class Expense implements OnInit {
+  get categoriesList(): any[] {
+    return this.expenseCategories.map(c => ({ value: c.name, label: c.name }));
+  }
   isLightTheme = false;
 
   description = '';

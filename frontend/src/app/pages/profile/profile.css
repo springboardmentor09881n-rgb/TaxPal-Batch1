@@ -307,7 +307,19 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 500px;
+  max-width: 800px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 24px;
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .form-group {
@@ -322,7 +334,8 @@
   color: var(--text-secondary);
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   background-color: var(--bg-secondary);
   border: 1px solid var(--card-border);
   border-radius: 8px;
@@ -331,9 +344,11 @@
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s, background-color 0.2s ease;
+  width: 100%;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   border-color: #6366f1;
 }
 
@@ -637,4 +652,172 @@ input:checked + .slider:before {
     align-items: flex-start;
     gap: 12px;
   }
+}
+
+/* Avatar Uploader */
+.avatar-uploader-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.avatar-container {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid var(--border-color);
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.avatar-container:hover {
+  border-color: #6366f1;
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: opacity 0.2s ease;
+}
+
+.avatar-container:hover .avatar-hover-overlay {
+  opacity: 1;
+}
+
+.avatar-hover-overlay svg {
+  width: 24px;
+  height: 24px;
+}
+
+.avatar-tip {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* Theme Option Selector */
+.theme-toggle-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.theme-option-btn {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.theme-option-btn:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+.theme-option-btn.active {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+}
+
+/* Password Strength Meter */
+.strength-meter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 2FA Toggle Switch Customization */
+.toggle-switch-2fa input:checked + .toggle-slider-2fa {
+  background: #10b981;
+}
+
+.toggle-switch-2fa input:checked + .toggle-slider-2fa:before {
+  transform: translateX(20px);
+}
+
+.toggle-slider-2fa {
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.toggle-slider-2fa:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.toggle-slider-2fa.enabled {
+  background-color: #10b981;
+}
+
+.toggle-slider-2fa.enabled:before {
+  transform: translateX(22px);
+}
+
+/* Category Item Drag Over */
+.category-item:active {
+  cursor: grabbing;
+  opacity: 0.6;
+}
+
+/* Light Theme overrides using host context */
+:host-context(body.light-theme) .avatar-container {
+  background-color: var(--bg-secondary);
+}
+
+:host-context(body.light-theme) .theme-option-btn:not(.active) {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
 }

@@ -62,3 +62,184 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-hover);
 }
+
+/* Global Brand Logo overrides for the new logo on Card Pages (Login, Signup, Income, Expense) */
+.brand-section .brand-logo {
+  background: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.brand-section .brand-logo svg {
+  display: none !important; /* Hide old inline SVGs on card pages */
+}
+
+.brand-section .brand-logo-img {
+  max-height: 120px !important;
+  width: auto !important;
+  max-width: 280px !important;
+  object-fit: contain !important;
+  transition: transform 0.3s ease;
+}
+
+.brand-section .brand-logo-img:hover {
+  transform: scale(1.03);
+}
+
+.brand-section h1, .brand-section h2 {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: -1px !important;
+  margin-top: 10px !important;
+  margin-bottom: 4px !important;
+  display: block !important;
+}
+
+body.light-theme .brand-section h1, 
+body.light-theme .brand-section h2 {
+  background: linear-gradient(135deg, #8b5cf6 0%, #4f46e5 100%) !important;
+}
+
+.brand-section p {
+  display: block !important;
+  font-size: 13px !important;
+  color: var(--text-secondary) !important;
+}
+
+
+
+/* ========================================================
+   Premium Global Interactive Animations & Transitions
+   ======================================================== */
+
+/* Tab/Page Switch Entry Animations */
+.dashboard-container,
+.transactions-container,
+.budgets-container,
+.reports-container,
+.tax-estimator-container,
+.profile-container,
+.login-container,
+.signup-container,
+.transaction-container {
+  animation: pageFadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pageFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dynamic Hover Effects on Cards & Layout Metrics */
+.metric-card,
+.card,
+.login-card,
+.signup-card,
+.transaction-card {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.3s ease !important;
+}
+
+.metric-card:hover,
+.card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25) !important;
+  border-color: rgba(99, 102, 241, 0.25) !important;
+}
+
+body.light-theme .metric-card:hover,
+body.light-theme .card:hover {
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.08) !important;
+}
+
+/* Premium Sidebar interactive sliding and highlights */
+.sidebar-menu li {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-menu li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 3px;
+  background-color: #6366f1;
+  border-radius: 0 4px 4px 0;
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+}
+
+.sidebar-menu li:hover::before {
+  transform: scaleY(0.6);
+}
+
+.sidebar-menu li.active::before {
+  transform: scaleY(1);
+}
+
+.sidebar-menu li:hover {
+  padding-left: 20px !important;
+  color: var(--text-primary) !important;
+  background-color: rgba(99, 102, 241, 0.05) !important;
+}
+
+.sidebar-menu li.active {
+  padding-left: 20px !important;
+  background-color: rgba(99, 102, 241, 0.12) !important;
+}
+
+/* Table Row Highlights and Scale Transitions */
+table tbody tr {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+table tbody tr:hover {
+  background-color: rgba(99, 102, 241, 0.03) !important;
+  transform: scale(1.002);
+}
+
+body.light-theme table tbody tr:hover {
+  background-color: rgba(99, 102, 241, 0.02) !important;
+}
+
+/* Global Button Hover Lift & Scale Animations */
+button, .btn {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+button:hover:not(:disabled), .btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+button:active:not(:disabled), .btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Form input focus transitions */
+input, select, textarea {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+}

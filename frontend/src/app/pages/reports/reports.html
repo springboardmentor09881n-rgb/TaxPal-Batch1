@@ -1,10 +1,25 @@
 <div class="reports-container">
 
+  <!-- Success/Error Toast Banner -->
+  <div *ngIf="toast.show" class="toast-banner" [ngClass]="toast.type === 'success' ? 'toast-success' : 'toast-error'">
+    <svg *ngIf="toast.type === 'success'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="toast-icon">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    <svg *ngIf="toast.type === 'error'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="toast-icon">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <span>{{ toast.message }}</span>
+  </div>
+
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-header">
       <div class="brand-logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="1" x2="12" y2="23"></line>
           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
         </svg>
@@ -15,31 +30,59 @@
     <ul class="sidebar-menu">
       <li>
         <span class="menu-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="9"></rect>
+            <rect x="14" y="3" width="7" height="5"></rect>
+            <rect x="14" y="12" width="7" height="9"></rect>
+            <rect x="3" y="16" width="7" height="5"></rect>
+          </svg>
         </span>
-        <a routerLink="/dashboard" style="text-decoration: none; color: inherit; display: block; width: 100%;">Dashboard</a>
+        <a routerLink="/dashboard"
+          style="text-decoration: none; color: inherit; display: block; width: 100%;">Dashboard</a>
       </li>
       <li>
         <span class="menu-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
         </span>
-        <a routerLink="/transactions" style="text-decoration: none; color: inherit; display: block; width: 100%;">Transactions</a>
+        <a routerLink="/transactions"
+          style="text-decoration: none; color: inherit; display: block; width: 100%;">Transactions</a>
       </li>
       <li>
         <span class="menu-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+            <path d="M4 6v12a2 2 0 0 0 2 2h14v-4"></path>
+            <path d="M18 12a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4v-6z"></path>
+          </svg>
         </span>
         <a routerLink="/budgets" style="text-decoration: none; color: inherit; display: block; width: 100%;">Budgets</a>
       </li>
       <li>
         <span class="menu-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="2" ry="2"></rect><rect x="10" y="8" width="4" height="13" rx="2" ry="2"></rect><rect x="2" y="13" width="4" height="8" rx="2" ry="2"></rect></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="18" y="3" width="4" height="18" rx="2" ry="2"></rect>
+            <rect x="10" y="8" width="4" height="13" rx="2" ry="2"></rect>
+            <rect x="2" y="13" width="4" height="8" rx="2" ry="2"></rect>
+          </svg>
         </span>
-        <a routerLink="/tax-estimator" style="text-decoration: none; color: inherit; display: block; width: 100%;">Tax Estimator</a>
+        <a routerLink="/tax-estimator" style="text-decoration: none; color: inherit; display: block; width: 100%;">Tax
+          Estimator</a>
       </li>
       <li class="active">
         <span class="menu-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
         </span>
         <a routerLink="/reports" style="text-decoration: none; color: inherit; display: block; width: 100%;">Reports</a>
       </li>
@@ -48,20 +91,43 @@
     <div class="sidebar-footer">
       <button (click)="toggleTheme()" class="btn-theme" title="Toggle theme">
         <span class="menu-icon">
-          <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-          <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
         </span>
         <span>Theme</span>
       </button>
       <a routerLink="/profile" class="btn-profile">
         <span class="menu-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
         </span>
         <span>Profile</span>
       </a>
       <button (click)="logout()" class="btn-logout">
         <span class="menu-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
         </span>
         <span>Sign Out</span>
       </button>
@@ -78,57 +144,45 @@
 
     <!-- Alert Notifications -->
     <div *ngIf="errorMessage" class="alert alert-error">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
       <span>{{ errorMessage }}</span>
     </div>
 
     <div *ngIf="successMessage" class="alert alert-success">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
       <span>{{ successMessage }}</span>
     </div>
 
     <!-- Generate Report Card -->
     <div class="card generate-card">
       <div class="card-title">Generate Report</div>
-      
+
       <div class="form-grid">
         <!-- Report Type -->
         <div class="form-group">
           <label class="form-label">Report Type</label>
-          <div class="select-wrapper">
-            <select [(ngModel)]="selectedReportType" class="form-select">
-              <option *ngFor="let type of reportTypes" [value]="type">{{ type }}</option>
-            </select>
-            <span class="select-chevron">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </span>
-          </div>
+          <app-dropdown [options]="reportTypes" [(value)]="selectedReportType" placeholder="Select report type"></app-dropdown>
         </div>
 
         <!-- Period -->
         <div class="form-group">
           <label class="form-label">Period</label>
-          <div class="select-wrapper">
-            <select [(ngModel)]="selectedPeriod" (change)="onPeriodChange()" class="form-select">
-              <option *ngFor="let p of periods" [value]="p">{{ p }}</option>
-            </select>
-            <span class="select-chevron">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </span>
-          </div>
+          <app-dropdown [options]="periods" [(value)]="selectedPeriod" (valueChange)="onPeriodChange()" placeholder="Select period"></app-dropdown>
         </div>
 
         <!-- Format -->
         <div class="form-group">
           <label class="form-label">Format</label>
-          <div class="select-wrapper">
-            <select [(ngModel)]="selectedFormat" class="form-select">
-              <option *ngFor="let fmt of formats" [value]="fmt">{{ fmt }}</option>
-            </select>
-            <span class="select-chevron">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </span>
-          </div>
+          <app-dropdown [options]="formats" [(value)]="selectedFormat" placeholder="Select format"></app-dropdown>
         </div>
       </div>
 
@@ -158,6 +212,22 @@
     <div class="card recent-card">
       <div class="card-title">Recent Reports</div>
 
+      <!-- Search & Filters Bar -->
+      <div class="filter-controls" style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px;">
+        <div class="search-input-wrapper" style="flex: 1; min-width: 200px; position: relative;">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Search by name, period..." 
+                 style="width: 100%; padding: 10px 14px 10px 38px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-primary); color: var(--text-primary); font-size: 13.5px;" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+               style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none;">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <div class="filter-select-wrapper" style="min-width: 220px;">
+          <app-dropdown [options]="filterReportTypesList" [(value)]="filterReportType" placeholder="Filter report type"></app-dropdown>
+        </div>
+      </div>
+
       <div class="table-responsive">
         <table class="reports-table">
           <thead>
@@ -178,31 +248,108 @@
                 </div>
               </td>
             </tr>
-            <tr *ngIf="!isLoading && reports.length === 0">
+            <tr *ngIf="!isLoading && filteredReports.length === 0">
               <td colspan="5" class="table-message">No results.</td>
             </tr>
-            <tr *ngFor="let r of reports" [class.selected-row]="selectedReport?._id === r._id" (click)="selectReport(r)">
+            <tr *ngFor="let r of filteredReports" [class.selected-row]="selectedReport?._id === r._id"
+              (click)="selectReport(r)">
               <td class="report-name-cell">
                 <div class="report-type-text">{{ r.reportType }}</div>
-                <div class="report-sub-text">{{ formatShortDate(r.periodStart) }} - {{ formatShortDate(r.periodEnd) }}</div>
+                <div class="report-sub-text">{{ formatShortDate(r.periodStart) }} - {{ formatShortDate(r.periodEnd) }}
+                </div>
               </td>
               <td>{{ formatDate(r.createdAt) }}</td>
               <td><span class="period-badge">{{ r.period }}</span></td>
               <td>
-                <span class="format-badge" [ngClass]="r.format === 'PDF' ? 'badge-pdf' : 'badge-csv'">{{ r.format }}</span>
+                <span class="format-badge" [ngClass]="r.format === 'PDF' ? 'badge-pdf' : 'badge-csv'">{{ r.format
+                  }}</span>
               </td>
               <td class="text-right">
                 <div class="row-actions" (click)="$event.stopPropagation()">
                   <button (click)="selectReport(r)" class="btn-icon" title="Preview Report">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
                   </button>
                   <button (click)="downloadReport(r)" class="btn-icon" title="Download">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                  </button>
+                  <button (click)="openQuickEmailModal(r, $event)" class="btn-icon" title="Send via Email">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
                   </button>
                   <button (click)="deleteReport(r._id, $event)" class="btn-icon btn-icon-delete" title="Delete Report">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
                   </button>
                 </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Scheduled Recurring Reports Card -->
+    <div class="card schedule-card" style="margin-top: 24px;">
+      <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <span style="font-size: 16px; font-weight: 600;">Scheduled Recurring Reports</span>
+        <button (click)="openScheduleModal()" class="btn btn-primary btn-sm" style="background-color: #0284c7;">
+          + Schedule New
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="reports-table" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th style="width: 25%; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); vertical-align: middle;">Report Type</th>
+              <th style="width: 30%; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); vertical-align: middle;">Recipient Email</th>
+              <th style="width: 15%; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); vertical-align: middle;">Format</th>
+              <th style="width: 10%; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); vertical-align: middle;">Frequency</th>
+              <th style="width: 12%; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); vertical-align: middle;">Last Sent</th>
+              <th style="width: 8%; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); text-align: center; vertical-align: middle;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let sch of scheduledReports" style="border-bottom: 1px solid var(--border-color); vertical-align: middle;">
+              <td style="padding: 14px 16px; font-size: 13.5px; vertical-align: middle;">{{ sch.reportType }}</td>
+              <td style="padding: 14px 16px; font-size: 13.5px; vertical-align: middle;">{{ sch.email }}</td>
+              <td style="padding: 14px 16px; font-size: 13.5px; vertical-align: middle;">
+                <span class="format-badge" [ngClass]="sch.format === 'PDF' ? 'badge-pdf' : 'badge-csv'" style="display: inline-flex; align-items: center; justify-content: center; height: 24px; vertical-align: middle;">
+                  {{ sch.format }}
+                </span>
+              </td>
+              <td style="padding: 14px 16px; font-size: 13.5px; vertical-align: middle;">Monthly</td>
+              <td style="padding: 14px 16px; font-size: 13.5px; vertical-align: middle;">{{ sch.lastSent ? (sch.lastSent | date:'yyyy-MM-dd') : 'Never' }}</td>
+              <td style="padding: 14px 16px; text-align: center; vertical-align: middle;">
+                <div style="display: inline-flex; align-items: center; justify-content: center; vertical-align: middle;">
+                  <button (click)="deleteSchedule(sch._id)" class="btn-icon btn-icon-delete" title="Cancel Schedule" style="display: inline-flex; align-items: center; justify-content: center; border: none; background: transparent; cursor: pointer; color: var(--text-muted); width: 32px; height: 32px; border-radius: 50%; padding: 0;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="scheduledReports.length === 0">
+              <td colspan="6" style="text-align: center; padding: 30px; color: var(--text-muted); font-size: 13.5px;">
+                No automated reports scheduled yet. Click "+ Schedule New" to automate monthly reporting.
               </td>
             </tr>
           </tbody>
@@ -216,12 +363,30 @@
         <div class="card-title">Report Preview</div>
         <div class="preview-actions" *ngIf="selectedReport">
           <button (click)="printPreview()" class="btn btn-secondary btn-sm" title="Print document">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
             <span>Print</span>
           </button>
           <button (click)="downloadReport(selectedReport)" class="btn btn-primary btn-sm" title="Download report">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
             <span>Download</span>
+          </button>
+          <button (click)="openEmailModal()" class="btn btn-secondary btn-sm" title="Send to Email" style="border-color: rgba(99, 102, 241, 0.4); color: #818cf8;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; margin-right: 6px;">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <span>Send to Email</span>
           </button>
         </div>
       </div>
@@ -229,7 +394,8 @@
       <!-- Empty State -->
       <div *ngIf="!selectedReport" class="preview-empty-state">
         <div class="empty-icon-wrapper">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-doc-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-doc-icon">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
             <line x1="9" y1="13" x2="15" y2="13"></line>
@@ -247,19 +413,23 @@
           <div class="sheet-brand">
             <div class="brand-badge">TaxPal</div>
             <h2>{{ selectedReport.reportType }}</h2>
-            <div class="sheet-meta-period">{{ selectedReport.period }} ({{ formatShortDate(selectedReport.periodStart) }} - {{ formatShortDate(selectedReport.periodEnd) }})</div>
+            <div class="sheet-meta-period">{{ selectedReport.period }} ({{ formatShortDate(selectedReport.periodStart)
+              }} - {{ formatShortDate(selectedReport.periodEnd) }})</div>
           </div>
           <div class="sheet-info">
-            <div class="info-item"><span class="lbl">Client / Prepared For:</span> <span class="val">{{ userName }}</span></div>
-            <div class="info-item"><span class="lbl">Generated Date:</span> <span class="val">{{ formatDate(selectedReport.createdAt) }}</span></div>
-            <div class="info-item"><span class="lbl">Export Format:</span> <span class="val format-pill">{{ selectedReport.format }}</span></div>
+            <div class="info-item"><span class="lbl">Client / Prepared For:</span> <span class="val">{{ userName
+                }}</span></div>
+            <div class="info-item"><span class="lbl">Generated Date:</span> <span class="val">{{
+                formatDate(selectedReport.createdAt) }}</span></div>
+            <div class="info-item"><span class="lbl">Export Format:</span> <span class="val format-pill">{{
+                selectedReport.format }}</span></div>
           </div>
         </div>
 
         <!-- Metrics Overview Grid -->
         <div class="metrics-summary-grid">
           <!-- Income Statement: show income focus metrics -->
-          <ng-container *ngIf="selectedReport.reportType === 'Income Statement'">
+          <ng-container *ngIf="selectedReport.reportType === 'Income Statement' || selectedReport.reportType === 'Profit & Loss (P&L) Statement'">
             <div class="metric-box metric-income">
               <div class="box-label">Total Revenue</div>
               <div class="box-value">{{ formatCurrency(selectedReport.totalIncome) }}</div>
@@ -299,7 +469,7 @@
           </ng-container>
 
           <!-- Tax Summary: show tax focus metrics -->
-          <ng-container *ngIf="selectedReport.reportType === 'Tax Summary'">
+          <ng-container *ngIf="selectedReport.reportType === 'Tax Summary' || selectedReport.reportType === 'Schedule C (Form 1040) Tax Summary' || selectedReport.reportType === 'Quarterly Tax Summary'">
             <div class="metric-box metric-income">
               <div class="box-label">Gross Income</div>
               <div class="box-value">{{ formatCurrency(selectedReport.totalIncome) }}</div>
@@ -314,12 +484,14 @@
             </div>
             <div class="metric-box metric-rate">
               <div class="box-label">Estimated Tax</div>
-              <div class="box-value">{{ formatCurrency(selectedReport.data?.totalEstimatedTax || selectedReport.data?.estimatedAnnualTax) }}</div>
+              <div class="box-value">{{ formatCurrency(selectedReport.data?.totalEstimatedTax ||
+                selectedReport.data?.estimatedAnnualTax) }}</div>
             </div>
           </ng-container>
 
           <!-- Income & Expense Summary: show the combined metrics -->
-          <ng-container *ngIf="selectedReport.reportType === 'Income & Expense Summary' || (selectedReport.reportType !== 'Income Statement' && selectedReport.reportType !== 'Expense Breakdown' && selectedReport.reportType !== 'Tax Summary')">
+          <ng-container
+            *ngIf="selectedReport.reportType === 'Income & Expense Summary' || (selectedReport.reportType !== 'Income Statement' && selectedReport.reportType !== 'Expense Breakdown' && selectedReport.reportType !== 'Tax Summary')">
             <div class="metric-box metric-income" *ngIf="selectedReport.reportType === 'Income & Expense Summary'">
               <div class="box-label">Total Income</div>
               <div class="box-value">{{ formatCurrency(selectedReport.totalIncome) }}</div>
@@ -328,7 +500,8 @@
               <div class="box-label">Total Expenses</div>
               <div class="box-value">{{ formatCurrency(selectedReport.totalExpenses) }}</div>
             </div>
-            <div class="metric-box metric-savings" [class.negative]="selectedReport.netSavings < 0" *ngIf="selectedReport.reportType === 'Income & Expense Summary'">
+            <div class="metric-box metric-savings" [class.negative]="selectedReport.netSavings < 0"
+              *ngIf="selectedReport.reportType === 'Income & Expense Summary'">
               <div class="box-label">Net Savings</div>
               <div class="box-value">{{ formatCurrency(selectedReport.netSavings) }}</div>
             </div>
@@ -339,10 +512,78 @@
           </ng-container>
         </div>
 
+        <!-- Interactive Charts Preview Section -->
+        <div class="charts-preview-section no-print" style="margin-top: 25px; margin-bottom: 25px;">
+          <!-- Bar Chart for Income vs Expenses -->
+          <div *ngIf="selectedReport.reportType === 'Income Statement' || selectedReport.reportType === 'Profit & Loss (P&L) Statement' || selectedReport.reportType === 'Income & Expense Summary'"
+               class="bar-chart-container" style="padding: 24px; background: rgba(128, 128, 128, 0.03); border: 1px solid var(--border-color); border-radius: 16px; margin-bottom: 20px;">
+            <h4 style="margin: 0 0 20px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Income vs Expenses Comparison</h4>
+            <div style="display: flex; gap: 40px; align-items: flex-end; height: 180px; padding-bottom: 25px; border-bottom: 1px solid var(--border-color); position: relative;">
+              <!-- Grid Lines -->
+              <div style="position: absolute; left: 0; right: 0; bottom: 25px; height: 1px; border-bottom: 1px dashed rgba(128, 128, 128, 0.1);"></div>
+              <div style="position: absolute; left: 0; right: 0; bottom: 75px; height: 1px; border-bottom: 1px dashed rgba(128, 128, 128, 0.1);"></div>
+              <div style="position: absolute; left: 0; right: 0; bottom: 125px; height: 1px; border-bottom: 1px dashed rgba(128, 128, 128, 0.1);"></div>
+              <div style="position: absolute; left: 0; right: 0; bottom: 175px; height: 1px; border-bottom: 1px dashed rgba(128, 128, 128, 0.1);"></div>
+
+              <!-- Income Bar -->
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                <span style="font-size: 12px; font-weight: 700; color: #10b981; margin-bottom: 6px;">{{ formatCurrency(selectedReport.totalIncome) }}</span>
+                <div [style.height.px]="getBarHeight(selectedReport.totalIncome, selectedReport.totalIncome, selectedReport.totalExpenses)" 
+                     style="width: 60px; background: linear-gradient(to top, #10b981, #34d399); border-radius: 8px 8px 0 0; transition: height 0.5s ease-out; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);"></div>
+                <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-top: 10px;">Gross Income</span>
+              </div>
+
+              <!-- Expense Bar -->
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                <span style="font-size: 12px; font-weight: 700; color: #ef4444; margin-bottom: 6px;">{{ formatCurrency(selectedReport.totalExpenses) }}</span>
+                <div [style.height.px]="getBarHeight(selectedReport.totalExpenses, selectedReport.totalIncome, selectedReport.totalExpenses)" 
+                     style="width: 60px; background: linear-gradient(to top, #ef4444, #f87171); border-radius: 8px 8px 0 0; transition: height 0.5s ease-out; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);"></div>
+                <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-top: 10px;">Total Expenses</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Donut Chart for Expense Category Breakdown -->
+          <div *ngIf="(selectedReport.reportType === 'Expense Breakdown' || selectedReport.reportType === 'Tax Summary' || selectedReport.reportType === 'Schedule C (Form 1040) Tax Summary' || selectedReport.reportType === 'Quarterly Tax Summary' || selectedReport.reportType === 'Income & Expense Summary') && selectedReport.data?.categoryBreakdown?.length"
+               class="donut-chart-container" style="padding: 24px; background: rgba(128, 128, 128, 0.03); border: 1px solid var(--border-color); border-radius: 16px; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 30px;">
+            <div style="position: relative; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <svg width="100%" height="100%" viewBox="0 0 42 42" class="donut-chart-svg">
+                <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--border-color)" stroke-width="2.5"></circle>
+                <circle *ngFor="let seg of getDonutSegments(selectedReport.data?.categoryBreakdown)"
+                        cx="21" cy="21" r="15.915" fill="transparent"
+                        [attr.stroke]="seg.color" stroke-width="4.5"
+                        [attr.stroke-dasharray]="seg.dashArray"
+                        [attr.stroke-dashoffset]="seg.dashOffset"
+                        style="transition: stroke-dashoffset 0.5s ease; transform: rotate(-90deg); transform-origin: center;"></circle>
+              </svg>
+              <div style="position: absolute; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Expenses</span>
+                <span style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-top: 2px;">{{ formatCurrency(selectedReport.totalExpenses) }}</span>
+              </div>
+            </div>
+
+            <!-- Chart Legend -->
+            <div style="flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 10px;">
+              <h4 style="margin: 0 0 10px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600;">Spending Shares</h4>
+              <div *ngFor="let seg of getDonutSegments(selectedReport.data?.categoryBreakdown)" style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                <div style="display: flex; align-items: center; gap: 8px; font-weight: 500; color: var(--text-secondary);">
+                  <span [style.background-color]="seg.color" style="width: 10px; height: 10px; border-radius: 50%; display: inline-block;"></span>
+                  <span>{{ seg.category }}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="color: var(--text-muted); font-size: 12px;">{{ formatCurrency(seg.amount) }}</span>
+                  <span style="font-weight: 600; color: var(--text-primary); min-width: 40px; text-align: right;">{{ seg.percentage }}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- ========== INCOME STATEMENT SECTIONS ========== -->
-        <ng-container *ngIf="selectedReport.reportType === 'Income Statement'">
+        <ng-container *ngIf="selectedReport.reportType === 'Income Statement' || selectedReport.reportType === 'Profit & Loss (P&L) Statement'">
           <!-- Income Sources Breakdown -->
-          <div class="sheet-section" *ngIf="selectedReport.data?.incomeCategoryBreakdown && selectedReport.data?.incomeCategoryBreakdown?.length">
+          <div class="sheet-section"
+            *ngIf="selectedReport.data?.incomeCategoryBreakdown && selectedReport.data?.incomeCategoryBreakdown?.length">
             <div class="section-heading">Revenue Sources</div>
             <div class="breakdown-table-wrapper">
               <table class="preview-table">
@@ -372,7 +613,8 @@
           </div>
 
           <!-- Monthly Income vs Expenses Trend -->
-          <div class="sheet-section" *ngIf="selectedReport.data?.monthlyBreakdown && selectedReport.data?.monthlyBreakdown?.length">
+          <div class="sheet-section"
+            *ngIf="selectedReport.data?.monthlyBreakdown && selectedReport.data?.monthlyBreakdown?.length">
             <div class="section-heading">Monthly Profit & Loss</div>
             <div class="breakdown-table-wrapper">
               <table class="preview-table">
@@ -402,7 +644,8 @@
         <!-- ========== EXPENSE BREAKDOWN SECTIONS ========== -->
         <ng-container *ngIf="selectedReport.reportType === 'Expense Breakdown'">
           <!-- Expense Category Breakdown -->
-          <div class="sheet-section" *ngIf="selectedReport.data?.categoryBreakdown && selectedReport.data?.categoryBreakdown?.length">
+          <div class="sheet-section"
+            *ngIf="selectedReport.data?.categoryBreakdown && selectedReport.data?.categoryBreakdown?.length">
             <div class="section-heading">Spending by Category</div>
             <div class="breakdown-table-wrapper">
               <table class="preview-table">
@@ -432,7 +675,8 @@
           </div>
 
           <!-- Monthly Expenses Trend -->
-          <div class="sheet-section" *ngIf="selectedReport.data?.monthlyBreakdown && selectedReport.data?.monthlyBreakdown?.length">
+          <div class="sheet-section"
+            *ngIf="selectedReport.data?.monthlyBreakdown && selectedReport.data?.monthlyBreakdown?.length">
             <div class="section-heading">Monthly Spending Trend</div>
             <div class="breakdown-table-wrapper">
               <table class="preview-table">
@@ -454,7 +698,7 @@
         </ng-container>
 
         <!-- ========== TAX SUMMARY SECTIONS ========== -->
-        <ng-container *ngIf="selectedReport.reportType === 'Tax Summary'">
+        <ng-container *ngIf="selectedReport.reportType === 'Tax Summary' || selectedReport.reportType === 'Schedule C (Form 1040) Tax Summary' || selectedReport.reportType === 'Quarterly Tax Summary'">
           <!-- Tax Info Banner -->
           <div class="sheet-section">
             <div class="section-heading">Tax Overview</div>
@@ -475,7 +719,8 @@
           </div>
 
           <!-- Deduction Breakdown -->
-          <div class="sheet-section" *ngIf="selectedReport.data?.deductionBreakdown && selectedReport.data?.deductionBreakdown?.length">
+          <div class="sheet-section"
+            *ngIf="selectedReport.data?.deductionBreakdown && selectedReport.data?.deductionBreakdown?.length">
             <div class="section-heading">Deductible Expenses</div>
             <div class="breakdown-table-wrapper">
               <table class="preview-table">
@@ -494,7 +739,8 @@
                   </tr>
                   <tr class="total-row">
                     <td class="font-semibold">Total Deductions</td>
-                    <td class="text-right font-semibold text-income">{{ formatCurrency(selectedReport.data?.totalDeductible) }}</td>
+                    <td class="text-right font-semibold text-income">{{
+                      formatCurrency(selectedReport.data?.totalDeductible) }}</td>
                     <td></td>
                   </tr>
                 </tbody>
@@ -503,7 +749,8 @@
           </div>
 
           <!-- Quarterly Tax Estimates -->
-          <div class="sheet-section" *ngIf="selectedReport.data?.quarterlyEstimates && selectedReport.data?.quarterlyEstimates?.length">
+          <div class="sheet-section"
+            *ngIf="selectedReport.data?.quarterlyEstimates && selectedReport.data?.quarterlyEstimates?.length">
             <div class="section-heading">Quarterly Tax Estimates</div>
             <div class="breakdown-table-wrapper">
               <table class="preview-table">
@@ -522,7 +769,8 @@
                     <td class="text-right">{{ formatCurrency(qe.grossIncome) }}</td>
                     <td class="text-right text-expense">{{ formatCurrency(qe.estimatedTax) }}</td>
                     <td class="text-right">{{ formatShortDate(qe.dueDate) }}</td>
-                    <td><span class="status-badge" [ngClass]="qe.status === 'Paid' ? 'status-paid' : 'status-pending'">{{ qe.status }}</span></td>
+                    <td><span class="status-badge"
+                        [ngClass]="qe.status === 'Paid' ? 'status-paid' : 'status-pending'">{{ qe.status }}</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -530,7 +778,8 @@
           </div>
 
           <!-- Non-Deductible Expenses -->
-          <div class="sheet-section" *ngIf="selectedReport.data?.categoryBreakdown && selectedReport.data?.categoryBreakdown?.length">
+          <div class="sheet-section"
+            *ngIf="selectedReport.data?.categoryBreakdown && selectedReport.data?.categoryBreakdown?.length">
             <div class="section-heading">All Expense Categories</div>
             <div class="breakdown-table-wrapper">
               <table class="preview-table">
@@ -563,7 +812,8 @@
         <!-- ========== INCOME & EXPENSE SUMMARY SECTIONS ========== -->
         <ng-container *ngIf="selectedReport.reportType === 'Income & Expense Summary'">
           <!-- Income Sources -->
-          <div class="sheet-section" *ngIf="selectedReport.data?.incomeCategoryBreakdown && selectedReport.data?.incomeCategoryBreakdown?.length">
+          <div class="sheet-section"
+            *ngIf="selectedReport.data?.incomeCategoryBreakdown && selectedReport.data?.incomeCategoryBreakdown?.length">
             <div class="section-heading">Income Sources</div>
             <div class="breakdown-table-wrapper">
               <table class="preview-table">
@@ -593,7 +843,8 @@
           </div>
 
           <!-- Expense Category Breakdown -->
-          <div class="sheet-section" *ngIf="selectedReport.data?.categoryBreakdown && selectedReport.data?.categoryBreakdown?.length">
+          <div class="sheet-section"
+            *ngIf="selectedReport.data?.categoryBreakdown && selectedReport.data?.categoryBreakdown?.length">
             <div class="section-heading">Expense Breakdown by Category</div>
             <div class="breakdown-table-wrapper">
               <table class="preview-table">
@@ -623,7 +874,8 @@
           </div>
 
           <!-- Monthly Breakdown -->
-          <div class="sheet-section" *ngIf="selectedReport.data?.monthlyBreakdown && selectedReport.data?.monthlyBreakdown?.length">
+          <div class="sheet-section"
+            *ngIf="selectedReport.data?.monthlyBreakdown && selectedReport.data?.monthlyBreakdown?.length">
             <div class="section-heading">Monthly Breakdown</div>
             <div class="breakdown-table-wrapper">
               <table class="preview-table">
@@ -655,6 +907,71 @@
           <span>Generated by TaxPal • Confidential Financial Summary</span>
           <span>Verified Document</span>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Direct Email Report Modal -->
+  <div class="modal-overlay" *ngIf="showEmailModal">
+    <div class="modal-card" style="max-width: 500px; padding: 24px; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 12px 30px rgba(0,0,0,0.4);">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="margin: 0; font-size: 18px; font-weight: 700; color: var(--text-primary);">Send Report via Email</h2>
+        <button (click)="closeEmailModal()" class="btn-close-modal" style="background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form (submit)="sendEmailReport(); $event.preventDefault()">
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label class="form-label" style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--text-secondary);">Recipient Email</label>
+            <input type="email" [(ngModel)]="recipientEmail" name="recipientEmail" required placeholder="e.g. cpa@advisor.com" class="form-input" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-primary); color: var(--text-primary); font-size: 14px; outline: none;" />
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label" style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--text-secondary);">Attachment Format</label>
+            <app-dropdown [options]="formats" [(value)]="emailFormat" placeholder="Select format"></app-dropdown>
+          </div>
+          <div class="card-actions" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px;">
+            <button type="button" (click)="closeEmailModal()" class="btn btn-secondary">Cancel</button>
+            <button type="submit" [disabled]="isSendingEmail" class="btn btn-primary" style="background-color: #6366f1;">
+              <span *ngIf="isSendingEmail" class="spinner-sm" style="margin-right: 6px;"></span>
+              <span>Send Email</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Recurring Report Modal -->
+  <div class="modal-overlay" *ngIf="showScheduleModal">
+    <div class="modal-card" style="max-width: 500px; padding: 24px; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 12px 30px rgba(0,0,0,0.4);">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="margin: 0; font-size: 18px; font-weight: 700; color: var(--text-primary);">Schedule Recurring Report</h2>
+        <button (click)="closeScheduleModal()" class="btn-close-modal" style="background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form (submit)="createRecurringSchedule(); $event.preventDefault()">
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label class="form-label" style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--text-secondary);">Recipient Email</label>
+            <input type="email" [(ngModel)]="scheduleEmail" name="scheduleEmail" required placeholder="e.g. advisor@taxpal.com" class="form-input" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-primary); color: var(--text-primary); font-size: 14px; outline: none;" />
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label class="form-label" style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--text-secondary);">Report Type</label>
+            <app-dropdown [options]="reportTypes" [(value)]="scheduleReportType" placeholder="Select report type"></app-dropdown>
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label" style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--text-secondary);">Attachment Format</label>
+            <app-dropdown [options]="formats" [(value)]="scheduleFormat" placeholder="Select format"></app-dropdown>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
+            *Recurring reports are generated and emailed automatically on the 1st of every month, covering the preceding calendar month's totals.
+          </p>
+          <div class="card-actions" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px;">
+            <button type="button" (click)="closeScheduleModal()" class="btn btn-secondary">Cancel</button>
+            <button type="submit" [disabled]="isSavingSchedule" class="btn btn-primary">
+              <span *ngIf="isSavingSchedule" class="spinner-sm" style="margin-right: 6px;"></span>
+              <span>Schedule Automated Reports</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

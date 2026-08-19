@@ -1,20 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api';
+import { Dropdown } from '../../components/dropdown/dropdown';
 
 @Component({
   selector: 'app-budgets',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, CommonModule, Dropdown],
   templateUrl: './budgets.html',
   styleUrl: './budgets.css'
 })
 export class Budgets implements OnInit {
+  get categoriesList(): any[] {
+    return this.expenseCategories.map(name => ({ value: name, label: name }));
+  }
+  get availableCategoriesList(): any[] {
+    return this.getAvailableCategories().map((cat: string) => ({ value: cat, label: cat }));
+  }
   budgets: any[] = [];
   isLoading = false;
   errorMessage = '';
   userName = 'Freelancer';
   isLightTheme = false;
+  isTableView = false;
 
   // Budget Editor properties
   editingCategory = '';
@@ -324,6 +333,24 @@ export class Budgets implements OnInit {
   // Format helper
   formatCurrency(amount: number): string {
     return '₹' + amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  get totalBudgetLimit(): number {
+    return this.budgets.reduce((sum, b) => sum + (Number(b.limit) || 0), 0);
+  }
+
+  get totalSpent(): number {
+    return this.budgets.reduce((sum, b) => sum + (Number(b.spent) || 0), 0);
+  }
+
+  get totalRemaining(): number {
+    return this.totalBudgetLimit - this.totalSpent;
+  }
+
+  get budgetHealth(): 'Good' | 'At Risk' {
+    if (this.totalBudgetLimit === 0) return 'Good';
+    const ratio = this.totalSpent / this.totalBudgetLimit;
+    return ratio > 0.9 ? 'At Risk' : 'Good';
   }
 
   logout() {

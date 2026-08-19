@@ -3,23 +3,71 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
+import { Dropdown } from '../../components/dropdown/dropdown';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, Dropdown],
   templateUrl: './profile.html',
   styleUrl: './profile.css'
 })
 export class Profile implements OnInit {
   activeTab = 'profile';
   isLightTheme = false;
+
+  // Static options lists for custom dropdowns
+  countriesList = ['United States', 'Canada', 'United Kingdom', 'Australia', 'India', 'Germany', 'France', 'Other'];
+  languagesList = ['English', 'Spanish', 'French', 'German', 'Japanese', 'Chinese', 'Hindi'];
+  incomeBracketsList = [
+    { value: '<25k', label: '< 25k' },
+    { value: '25k-50k', label: '25k - 50k' },
+    { value: '50k-100k', label: '50k - 100k' },
+    { value: '100k-150k', label: '100k - 150k' },
+    { value: '150k+', label: '150k+' }
+  ];
+  currenciesList = [
+    { value: 'INR', label: 'Indian Rupees (₹)' },
+    { value: 'USD', label: 'US Dollars ($)' },
+    { value: 'GBP', label: 'British Pounds (£)' },
+    { value: 'EUR', label: 'Euros (€)' }
+  ];
   
   // Profile data
   fullName = '';
   email = '';
+  username = '';
+  phone = '';
+  city = '';
+  state = '';
+  country = '';
+  language = '';
+  incomeBracket = '';
   currentPassword = '';
   newPassword = '';
   confirmPassword = '';
+  currencyPreference = 'INR';
+  twoFactorEnabled = false;
+  twoFactorMethod = 'app';
+
+  // 2FA Setup Mock Modal
+  show2faModal = false;
+  verificationCode2fa = '';
+
+  // Active Sessions
+  deviceSessions: any[] = [];
+  
+  // Category Customizations & Editing
+  editingCategory: any = null;
+  availableIcons = ['tag', 'shopping-cart', 'home', 'car', 'gift', 'book', 'lock', 'phone', 'briefcase', 'users', 'megaphone', 'laptop', 'plane', 'cpu', 'coffee', 'heart'];
+  
+  // Country to states mappings
+  countryStates: Record<string, string[]> = {
+    'India': ['Telangana', 'Maharashtra', 'Karnataka', 'Delhi', 'Tamil Nadu', 'Gujarat', 'Uttar Pradesh', 'West Bengal'],
+    'United States': ['California', 'Texas', 'New York', 'Florida', 'Washington', 'Illinois', 'Pennsylvania', 'Ohio'],
+    'Canada': ['Ontario', 'Quebec', 'British Columbia', 'Alberta', 'Manitoba'],
+    'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland'],
+    'Australia': ['New South Wales', 'Victoria', 'Queensland', 'Western Australia']
+  };
   
   // Categories
   expenseCategories: any[] = [];
@@ -60,6 +108,7 @@ export class Profile implements OnInit {
     
     this.loadUserProfile();
     this.loadCategories();
+    this.loadSessions();
   }
 
   toggleTheme() {
@@ -84,6 +133,16 @@ export class Profile implements OnInit {
         const user = JSON.parse(userStr);
         this.fullName = user.fullName || '';
         this.email = user.email || '';
+        this.username = user.username || '';
+        this.phone = user.phone || '';
+        this.city = user.city || '';
+        this.state = user.state || '';
+        this.country = user.country || '';
+        this.language = user.language || 'English';
+        this.incomeBracket = user.incomeBracket || '';
+        this.currencyPreference = user.currencyPreference || 'INR';
+        this.twoFactorEnabled = user.twoFactorEnabled || false;
+        this.twoFactorMethod = user.twoFactorMethod || 'app';
       } catch (e) {
         console.error('Error parsing user storage:', e);
       }
@@ -157,7 +216,15 @@ export class Profile implements OnInit {
     this.isLoading = true;
     const payload = {
       fullName: this.fullName,
-      email: this.email
+      email: this.email,
+      username: this.username,
+      phone: this.phone,
+      city: this.city,
+      state: this.state,
+      country: this.country,
+      language: this.language,
+      incomeBracket: this.incomeBracket,
+      currencyPreference: this.currencyPreference
     };
 
     this.api.updateProfile(payload).subscribe({
@@ -166,21 +233,34 @@ export class Profile implements OnInit {
         this.successMessage = 'Profile updated successfully';
         
         // Update local storage
-        const userStr = localStorage.getItem('user');
-        if (userStr) {
-          try {
-            const user = JSON.parse(userStr);
-            user.fullName = this.fullName;
-            user.email = this.email;
-            localStorage.setItem('user', JSON.stringify(user));
-          } catch (e) {
-            console.error('Error updating local storage:', e);
+        if (res.data && res.data.user) {
+          localStorage.setItem('user', JSON.stringify(res.data.user));
+          this.loadUserProfile();
+        } else {
+          const userStr = localStorage.getItem('user');
+          if (userStr) {
+            try {
+              const user = JSON.parse(userStr);
+              user.fullName = this.fullName;
+              user.email = this.email;
+              user.username = this.username;
+              user.phone = this.phone;
+              user.city = this.city;
+              user.state = this.state;
+              user.country = this.country;
+              user.language = this.language;
+              user.incomeBracket = this.incomeBracket;
+              user.currencyPreference = this.currencyPreference;
+              localStorage.setItem('user', JSON.stringify(user));
+            } catch (e) {
+              console.error('Error updating local storage:', e);
+            }
           }
         }
       },
       error: (err: any) => {
         this.isLoading = false;
-        this.errorMessage = 'Failed to update profile. Please try again.';
+        this.errorMessage = err.error?.message || 'Failed to update profile. Please try again.';
       }
     });
   }
@@ -340,5 +420,196 @@ export class Profile implements OnInit {
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
     this.router.navigate(['/']);
+  }
+
+  // Country dynamic states resolver getter
+  get availableStates(): string[] {
+    return this.countryStates[this.country] || [];
+  }
+
+  onCountryChange() {
+    const states = this.availableStates;
+    if (states.length > 0) {
+      this.state = states[0];
+    } else {
+      this.state = '';
+    }
+  }
+
+  // Password strength calculation getter
+  get passwordStrength(): { score: number; label: string; color: string } {
+    const p = this.newPassword || '';
+    if (!p) return { score: 0, label: '', color: 'transparent' };
+    if (p.length < 6) return { score: 1, label: 'Weak', color: '#ef4444' };
+    
+    const hasLetters = /[a-zA-Z]/.test(p);
+    const hasNumbers = /[0-9]/.test(p);
+    const hasCaps = /[A-Z]/.test(p);
+    const hasSpecial = /[^A-Za-z0-9]/.test(p);
+    
+    if (p.length >= 8 && hasLetters && hasNumbers && hasCaps && hasSpecial) {
+      return { score: 3, label: 'Strong', color: '#10b981' };
+    }
+    if (p.length >= 6 && hasLetters && hasNumbers) {
+      return { score: 2, label: 'Medium', color: '#f59e0b' };
+    }
+    return { score: 1, label: 'Weak', color: '#ef4444' };
+  }
+
+  // 2FA setups
+  toggle2faSetting() {
+    if (this.twoFactorEnabled) {
+      // Show setup modal when user toggles switch to true
+      this.show2faModal = true;
+      this.twoFactorEnabled = false; // keep false until verified
+    } else {
+      this.save2faSetting(false);
+    }
+  }
+
+  verifyAndEnable2fa() {
+    if (this.verificationCode2fa.trim().length === 6) {
+      this.show2faModal = false;
+      this.twoFactorEnabled = true;
+      this.save2faSetting(true);
+      this.successMessage = '2FA configured successfully';
+      this.verificationCode2fa = '';
+    } else {
+      alert('Invalid authentication code. Please enter a 6-digit verification code.');
+    }
+  }
+
+  cancel2faSetup() {
+    this.show2faModal = false;
+    this.twoFactorEnabled = false;
+    this.verificationCode2fa = '';
+  }
+
+  save2faSetting(enabled: boolean) {
+    const payload = {
+      twoFactorEnabled: enabled,
+      twoFactorMethod: this.twoFactorMethod
+    };
+    this.api.updateProfile(payload).subscribe({
+      next: (res: any) => {
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+          try {
+            const user = JSON.parse(userStr);
+            user.twoFactorEnabled = enabled;
+            user.twoFactorMethod = this.twoFactorMethod;
+            localStorage.setItem('user', JSON.stringify(user));
+          } catch (e) {
+            console.error('Error saving 2FA to local storage:', e);
+          }
+        }
+      },
+      error: () => {
+        this.errorMessage = 'Failed to save 2FA preferences';
+      }
+    });
+  }
+
+  // Active session logging details
+  loadSessions() {
+    this.api.getActiveSessions().subscribe({
+      next: (res: any) => {
+        this.deviceSessions = res.data || [];
+      },
+      error: (err) => {
+        console.error('Failed to load device logs:', err);
+      }
+    });
+  }
+
+  logoutOthers() {
+    if (confirm('Are you sure you want to log out all other active sessions?')) {
+      this.api.logoutOthers().subscribe({
+        next: () => {
+          this.successMessage = 'Other active sessions terminated successfully';
+          this.loadSessions();
+        },
+        error: (err) => {
+          this.errorMessage = 'Failed to revoke other active sessions';
+        }
+      });
+    }
+  }
+
+  // Category Edit settings
+  startEditCategory(cat: any) {
+    this.editingCategory = { ...cat };
+  }
+
+  cancelEditCategory() {
+    this.editingCategory = null;
+  }
+
+  saveCategoryEdit() {
+    if (!this.editingCategory) return;
+    this.api.updateCategory(this.editingCategory._id, {
+      name: this.editingCategory.name,
+      color: this.editingCategory.color,
+      icon: this.editingCategory.icon,
+      taxDeductible: this.editingCategory.taxDeductible
+    }).subscribe({
+      next: () => {
+        this.editingCategory = null;
+        this.successMessage = 'Category updated successfully';
+        this.loadCategories();
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Failed to update category';
+      }
+    });
+  }
+
+  toggleDeductibleInline(cat: any) {
+    const newVal = !cat.taxDeductible;
+    this.api.updateCategory(cat._id, { taxDeductible: newVal }).subscribe({
+      next: () => {
+        cat.taxDeductible = newVal;
+        this.successMessage = 'Tax deductible preference updated';
+      },
+      error: (err) => {
+        this.errorMessage = 'Failed to update category deductible status';
+      }
+    });
+  }
+
+  // Drag & Drop Category sorting
+  draggedItemIndex: number | null = null;
+  draggedType: 'expense' | 'income' | null = null;
+
+  onDragStart(index: number, type: 'expense' | 'income') {
+    this.draggedItemIndex = index;
+    this.draggedType = type;
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  onDrop(index: number, type: 'expense' | 'income') {
+    if (this.draggedItemIndex === null || this.draggedType !== type) return;
+
+    const list = type === 'expense' ? this.expenseCategories : this.incomeCategories;
+    const draggedItem = list[this.draggedItemIndex];
+
+    list.splice(this.draggedItemIndex, 1);
+    list.splice(index, 0, draggedItem);
+
+    this.draggedItemIndex = null;
+    this.draggedType = null;
+
+    // Persist new sort positions to database
+    list.forEach((cat: any, i: number) => {
+      cat.sortOrder = i;
+      this.api.updateCategory(cat._id, { sortOrder: i }).subscribe({
+        error: (err) => console.error('Failed to update category sortOrder:', err)
+      });
+    });
+
+    this.successMessage = 'Categories reordered successfully';
   }
 }

@@ -1,4 +1,5 @@
 import { User } from '../models/User';
+import mongoose from 'mongoose';
 import { ApiError } from '../utils/ApiError';
 import { generateAccessToken, generateRefreshToken } from '../utils/generateToken';
 import { UserRole } from '../utils/constants';
@@ -30,19 +31,22 @@ export class AuthService {
   /**
    * Register a new user
    */
-  public static async register(userData: {
-    email: string;
-    password?: string;
-    role: UserRole;
-    fullName: string;
-    username: string;
-    phone?: string;
-    country: string;
-    state?: string;
-    city?: string;
-    language?: string;
-    incomeBracket?: string;
-  }): Promise<AuthResponse> {
+  public static async register(
+    userData: {
+      email: string;
+      password?: string;
+      role: UserRole;
+      fullName: string;
+      username: string;
+      phone?: string;
+      country: string;
+      state?: string;
+      city?: string;
+      language?: string;
+      incomeBracket?: string;
+    },
+    reqContext?: { deviceName?: string; ipAddress?: string }
+  ): Promise<AuthResponse> {
     const existingUser = await User.findOne({ email: userData.email });
     if (existingUser) {
       throw new ApiError(400, 'User with this email already exists');
@@ -79,6 +83,18 @@ export class AuthService {
     const refreshToken = generateRefreshToken(payload);
 
     user.refreshTokens.push(refreshToken);
+
+    // Log initial device session
+    const deviceName = reqContext?.deviceName || 'Chrome Browser (Windows)';
+    const ipAddress = reqContext?.ipAddress || '127.0.0.1';
+    user.deviceSessions = [{
+      id: new mongoose.Types.ObjectId().toString(),
+      deviceName,
+      ipAddress,
+      loginTime: new Date(),
+      token: accessToken
+    }];
+
     await user.save();
 
     return {
@@ -105,7 +121,11 @@ export class AuthService {
   /**
    * Login user and generate access/refresh tokens
    */
-  public static async login(email: string, password: string): Promise<AuthResponse> {
+  public static async login(
+    email: string, 
+    password: string,
+    reqContext?: { deviceName?: string; ipAddress?: string }
+  ): Promise<AuthResponse> {
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
       throw new ApiError(401, 'Invalid email or password');
@@ -131,6 +151,24 @@ export class AuthService {
     if (user.refreshTokens.length > 5) {
       user.refreshTokens.shift();
     }
+
+    // Log device session
+    const deviceName = reqContext?.deviceName || 'Chrome Browser (Windows)';
+    const ipAddress = reqContext?.ipAddress || '127.0.0.1';
+    if (!user.deviceSessions) {
+      user.deviceSessions = [];
+    }
+    user.deviceSessions.push({
+      id: new mongoose.Types.ObjectId().toString(),
+      deviceName,
+      ipAddress,
+      loginTime: new Date(),
+      token: accessToken
+    });
+    if (user.deviceSessions.length > 5) {
+      user.deviceSessions.shift();
+    }
+
     await user.save();
 
     return {
@@ -197,6 +235,10 @@ export class AuthService {
     if (data.city !== undefined) user.city = data.city;
     if (data.language !== undefined) user.language = data.language;
     if (data.incomeBracket !== undefined) user.incomeBracket = data.incomeBracket;
+    if (data.avatar !== undefined) user.avatar = data.avatar;
+    if (data.currencyPreference !== undefined) user.currencyPreference = data.currencyPreference;
+    if (data.twoFactorEnabled !== undefined) user.twoFactorEnabled = data.twoFactorEnabled;
+    if (data.twoFactorMethod !== undefined) user.twoFactorMethod = data.twoFactorMethod;
     if (data.autoCategorizeEnabled !== undefined) user.autoCategorizeEnabled = data.autoCategorizeEnabled;
     if (data.categoryMappings !== undefined) user.categoryMappings = data.categoryMappings;
 
@@ -250,5 +292,54 @@ export class AuthService {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
     };
+  }
+
+  /**
+   * Change user password
+   */
+  public static async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+    const user = await User.findById(userId).select('+password');
+    if (!user) {
+      throw new ApiError(404, 'User not found');
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      throw new ApiError(400, 'Invalid current password');
+    }
+
+    user.password = newPassword;
+    await user.save();
+  }
+
+  /**
+   * Get active device sessions
+   */
+  public static async getSessions(userId: string): Promise<any[]> {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ApiError(404, 'User not found');
+    }
+    return user.deviceSessions || [];
+  }
+
+  /**
+   * Log out from other active sessions
+   */
+  public static async logoutOtherSessions(userId: string, currentToken: string): Promise<void> {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ApiError(404, 'User not found');
+    }
+
+    if (user.deviceSessions) {
+      user.deviceSessions = user.deviceSessions.filter((s: any) => s.token === currentToken);
+    }
+
+    if (user.refreshTokens.length > 1) {
+      user.refreshTokens = [user.refreshTokens[user.refreshTokens.length - 1]];
+    }
+
+    await user.save();
   }
 }

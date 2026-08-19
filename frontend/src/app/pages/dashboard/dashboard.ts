@@ -26,6 +26,7 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
   isLoadingChart = false;
   spendingChart: any;
   incomeExpenseChart: any;
+  chartTimePeriod: 'year' | 'quarter' | 'month' | 'all' = 'all';
 
   constructor(
     private api: ApiService,
@@ -220,6 +221,49 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  getChartTotals(): { income: number; expense: number } {
+    let filteredIncome = 0;
+    let filteredExpense = 0;
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    const currentQuarter = Math.floor(currentMonth / 3);
+
+    this.transactions.forEach(t => {
+      const amt = Number(t.amount) || 0;
+      const tDate = new Date(t.transactionDate);
+      const tYear = tDate.getFullYear();
+      const tMonth = tDate.getMonth();
+      const tQuarter = Math.floor(tMonth / 3);
+
+      let matches = false;
+      if (this.chartTimePeriod === 'all') {
+        matches = true;
+      } else if (this.chartTimePeriod === 'year') {
+        matches = (tYear === currentYear);
+      } else if (this.chartTimePeriod === 'quarter') {
+        matches = (tYear === currentYear && tQuarter === currentQuarter);
+      } else if (this.chartTimePeriod === 'month') {
+        matches = (tYear === currentYear && tMonth === currentMonth);
+      }
+
+      if (matches) {
+        if (t.type === 'Income') {
+          filteredIncome += amt;
+        } else if (t.type === 'Expense') {
+          filteredExpense += amt;
+        }
+      }
+    });
+
+    return { income: filteredIncome, expense: filteredExpense };
+  }
+
+  setChartTimePeriod(period: 'year' | 'quarter' | 'month' | 'all') {
+    this.chartTimePeriod = period;
+    this.renderIncomeExpenseChart();
+  }
+
   renderIncomeExpenseChart() {
     const canvas = document.getElementById('incomeExpenseChart') as HTMLCanvasElement;
     if (!canvas) {
@@ -231,6 +275,30 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
       this.incomeExpenseChart.destroy();
     }
 
+    const totals = this.getChartTotals();
+    const ctx = canvas.getContext('2d');
+    
+    let incomeBg: any = '#10b981';
+    let expenseBg: any = '#ef4444';
+    let incomeBorder: any = '#059669';
+    let expenseBorder: any = '#dc2626';
+
+    if (ctx) {
+      const height = canvas.clientHeight || canvas.height || 200;
+      
+      // Income: Emerald green (#34d399) fading to deep mint (#065f46)
+      const g1 = ctx.createLinearGradient(0, 0, 0, height);
+      g1.addColorStop(0, '#34d399');
+      g1.addColorStop(1, '#065f46');
+      incomeBg = g1;
+
+      // Expense: Coral red (#f87171) fading to dark crimson (#991b1b)
+      const g2 = ctx.createLinearGradient(0, 0, 0, height);
+      g2.addColorStop(0, '#f87171');
+      g2.addColorStop(1, '#991b1b');
+      expenseBg = g2;
+    }
+
     this.incomeExpenseChart = new Chart(canvas, {
       type: 'bar',
       data: {
@@ -238,11 +306,18 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
         datasets: [
           {
             label: 'Amount (₹)',
-            data: [this.totalIncome, this.totalExpense],
-            backgroundColor: ['#10b981', '#ef4444'],
-            borderColor: ['#10b981', '#ef4444'],
+            data: [totals.income, totals.expense],
+            backgroundColor: [incomeBg, expenseBg],
+            borderColor: [incomeBorder, expenseBorder],
             borderWidth: 1,
-            borderRadius: 8
+            borderRadius: {
+              topLeft: 8,
+              topRight: 8,
+              bottomLeft: 0,
+              bottomRight: 0
+            },
+            barThickness: 32,
+            maxBarThickness: 40
           }
         ]
       },
@@ -279,16 +354,21 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
             display: false
           },
           tooltip: {
-            backgroundColor: '#0c101b',
-            titleColor: '#fff',
-            bodyColor: '#94a3b8',
-            borderColor: 'rgba(255, 255, 255, 0.1)',
+            backgroundColor: '#1A1D28',
+            titleColor: '#ffffff',
+            bodyColor: '#ffffff',
+            borderColor: '#2D3243',
             borderWidth: 1,
             padding: 12,
+            displayColors: false,
+            cornerRadius: 8,
             callbacks: {
+              title: (tooltipItems) => {
+                return tooltipItems[0].label;
+              },
               label: (context) => {
                 const val = context.raw as number;
-                return ` ₹${val.toLocaleString('en-IN')}`;
+                return `₹${val.toLocaleString('en-IN')}`;
               }
             }
           }

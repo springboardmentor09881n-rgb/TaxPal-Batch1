@@ -3,14 +3,18 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api';
+import { Dropdown } from '../../components/dropdown/dropdown';
 
 @Component({
   selector: 'app-income',
-  imports: [FormsModule, RouterLink, CommonModule],
+  imports: [FormsModule, RouterLink, CommonModule, Dropdown],
   templateUrl: './income.html',
   styleUrl: './income.css',
 })
 export class Income implements OnInit {
+  get categoriesList(): any[] {
+    return this.incomeCategories.map(c => ({ value: c.name, label: c.name }));
+  }
   isLightTheme = false;
 
   description = '';

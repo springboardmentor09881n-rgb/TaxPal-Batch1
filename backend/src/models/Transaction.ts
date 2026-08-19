@@ -8,6 +8,7 @@ export interface ITransaction {
   amount: number;
   transactionDate: Date;
   notes?: string;
+  receiptImage?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -51,6 +52,9 @@ const transactionSchema = new Schema<ITransactionDocument>(
     notes: {
       type: String,
       trim: true,
+    },
+    receiptImage: {
+      type: String,
     },
   },
   {

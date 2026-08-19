@@ -200,7 +200,8 @@ export class ReportService {
     const expenseTransactions = transactions.filter(t => t.type === 'Expense');
 
     switch (reportType) {
-      case 'Income Statement': {
+      case 'Income Statement':
+      case 'Profit & Loss (P&L) Statement': {
         // Focus on income sources, revenue breakdown, and profit/loss
         reportData = {
           incomeCategoryBreakdown,
@@ -252,7 +253,9 @@ export class ReportService {
         break;
       }
 
-      case 'Tax Summary': {
+      case 'Tax Summary':
+      case 'Schedule C (Form 1040) Tax Summary':
+      case 'Quarterly Tax Summary': {
         // Pull tax estimate data from TaxEstimate collection
         const TaxEstimate = (await import('../models/TaxEstimate')).TaxEstimate;
         const taxEstimates = await TaxEstimate.find({
@@ -265,6 +268,16 @@ export class ReportService {
           'Travel', 'Education', 'Insurance', 'Utilities', 'Rent', 'Marketing',
           'Equipment', 'Hardware/Gadgets', 'Subscriptions'
         ];
+
+        // Determine if report country is India (INR)
+        const latestEstimate = taxEstimates.length > 0 ? taxEstimates[0] : null;
+        const reportCountry = latestEstimate?.country || 'United States';
+        const isReportINR = reportCountry.trim().toLowerCase() === 'india';
+
+        // Normalized transaction calculations (USD raw transactions converted to INR if report is in INR)
+        const totalIncomeNormalized = isReportINR ? totalIncome * 83 : totalIncome;
+        const totalExpensesNormalized = isReportINR ? totalExpenses * 83 : totalExpenses;
+
         const deductionBreakdown: Array<{ category: string; amount: number; count: number }> = [];
         let totalDeductible = 0;
 
@@ -273,56 +286,95 @@ export class ReportService {
             dc => cat.category.toLowerCase().includes(dc.toLowerCase())
           );
           if (isDeductible) {
+            const normalizedAmt = isReportINR ? cat.amount * 83 : cat.amount;
             deductionBreakdown.push({
               category: cat.category,
-              amount: cat.amount,
+              amount: Number(normalizedAmt.toFixed(2)),
               count: cat.count,
             });
-            totalDeductible += cat.amount;
+            totalDeductible += normalizedAmt;
           }
         });
 
-        // Use the most recent tax estimate for tax rate / liability info
-        const latestEstimate = taxEstimates.length > 0 ? taxEstimates[0] : null;
-        const taxableIncome = totalIncome - totalDeductible;
-        const effectiveTaxRate = latestEstimate && latestEstimate.grossIncomeForQuarter > 0
-          ? Math.round(((latestEstimate.estimatedTax / latestEstimate.grossIncomeForQuarter) * 100) * 100) / 100
-          : 0;
+        const taxableIncome = totalIncomeNormalized - totalDeductible;
 
-        // Aggregate quarterly estimates within the report period
+        // Aggregate quarterly estimates within the report period, normalising values (INR vs USD conversion)
         const quarterlyEstimates = taxEstimates
           .filter(te => {
             const created = new Date(te.createdAt);
             return created >= periodStart && created <= periodEnd;
           })
-          .map(te => ({
-            quarter: te.quarter,
-            grossIncome: te.grossIncomeForQuarter,
-            estimatedTax: te.estimatedTax,
-            dueDate: te.dueDate,
-            status: te.status,
-            country: te.country,
-            businessExpenses: te.businessExpenses || 0,
-            retirementContribution: te.retirementContribution || 0,
-            healthInsurancePremiums: te.healthInsurancePremiums || 0,
-            homeOfficeDeduction: te.homeOfficeDeduction || 0,
-          }));
+          .map(te => {
+            const isEstINR = te.country.trim().toLowerCase() === 'india';
+            let gross = te.grossIncomeForQuarter;
+            let estTax = te.estimatedTax;
+            let bizExp = te.businessExpenses || 0;
+            let retCont = te.retirementContribution || 0;
+            let healthIns = te.healthInsurancePremiums || 0;
+            let homeOff = te.homeOfficeDeduction || 0;
+
+            if (isEstINR && !isReportINR) {
+              // Convert INR estimate to USD
+              gross = Number((gross / 83).toFixed(2));
+              estTax = Number((estTax / 83).toFixed(2));
+              bizExp = Number((bizExp / 83).toFixed(2));
+              retCont = Number((retCont / 83).toFixed(2));
+              healthIns = Number((healthIns / 83).toFixed(2));
+              homeOff = Number((homeOff / 83).toFixed(2));
+            } else if (!isEstINR && isReportINR) {
+              // Convert USD estimate to INR
+              gross = Number((gross * 83).toFixed(2));
+              estTax = Number((estTax * 83).toFixed(2));
+              bizExp = Number((bizExp * 83).toFixed(2));
+              retCont = Number((retCont * 83).toFixed(2));
+              healthIns = Number((healthIns * 83).toFixed(2));
+              homeOff = Number((homeOff * 83).toFixed(2));
+            }
+
+            return {
+              quarter: te.quarter,
+              grossIncome: gross,
+              estimatedTax: estTax,
+              dueDate: te.dueDate,
+              status: te.status,
+              country: te.country,
+              businessExpenses: bizExp,
+              retirementContribution: retCont,
+              healthInsurancePremiums: healthIns,
+              homeOfficeDeduction: homeOff,
+            };
+          });
 
         const totalEstimatedTax = quarterlyEstimates.reduce((sum, qe) => sum + qe.estimatedTax, 0);
 
+        // Effective Tax Rate based on normalized values
+        const effectiveTaxRate = latestEstimate && latestEstimate.grossIncomeForQuarter > 0
+          ? Math.round(((latestEstimate.estimatedTax / latestEstimate.grossIncomeForQuarter) * 100) * 100) / 100
+          : 0;
+
         reportData = {
-          categoryBreakdown,
-          monthlyBreakdown,
+          categoryBreakdown: categoryBreakdown.map(cat => ({
+            category: cat.category,
+            amount: Number((isReportINR ? cat.amount * 83 : cat.amount).toFixed(2)),
+            percentage: cat.percentage,
+            count: cat.count
+          })),
+          monthlyBreakdown: monthlyBreakdown.map(m => ({
+            month: m.month,
+            income: Number((isReportINR ? m.income * 83 : m.income).toFixed(2)),
+            expenses: Number((isReportINR ? m.expenses * 83 : m.expenses).toFixed(2)),
+            netSavings: Number((isReportINR ? m.netSavings * 83 : m.netSavings).toFixed(2))
+          })),
           transactionCount: transactions.length,
           savingsRate,
-          taxableIncome: Math.max(0, taxableIncome),
-          totalDeductible,
+          taxableIncome: Math.max(0, Number(taxableIncome.toFixed(2))),
+          totalDeductible: Number(totalDeductible.toFixed(2)),
           deductionBreakdown,
           effectiveTaxRate,
-          estimatedAnnualTax: latestEstimate ? (latestEstimate.estimatedTax * 4) : 0,
-          totalEstimatedTax,
+          estimatedAnnualTax: quarterlyEstimates.length > 0 ? (quarterlyEstimates[0].estimatedTax * 4) : 0,
+          totalEstimatedTax: Number(totalEstimatedTax.toFixed(2)),
           quarterlyEstimates,
-          country: latestEstimate?.country || 'N/A',
+          country: reportCountry,
         };
         break;
       }
@@ -409,212 +461,162 @@ export class ReportService {
    */
   public static generateCSV(report: IReportDocument): Buffer {
     const lines: string[] = [];
-    const fmt = (n: number) => (n || 0).toFixed(2);
+    const fmtAmt = (n: number | undefined) => n !== undefined ? (n || 0).toFixed(2) : '';
+    const fmtPercent = (n: number | undefined) => n !== undefined ? (n || 0).toFixed(2) + '%' : '';
+    const formatDate = (dateInput: any) => {
+      if (!dateInput) return '';
+      try {
+        const d = new Date(dateInput);
+        if (isNaN(d.getTime())) return '';
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd} `; // Trailing space forces Excel to treat it as plain text to prevent hashing
+      } catch (e) {
+        return '';
+      }
+    };
 
-    // Common Header Meta
-    lines.push(`TaxPal Financial Report`);
-    lines.push(`Report Type,${report.reportType}`);
-    lines.push(`Period,${report.period}`);
-    lines.push(`Date Range,${report.periodStart.toISOString().split('T')[0]} to ${report.periodEnd.toISOString().split('T')[0]}`);
-    lines.push(`Generated Date,${new Date(report.createdAt).toISOString()}`);
-    lines.push(``);
+    const rType = report.reportType || 'Summary';
+    const period = report.period || 'N/A';
+    const range = `${formatDate(report.periodStart)}to ${formatDate(report.periodEnd)}`;
+
+    // Single-table Header Row
+    lines.push(`"Report Type","Period","Date Range","Section","Category/Metric","Amount ($)","Share (%)","Transactions Count","Date / Due Date","Status"`);
+
+    const addRow = (section: string, catOrMetric: string, amount?: number, percent?: number, count?: number, date?: any, status?: string) => {
+      const row = [
+        `"${rType.replace(/"/g, '""')}"`,
+        `"${period.replace(/"/g, '""')}"`,
+        `"${range.replace(/"/g, '""')}"`,
+        `"${section.replace(/"/g, '""')}"`,
+        `"${catOrMetric.replace(/"/g, '""')}"`,
+        fmtAmt(amount),
+        fmtPercent(percent),
+        count !== undefined ? String(count) : '',
+        date ? `"${formatDate(date)}"` : '',
+        status ? `"${status.replace(/"/g, '""')}"` : ''
+      ];
+      lines.push(row.join(','));
+    };
 
     switch (report.reportType) {
-      case 'Income Statement': {
-        // Summary
-        lines.push(`--- Profit & Loss Summary ---`);
-        lines.push(`Metric,Amount ($)`);
-        lines.push(`Total Revenue,${fmt(report.totalIncome)}`);
-        lines.push(`Total Costs,${fmt(report.totalExpenses)}`);
-        lines.push(`Net Profit / Loss,${fmt(report.netSavings)}`);
-        lines.push(`Profit Margin,${report.data?.savingsRate || 0}%`);
-        lines.push(``);
+      case 'Income Statement':
+      case 'Profit & Loss (P&L) Statement': {
+        // Summary Metrics
+        addRow('Profit & Loss Summary', 'Total Revenue', report.totalIncome);
+        addRow('Profit & Loss Summary', 'Total Costs', report.totalExpenses);
+        addRow('Profit & Loss Summary', 'Net Profit / Loss', report.netSavings);
+        addRow('Profit & Loss Summary', 'Profit Margin', undefined, report.data?.savingsRate);
 
         // Income Sources
         const incomeCats = report.data?.incomeCategoryBreakdown || [];
-        if (incomeCats.length > 0) {
-          lines.push(`--- Revenue Sources ---`);
-          lines.push(`Source,Amount ($),Share (%),Transactions`);
-          incomeCats.forEach((cat: any) => {
-            lines.push(`"${cat.category}",${fmt(cat.amount)},${cat.percentage}%,${cat.count}`);
-          });
-          lines.push(``);
-        }
+        incomeCats.forEach((cat: any) => {
+          addRow('Revenue Sources', cat.category, cat.amount, cat.percentage, cat.count);
+        });
 
-        // Monthly P&L
+        // Monthly Breakdown
         const monthly = report.data?.monthlyBreakdown || [];
-        if (monthly.length > 0) {
-          lines.push(`--- Monthly Profit & Loss ---`);
-          lines.push(`Month,Revenue ($),Costs ($),Net Profit ($)`);
-          monthly.forEach((m) => {
-            lines.push(`"${m.month}",${fmt(m.income)},${fmt(m.expenses)},${fmt(m.netSavings)}`);
-          });
-          lines.push(``);
-        }
+        monthly.forEach((m: any) => {
+          addRow('Monthly Profit & Loss', `${m.month} Revenue`, m.income);
+          addRow('Monthly Profit & Loss', `${m.month} Costs`, m.expenses);
+          addRow('Monthly Profit & Loss', `${m.month} Net Profit`, m.netSavings);
+        });
 
         // Recent Income Transactions
         const txs = report.data?.recentTransactions || [];
-        if (txs.length > 0) {
-          lines.push(`--- Recent Income Transactions ---`);
-          lines.push(`Date,Description,Category,Amount ($)`);
-          txs.forEach((tx: any) => {
-            const d = new Date(tx.date).toISOString().split('T')[0];
-            lines.push(`"${d}","${(tx.description || '').replace(/"/g, '""')}","${tx.category}",${fmt(tx.amount)}`);
-          });
-        }
+        txs.forEach((tx: any) => {
+          addRow('Recent Income Transactions', tx.description || 'N/A', tx.amount, undefined, undefined, tx.date, tx.category);
+        });
         break;
       }
 
       case 'Expense Breakdown': {
-        // Summary
-        lines.push(`--- Spending Summary ---`);
-        lines.push(`Metric,Value`);
-        lines.push(`Total Spending,${fmt(report.totalExpenses)}`);
-        lines.push(`Expense Transactions,${report.data?.transactionCount || 0}`);
-        lines.push(`Avg per Transaction,${fmt(report.data?.avgExpensePerTransaction || 0)}`);
-        lines.push(`Top Category,${report.data?.topExpenseCategory || 'N/A'}`);
-        lines.push(``);
+        // Spending Summary
+        addRow('Spending Summary', 'Total Spending', report.totalExpenses);
+        addRow('Spending Summary', 'Expense Transactions', undefined, undefined, report.data?.transactionCount);
+        addRow('Spending Summary', 'Avg per Transaction', report.data?.avgExpensePerTransaction);
+        addRow('Spending Summary', 'Top Category', undefined, undefined, undefined, undefined, report.data?.topExpenseCategory);
 
         // Spending by Category
         const cats = report.data?.categoryBreakdown || [];
-        if (cats.length > 0) {
-          lines.push(`--- Spending by Category ---`);
-          lines.push(`Category,Amount ($),Share (%),Transactions`);
-          cats.forEach((cat) => {
-            lines.push(`"${cat.category}",${fmt(cat.amount)},${cat.percentage}%,${cat.count}`);
-          });
-          lines.push(``);
-        }
+        cats.forEach((cat: any) => {
+          addRow('Spending by Category', cat.category, cat.amount, cat.percentage, cat.count);
+        });
 
         // Monthly Spending
         const monthly = report.data?.monthlyBreakdown || [];
-        if (monthly.length > 0) {
-          lines.push(`--- Monthly Spending Trend ---`);
-          lines.push(`Month,Expenses ($)`);
-          monthly.forEach((m) => {
-            lines.push(`"${m.month}",${fmt(m.expenses)}`);
-          });
-          lines.push(``);
-        }
+        monthly.forEach((m: any) => {
+          addRow('Monthly Spending Trend', m.month, m.expenses);
+        });
 
         // Recent Expense Transactions
         const txs = report.data?.recentTransactions || [];
-        if (txs.length > 0) {
-          lines.push(`--- Recent Expense Transactions ---`);
-          lines.push(`Date,Description,Category,Amount ($)`);
-          txs.forEach((tx: any) => {
-            const d = new Date(tx.date).toISOString().split('T')[0];
-            lines.push(`"${d}","${(tx.description || '').replace(/"/g, '""')}","${tx.category}",${fmt(tx.amount)}`);
-          });
-        }
+        txs.forEach((tx: any) => {
+          addRow('Recent Expense Transactions', tx.description || 'N/A', tx.amount, undefined, undefined, tx.date, tx.category);
+        });
         break;
       }
 
-      case 'Tax Summary': {
+      case 'Tax Summary':
+      case 'Schedule C (Form 1040) Tax Summary':
+      case 'Quarterly Tax Summary': {
         // Tax Overview
-        lines.push(`--- Tax Overview ---`);
-        lines.push(`Metric,Value`);
-        lines.push(`Gross Income,${fmt(report.totalIncome)}`);
-        lines.push(`Total Deductions,${fmt(report.data?.totalDeductible || 0)}`);
-        lines.push(`Taxable Income,${fmt(report.data?.taxableIncome || 0)}`);
-        lines.push(`Effective Tax Rate,${report.data?.effectiveTaxRate || 0}%`);
-        lines.push(`Estimated Annual Tax,${fmt(report.data?.estimatedAnnualTax || 0)}`);
-        lines.push(`Total Estimated Tax (Period),${fmt(report.data?.totalEstimatedTax || 0)}`);
-        lines.push(`Country,${report.data?.country || 'N/A'}`);
-        lines.push(``);
+        addRow('Tax Overview', 'Gross Income', report.totalIncome);
+        addRow('Tax Overview', 'Total Deductions', report.data?.totalDeductible);
+        addRow('Tax Overview', 'Taxable Income', report.data?.taxableIncome);
+        addRow('Tax Overview', 'Effective Tax Rate', undefined, report.data?.effectiveTaxRate);
+        addRow('Tax Overview', 'Estimated Annual Tax', report.data?.estimatedAnnualTax);
+        addRow('Tax Overview', 'Total Estimated Tax (Period)', report.data?.totalEstimatedTax);
+        addRow('Tax Overview', 'Country', undefined, undefined, undefined, undefined, report.data?.country);
 
-        // Deduction Breakdown
+        // Deductions
         const deductions = report.data?.deductionBreakdown || [];
-        if (deductions.length > 0) {
-          lines.push(`--- Deductible Expenses ---`);
-          lines.push(`Category,Amount ($),Transactions`);
-          deductions.forEach((d: any) => {
-            lines.push(`"${d.category}",${fmt(d.amount)},${d.count}`);
-          });
-          lines.push(`"Total Deductions",${fmt(report.data?.totalDeductible || 0)},`);
-          lines.push(``);
-        }
+        deductions.forEach((d: any) => {
+          addRow('Deductible Expenses', d.category, d.amount, undefined, d.count);
+        });
 
-        // Quarterly Tax Estimates
+        // Quarterly Estimates
         const qEstimates = report.data?.quarterlyEstimates || [];
-        if (qEstimates.length > 0) {
-          lines.push(`--- Quarterly Tax Estimates ---`);
-          lines.push(`Quarter,Gross Income ($),Estimated Tax ($),Due Date,Status`);
-          qEstimates.forEach((qe: any) => {
-            const dueDate = new Date(qe.dueDate).toISOString().split('T')[0];
-            lines.push(`"${qe.quarter}",${fmt(qe.grossIncome)},${fmt(qe.estimatedTax)},"${dueDate}","${qe.status}"`);
-          });
-          lines.push(``);
-        }
+        qEstimates.forEach((qe: any) => {
+          addRow('Quarterly Tax Estimates', qe.quarter, qe.grossIncome, undefined, undefined, qe.dueDate, qe.status);
+        });
 
         // All Expense Categories
         const cats = report.data?.categoryBreakdown || [];
-        if (cats.length > 0) {
-          lines.push(`--- All Expense Categories ---`);
-          lines.push(`Category,Amount ($),Share (%),Transactions`);
-          cats.forEach((cat) => {
-            lines.push(`"${cat.category}",${fmt(cat.amount)},${cat.percentage}%,${cat.count}`);
-          });
-        }
+        cats.forEach((cat: any) => {
+          addRow('All Expense Categories', cat.category, cat.amount, cat.percentage, cat.count);
+        });
         break;
       }
 
       case 'Income & Expense Summary':
       default: {
         // Summary
-        lines.push(`--- Financial Summary ---`);
-        lines.push(`Metric,Amount ($)`);
-        lines.push(`Total Income,${fmt(report.totalIncome)}`);
-        lines.push(`Total Expenses,${fmt(report.totalExpenses)}`);
-        lines.push(`Net Savings,${fmt(report.netSavings)}`);
-        if (report.data?.savingsRate !== undefined) {
-          lines.push(`Savings Rate,${report.data.savingsRate}%`);
-        }
-        lines.push(``);
+        addRow('Financial Summary', 'Total Income', report.totalIncome);
+        addRow('Financial Summary', 'Total Expenses', report.totalExpenses);
+        addRow('Financial Summary', 'Net Savings', report.netSavings);
+        addRow('Financial Summary', 'Savings Rate', undefined, report.data?.savingsRate);
 
-        // Income Sources
+        // Income Categories
         const incomeCats = report.data?.incomeCategoryBreakdown || [];
-        if (incomeCats.length > 0) {
-          lines.push(`--- Income Sources ---`);
-          lines.push(`Source,Amount ($),Share (%),Transactions`);
-          incomeCats.forEach((cat: any) => {
-            lines.push(`"${cat.category}",${fmt(cat.amount)},${cat.percentage}%,${cat.count}`);
-          });
-          lines.push(``);
-        }
+        incomeCats.forEach((cat: any) => {
+          addRow('Income Sources', cat.category, cat.amount, cat.percentage, cat.count);
+        });
 
-        // Expense Category Breakdown
-        const cats = report.data?.categoryBreakdown || [];
-        if (cats.length > 0) {
-          lines.push(`--- Expense Category Breakdown ---`);
-          lines.push(`Category,Amount ($),Percentage (%),Transaction Count`);
-          cats.forEach((cat) => {
-            lines.push(`"${cat.category}",${fmt(cat.amount)},${cat.percentage}%,${cat.count}`);
-          });
-          lines.push(``);
-        }
+        // Expense Categories
+        const expenseCats = report.data?.categoryBreakdown || [];
+        expenseCats.forEach((cat: any) => {
+          addRow('Expense Breakdown', cat.category, cat.amount, cat.percentage, cat.count);
+        });
 
         // Monthly Breakdown
         const monthly = report.data?.monthlyBreakdown || [];
-        if (monthly.length > 0) {
-          lines.push(`--- Monthly Breakdown ---`);
-          lines.push(`Month,Income ($),Expenses ($),Net Savings ($)`);
-          monthly.forEach((m) => {
-            lines.push(`"${m.month}",${fmt(m.income)},${fmt(m.expenses)},${fmt(m.netSavings)}`);
-          });
-          lines.push(``);
-        }
-
-        // Transactions
-        const txs = report.data?.recentTransactions || [];
-        if (txs.length > 0) {
-          lines.push(`--- Transactions Included ---`);
-          lines.push(`Date,Description,Category,Type,Amount ($)`);
-          txs.forEach((tx: any) => {
-            const d = new Date(tx.date).toISOString().split('T')[0];
-            lines.push(`"${d}","${(tx.description || '').replace(/"/g, '""')}","${tx.category}","${tx.type}",${fmt(tx.amount)}`);
-          });
-        }
+        monthly.forEach((m: any) => {
+          addRow('Monthly Breakdown', `${m.month} Income`, m.income);
+          addRow('Monthly Breakdown', `${m.month} Expenses`, m.expenses);
+          addRow('Monthly Breakdown', `${m.month} Net Savings`, m.netSavings);
+        });
         break;
       }
     }
@@ -643,7 +645,20 @@ export class ReportService {
       const purpleColor = '#a855f7';
       const blueColor = '#3b82f6';
 
-      const fmtMoney = (n: number) => '$' + (n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const getCurrencySymbol = (countryName: string) => {
+        const c = (countryName || '').trim().toLowerCase();
+        if (c === 'india' || c === 'in') return 'Rs.';
+        if (c === 'japan' || c === 'jp' || c === 'china' || c === 'cn') return '¥';
+        if (c === 'germany' || c === 'de' || c === 'france' || c === 'fr') return 'EUR';
+        if (c === 'united kingdom' || c === 'uk' || c === 'gb') return '£';
+        if (c === 'switzerland' || c === 'ch') return 'CHF';
+        if (c === 'singapore' || c === 'sg') return 'S$';
+        return '$';
+      };
+      const fmtMoney = (n: number) => {
+        const sym = getCurrencySymbol(report.data?.country || 'USA');
+        return sym + ' ' + (n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      };
 
       // ===== Common Header Banner =====
       doc.rect(40, 40, 515, 65).fill('#0f172a');
@@ -734,7 +749,8 @@ export class ReportService {
 
       switch (report.reportType) {
 
-        case 'Income Statement': {
+        case 'Income Statement':
+        case 'Profit & Loss (P&L) Statement': {
           // Metric Cards: Revenue | Costs | Net Profit | Profit Margin
           drawMetricCard(40, cardY, cardWidth, cardHeight, 'TOTAL REVENUE', fmtMoney(report.totalIncome), '#ecfdf5', '#a7f3d0', '#065f46', greenColor);
           drawMetricCard(170, cardY, cardWidth, cardHeight, 'TOTAL COSTS', fmtMoney(report.totalExpenses), '#fef2f2', '#fecaca', '#991b1b', redColor);
@@ -816,7 +832,9 @@ export class ReportService {
           break;
         }
 
-        case 'Tax Summary': {
+        case 'Tax Summary':
+        case 'Schedule C (Form 1040) Tax Summary':
+        case 'Quarterly Tax Summary': {
           // Metric Cards: Gross Income | Total Deductions | Taxable Income | Estimated Tax
           drawMetricCard(40, cardY, cardWidth, cardHeight, 'GROSS INCOME', fmtMoney(report.totalIncome), '#ecfdf5', '#a7f3d0', '#065f46', greenColor);
           drawMetricCard(170, cardY, cardWidth, cardHeight, 'DEDUCTIONS', fmtMoney((report.data as any)?.totalDeductible || 0), '#fef2f2', '#fecaca', '#991b1b', redColor);

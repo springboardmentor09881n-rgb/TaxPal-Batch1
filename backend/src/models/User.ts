@@ -14,9 +14,22 @@ export interface IUser {
   city?: string;
   language?: string;
   incomeBracket?: string;
+  avatar?: string;
+  currencyPreference?: string;
+  twoFactorEnabled?: boolean;
+  twoFactorMethod?: string;
+  deviceSessions?: Array<{
+    id: string;
+    deviceName: string;
+    ipAddress: string;
+    loginTime: Date;
+    token: string;
+  }>;
   refreshTokens: string[];
   autoCategorizeEnabled: boolean;
   categoryMappings: Array<{ keyword: string; category: string }>;
+  resetOtp?: string;
+  resetOtpExpires?: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
   createdAt: Date;
   updatedAt: Date;
@@ -79,6 +92,34 @@ const userSchema = new Schema<IUserDocument>(
       type: String,
       trim: true,
     },
+    avatar: {
+      type: String,
+      default: '',
+    },
+    currencyPreference: {
+      type: String,
+      default: 'INR',
+    },
+    twoFactorEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    twoFactorMethod: {
+      type: String,
+      default: 'app',
+    },
+    deviceSessions: {
+      type: [
+        {
+          id: { type: String, required: true },
+          deviceName: { type: String, required: true },
+          ipAddress: { type: String, required: true },
+          loginTime: { type: Date, default: Date.now },
+          token: { type: String, required: true }
+        }
+      ],
+      default: []
+    },
     refreshTokens: {
       type: [String],
       default: [],
@@ -119,6 +160,12 @@ const userSchema = new Schema<IUserDocument>(
         { keyword: 'office', category: 'Office Supplies' }
       ]
     },
+    resetOtp: {
+      type: String
+    },
+    resetOtpExpires: {
+      type: Date
+    }
   },
   {
     timestamps: true,

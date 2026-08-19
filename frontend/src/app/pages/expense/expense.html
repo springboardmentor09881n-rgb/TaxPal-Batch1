@@ -6,14 +6,16 @@
   <div class="transaction-card">
     <div class="brand-section">
       <div class="brand-logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="1" x2="12" y2="23"></line>
           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
         </svg>
       </div>
       <h2>TaxPal</h2>
       <button (click)="toggleTheme()" class="theme-toggle-btn" title="Toggle theme">
-        <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
           <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -24,12 +26,17 @@
           <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
-        <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
       </button>
       <a routerLink="/profile" class="btn-profile-small" title="Profile Settings">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
       </a>
     </div>
 
@@ -37,43 +44,34 @@
     <p class="card-subtitle">Record a new business expense to deduct from your taxable income</p>
 
     @if (errorMessage) {
-      <div class="alert alert-error">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        <span>{{ errorMessage }}</span>
-      </div>
+    <div class="alert alert-error">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="alert-icon">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </div>
     }
 
     <form (submit)="saveExpense(); $event.preventDefault()" class="transaction-form">
       <!-- Description -->
       <div class="input-group" [class.has-error]="descriptionError">
         <label for="description">Description</label>
-        <input
-          id="description"
-          type="text"
-          placeholder="e.g. Adobe Creative Suite Subscription"
-          [(ngModel)]="description"
-          name="description"
-          (input)="onDescriptionInput()">
+        <input id="description" type="text" placeholder="e.g. Adobe Creative Suite Subscription"
+          [(ngModel)]="description" name="description" (input)="onDescriptionInput()">
         @if (descriptionError) {
-          <span class="error-text">{{ descriptionError }}</span>
+        <span class="error-text">{{ descriptionError }}</span>
         }
       </div>
 
       <!-- Amount -->
       <div class="input-group" [class.has-error]="amountError">
         <label for="amount">Amount (INR)</label>
-        <input
-          id="amount"
-          type="number"
-          placeholder="e.g. 2500"
-          [(ngModel)]="amount"
-          name="amount">
+        <input id="amount" type="number" placeholder="e.g. 2500" [(ngModel)]="amount" name="amount">
         @if (amountError) {
-          <span class="error-text">{{ amountError }}</span>
+        <span class="error-text">{{ amountError }}</span>
         }
       </div>
 
@@ -82,47 +80,36 @@
         <div class="category-label-row">
           <label for="category">Category</label>
           @if (isAutoSuggested) {
-            <span class="auto-suggest-badge">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="spark-icon"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              Auto-suggested
-            </span>
+          <span class="auto-suggest-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="spark-icon">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            Auto-suggested
+          </span>
           }
         </div>
-        <select
-          id="category"
-          [(ngModel)]="category"
-          name="category"
-          (change)="onCategoryChange()">
-          @for (cat of expenseCategories; track cat.name) {
-            <option [value]="cat.name">{{ cat.name }}</option>
-          }
-        </select>
+        <app-dropdown id="category" [options]="categoriesList" [(value)]="category" (valueChange)="onCategoryChange()" placeholder="Select category"></app-dropdown>
         @if (categoryError) {
-          <span class="error-text">{{ categoryError }}</span>
+        <span class="error-text">{{ categoryError }}</span>
         }
       </div>
 
       <!-- Transaction Date -->
       <div class="input-group" [class.has-error]="dateError">
         <label for="transactionDate">Date</label>
-        <input
-          id="transactionDate"
-          type="date"
-          [(ngModel)]="transactionDate"
-          name="transactionDate">
+        <input id="transactionDate" type="date" [(ngModel)]="transactionDate" name="transactionDate">
         @if (dateError) {
-          <span class="error-text">{{ dateError }}</span>
+        <span class="error-text">{{ dateError }}</span>
         }
       </div>
 
       <!-- Notes (Optional) -->
       <div class="input-group">
         <label for="notes">Notes (Optional)</label>
-        <textarea
-          id="notes"
-          rows="3"
-          placeholder="Add any extra details..."
-          [(ngModel)]="notes"
+        <textarea id="notes" rows="3" placeholder="Add any extra details..." [(ngModel)]="notes"
           name="notes"></textarea>
       </div>
 
@@ -130,13 +117,13 @@
       <div class="action-buttons">
         <button type="submit" class="btn btn-primary" [disabled]="isLoading">
           @if (isLoading) {
-            <span class="spinner"></span>
-            <span>Saving...</span>
+          <span class="spinner"></span>
+          <span>Saving...</span>
           } @else {
-            <span>Save Expense</span>
+          <span>Save Expense</span>
           }
         </button>
-        
+
         <a routerLink="/dashboard" class="btn-cancel">Cancel</a>
       </div>
     </form>

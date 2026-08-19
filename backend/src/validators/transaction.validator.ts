@@ -14,6 +14,7 @@ export const createTransactionSchema = z.object({
       invalid_type_error: 'Invalid date format',
     }),
     notes: z.string().trim().optional(),
+    receiptImage: z.string().optional(),
   }),
 });
 
@@ -27,6 +28,7 @@ export const updateTransactionSchema = z.object({
       invalid_type_error: 'Invalid date format',
     }).optional(),
     notes: z.string().trim().optional(),
+    receiptImage: z.string().optional(),
   }),
   params: z.object({
     id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid Transaction ID format'),

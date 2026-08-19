@@ -701,3 +701,243 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ========================================================
+   Budget Summary Metrics Grid
+   ======================================================== */
+.budget-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.summary-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.summary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+body.light-theme .summary-card {
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.04);
+  border-color: rgba(99, 102, 241, 0.08);
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(128, 128, 128, 0.1);
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.card-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.total-icon {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
+}
+
+.spent-icon {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.remaining-icon {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.remaining-icon.negative-val {
+  background-color: rgba(244, 63, 94, 0.15);
+  color: #f43f5e;
+}
+
+.health-icon {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.health-icon.at-risk {
+  background-color: rgba(244, 63, 94, 0.15);
+  color: #f43f5e;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.card-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.card-value.text-danger {
+  color: #f43f5e;
+}
+
+.health-status-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.badge-good {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-risk {
+  background-color: rgba(244, 63, 94, 0.15);
+  color: #f43f5e;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+/* ========================================================
+   Card vs. Table View Toggle Styling
+   ======================================================== */
+.view-toggle-container {
+  display: flex;
+  background-color: rgba(128, 128, 128, 0.08);
+  border: 1px solid var(--border-color);
+  padding: 4px;
+  border-radius: 8px;
+}
+
+body.light-theme .view-toggle-container {
+  background-color: rgba(99, 102, 241, 0.03);
+}
+
+.btn-toggle-view {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-toggle-view:hover {
+  color: var(--text-primary);
+}
+
+.btn-toggle-view.active {
+  background-color: var(--bg-tertiary);
+  color: #6366f1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .btn-toggle-view.active {
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+  background-color: #ffffff;
+}
+
+/* ========================================================
+   Budget Table Styling
+   ======================================================== */
+.budget-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.budget-table th {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.light-theme .budget-table th {
+  border-bottom-color: rgba(99, 102, 241, 0.08);
+}
+
+.budget-table td {
+  padding: 16px 18px;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+body.light-theme .budget-table td {
+  border-bottom-color: rgba(99, 102, 241, 0.04);
+}
+
+.cell-category {
+  display: flex;
+  flex-direction: column;
+}
+
+.status-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+
+.badge-ok {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.badge-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.badge-danger {
+  background-color: rgba(244, 63, 94, 0.1);
+  color: #f43f5e;
+}
+
+.text-danger {
+  color: #f43f5e;
+}
+
+.text-success {
+  color: #10b981;
+}

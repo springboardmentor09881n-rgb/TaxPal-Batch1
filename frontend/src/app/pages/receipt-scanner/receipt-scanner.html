@@ -1,0 +1,230 @@
+<div class="transactions-container">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <h2>TaxPal</h2>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="9"></rect>
+            <rect x="14" y="3" width="7" height="5"></rect>
+            <rect x="14" y="12" width="7" height="9"></rect>
+            <rect x="3" y="16" width="7" height="5"></rect>
+          </svg>
+        </span>
+        <a routerLink="/dashboard"
+          style="text-decoration: none; color: inherit; display: block; width: 100%;">Dashboard</a>
+      </li>
+      <li class="active">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+        </span>
+        <a routerLink="/transactions"
+          style="text-decoration: none; color: inherit; display: block; width: 100%;">Transactions</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+            <path d="M4 6v12a2 2 0 0 0 2 2h14v-4"></path>
+            <path d="M18 12a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4v-6z"></path>
+          </svg>
+        </span>
+        <a routerLink="/budgets" style="text-decoration: none; color: inherit; display: block; width: 100%;">Budgets</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="18" y="3" width="4" height="18" rx="2" ry="2"></rect>
+            <rect x="10" y="8" width="4" height="13" rx="2" ry="2"></rect>
+            <rect x="2" y="13" width="4" height="8" rx="2" ry="2"></rect>
+          </svg>
+        </span>
+        <a routerLink="/tax-estimator" style="text-decoration: none; color: inherit; display: block; width: 100%;">Tax
+          Estimator</a>
+      </li>
+      <li>
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </span>
+        <a routerLink="/reports" style="text-decoration: none; color: inherit; display: block; width: 100%;">Reports</a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button (click)="toggleTheme()" class="btn-theme" title="Toggle theme">
+        <span class="menu-icon">
+          <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </span>
+        <span>Theme</span>
+      </button>
+      <a routerLink="/profile" class="btn-profile">
+        <span class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header-section">
+      <div class="title-area">
+        <h1>Smart Receipt Scanner</h1>
+        <p class="subtitle">Upload a receipt and our AI will extract the details for you.</p>
+      </div>
+      <div class="action-buttons">
+        <button class="btn-secondary" routerLink="/transactions">Cancel</button>
+      </div>
+    </div>
+
+    <div class="scanner-layout">
+      <!-- Upload Section -->
+      <div class="upload-section card">
+        <div class="upload-area" *ngIf="!selectedFile">
+          <div class="upload-icon">📸</div>
+          <h3>Upload Receipt</h3>
+          <p>Click below to select an image or PDF</p>
+          <input type="file" id="file-upload" class="hidden-input" accept="image/*,.pdf" capture="environment"
+            (change)="onFileSelected($event)">
+          <label for="file-upload" class="btn-primary">Browse File or Camera</label>
+        </div>
+
+        <div class="preview-area" *ngIf="selectedFile">
+          <div class="preview-image-wrapper">
+            <img *ngIf="filePreview && selectedFile.type.startsWith('image')" [src]="filePreview" alt="Receipt Preview">
+            <div class="scanner-container" *ngIf="isScanning">
+              <div class="scan-laser-line"></div>
+              <div class="scan-overlay-blur"></div>
+              <span class="scan-status-text">Scanning Receipt...</span>
+            </div>
+          </div>
+          <div class="pdf-placeholder" *ngIf="selectedFile.type === 'application/pdf'">
+            <div class="pdf-icon">📄</div>
+            <p>{{ selectedFile.name }}</p>
+            <div class="scanner-container" *ngIf="isScanning">
+              <div class="scan-laser-line"></div>
+              <div class="scan-overlay-blur"></div>
+              <span class="scan-status-text">Scanning PDF text...</span>
+            </div>
+          </div>
+
+          <div class="preview-actions">
+            <button class="btn-secondary" (click)="selectedFile = null; scanSuccess = false">Remove</button>
+            <button class="btn-primary" (click)="scanReceipt()" [disabled]="isScanning || scanSuccess">
+              {{ isScanning ? 'Scanning...' : 'Scan Receipt' }}
+            </button>
+          </div>
+
+          <div *ngIf="scanError" class="error-message mt-10">{{ scanError }}</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Autofill Confirmation Modal Overlay -->
+  <div class="modal-overlay" *ngIf="scanSuccess">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Verify Scanned Transaction</h2>
+        <button type="button" (click)="resetScanner()" class="btn-close">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <p class="subtitle mb-20" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
+        Please review the details extracted from your receipt below before saving.
+      </p>
+
+      <form (ngSubmit)="confirmTransaction()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Type</label>
+            <app-dropdown [options]="typesList" [(value)]="transactionType" placeholder="Select type"></app-dropdown>
+          </div>
+          <div class="form-group">
+            <label>Amount (INR)</label>
+            <div class="input-with-icon" style="position: relative;">
+              <span class="currency-symbol" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);">₹</span>
+              <input type="number" name="amount" [(ngModel)]="amount" required step="0.01" style="padding: 12px 12px 12px 28px; width: 100%; border-radius: 8px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); outline: none;">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+          <label>Merchant / Description</label>
+          <input type="text" name="description" [(ngModel)]="description" required style="padding: 12px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); outline: none;">
+        </div>
+
+        <div class="form-row" style="margin-top: 15px;">
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" name="transactionDate" [(ngModel)]="transactionDate" required style="padding: 12px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); outline: none;">
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <app-dropdown [options]="currentCategoriesList" [(value)]="category" placeholder="Select category"></app-dropdown>
+          </div>
+        </div>
+
+        <div *ngIf="submitError" class="error-message mb-10" style="color: #f43f5e; font-size: 13px; margin-top: 10px;">{{ submitError }}</div>
+
+        <div class="form-actions mt-20" style="display: flex; gap: 12px; width: 100%; margin-top: 24px;">
+          <button type="submit" class="btn-primary" [disabled]="isSubmitting" style="flex: 1; padding: 14px; border: none; font-weight: 600; border-radius: 8px; cursor: pointer; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white;">
+            {{ isSubmitting ? 'Creating...' : 'Confirm & Save' }}
+          </button>
+          <button type="button" (click)="resetScanner()" class="btn-secondary" style="flex: 1; padding: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; background: rgba(128, 128, 128, 0.05); border: 1px solid var(--border-color); color: var(--text-secondary);">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

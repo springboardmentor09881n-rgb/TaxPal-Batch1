@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api';
+import { Dropdown } from '../../components/dropdown/dropdown';
 
 export interface ICategoryBreakdown {
   category: string;
@@ -69,11 +70,19 @@ export interface IReportItem {
 
 @Component({
   selector: 'app-reports',
-  imports: [FormsModule, CommonModule, RouterLink],
+  imports: [FormsModule, CommonModule, RouterLink, Dropdown],
   templateUrl: './reports.html',
   styleUrl: './reports.css'
 })
 export class Reports implements OnInit {
+  // Getters for custom dropdowns
+  get filterReportTypesList(): any[] {
+    const list = [{ value: '', label: 'All Report Types' }];
+    this.reportTypes.forEach(rt => {
+      list.push({ value: rt, label: rt });
+    });
+    return list;
+  }
   isLightTheme = false;
   userName = 'Freelancer';
   isLoading = false;
@@ -84,9 +93,12 @@ export class Reports implements OnInit {
   // Form Fields
   reportTypes = [
     'Income Statement',
+    'Profit & Loss (P&L) Statement',
     'Income & Expense Summary',
     'Expense Breakdown',
-    'Tax Summary'
+    'Tax Summary',
+    'Schedule C (Form 1040) Tax Summary',
+    'Quarterly Tax Summary'
   ];
   periods = [
     'Current Month',
@@ -109,6 +121,40 @@ export class Reports implements OnInit {
   // Reports data
   reports: IReportItem[] = [];
   selectedReport: IReportItem | null = null;
+
+  // Direct Email modal state
+  showEmailModal = false;
+  recipientEmail = '';
+  emailFormat: 'PDF' | 'CSV' = 'PDF';
+  isSendingEmail = false;
+
+  // Scheduled Reports
+  scheduledReports: any[] = [];
+  showScheduleModal = false;
+  scheduleEmail = '';
+  scheduleReportType = 'Income Statement';
+  scheduleFormat: 'PDF' | 'CSV' = 'PDF';
+  isSavingSchedule = false;
+
+  // Toast notifications
+  toast = { show: false, message: '', type: 'success' as 'success' | 'error' };
+
+  // Search & Filters for History
+  searchQuery = '';
+  filterReportType = '';
+
+  get filteredReports(): IReportItem[] {
+    return this.reports.filter(r => {
+      const query = (this.searchQuery || '').trim().toLowerCase();
+      const matchesQuery = !query || 
+        (r.reportType || '').toLowerCase().includes(query) ||
+        (r.period || '').toLowerCase().includes(query);
+      
+      const matchesType = !this.filterReportType || r.reportType === this.filterReportType;
+      
+      return matchesQuery && matchesType;
+    });
+  }
 
   constructor(
     private api: ApiService,
@@ -138,6 +184,7 @@ export class Reports implements OnInit {
     }
 
     this.loadReports();
+    this.loadScheduledReports();
   }
 
   toggleTheme() {
@@ -302,8 +349,49 @@ export class Reports implements OnInit {
     }
   }
 
+  getCurrencySymbol(country: string): string {
+    const c = (country || '').trim().toLowerCase();
+    if (c === 'india' || c === 'in') return '₹';
+    if (c === 'japan' || c === 'jp' || c === 'china' || c === 'cn') return '¥';
+    if (c === 'germany' || c === 'de' || c === 'france' || c === 'fr') return '€';
+    if (c === 'united kingdom' || c === 'uk' || c === 'gb') return '£';
+    if (c === 'switzerland' || c === 'ch') return 'CHF';
+    if (c === 'singapore' || c === 'sg') return 'S$';
+    return '$';
+  }
+
   formatCurrency(amount: number | undefined): string {
-    return '$' + (amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const country = this.selectedReport?.data?.country || 'United States';
+    const symbol = this.getCurrencySymbol(country);
+    return symbol + ' ' + (amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  getDonutSegments(breakdown: ICategoryBreakdown[] | undefined): any[] {
+    if (!breakdown || breakdown.length === 0) return [];
+    
+    let accumulatedPercentage = 0;
+    const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6', '#ec4899', '#3b82f6', '#6b7280'];
+    
+    return breakdown.map((cat, idx) => {
+      const percent = cat.percentage || 0;
+      const strokeDashArray = `${percent} ${100 - percent}`;
+      const strokeDashOffset = 100 - accumulatedPercentage + 25; // start from top
+      accumulatedPercentage += percent;
+      
+      return {
+        category: cat.category,
+        amount: cat.amount,
+        percentage: percent,
+        dashArray: strokeDashArray,
+        dashOffset: strokeDashOffset,
+        color: colors[idx % colors.length]
+      };
+    });
+  }
+
+  getBarHeight(val: number, income: number, expense: number): number {
+    const max = Math.max(income, expense, 1);
+    return Math.max(10, Math.round((val / max) * 140)); // Max bar height 140px
   }
 
   formatDate(dateInput: any): string {
@@ -332,5 +420,114 @@ export class Reports implements OnInit {
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
     this.router.navigate(['/']);
+  }
+
+  showToast(message: string, type: 'success' | 'error' = 'success') {
+    this.toast = { show: true, message, type };
+    setTimeout(() => {
+      this.toast.show = false;
+    }, 4000);
+  }
+
+  // Email report action
+  openEmailModal() {
+    if (!this.selectedReport) return;
+    this.recipientEmail = '';
+    this.emailFormat = this.selectedReport.format || 'PDF';
+    this.showEmailModal = true;
+  }
+
+  openQuickEmailModal(report: IReportItem, event: MouseEvent) {
+    event.stopPropagation();
+    this.selectedReport = report;
+    this.openEmailModal();
+  }
+
+  closeEmailModal() {
+    this.showEmailModal = false;
+  }
+
+  sendEmailReport() {
+    if (!this.selectedReport || !this.recipientEmail) return;
+    this.isSendingEmail = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.api.emailReport(this.selectedReport._id, this.recipientEmail, this.emailFormat).subscribe({
+      next: () => {
+        this.isSendingEmail = false;
+        this.showEmailModal = false;
+        this.showToast('Report successfully sent to ' + this.recipientEmail, 'success');
+      },
+      error: (err: any) => {
+        this.isSendingEmail = false;
+        this.showToast(err.error?.message || 'Failed to send email. Please try again.', 'error');
+      }
+    });
+  }
+
+  // Scheduled recurring reports action
+  loadScheduledReports() {
+    this.api.getScheduledReports().subscribe({
+      next: (res: any) => {
+        this.scheduledReports = res?.data || [];
+      },
+      error: (err: any) => {
+        console.error('Failed to load scheduled reports:', err);
+      }
+    });
+  }
+
+  openScheduleModal() {
+    this.scheduleEmail = '';
+    this.scheduleReportType = this.reportTypes[0];
+    this.scheduleFormat = 'PDF';
+    this.showScheduleModal = true;
+  }
+
+  closeScheduleModal() {
+    this.showScheduleModal = false;
+  }
+
+  createRecurringSchedule() {
+    if (!this.scheduleEmail) return;
+    this.isSavingSchedule = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const payload = {
+      email: this.scheduleEmail,
+      reportType: this.scheduleReportType,
+      format: this.scheduleFormat
+    };
+
+    this.api.createScheduledReport(payload).subscribe({
+      next: () => {
+        this.isSavingSchedule = false;
+        this.showScheduleModal = false;
+        this.showToast('Automated monthly report scheduled successfully to ' + this.scheduleEmail, 'success');
+        this.loadScheduledReports();
+      },
+      error: (err: any) => {
+        this.isSavingSchedule = false;
+        this.showToast(err.error?.message || 'Failed to schedule report. Please try again.', 'error');
+      }
+    });
+  }
+
+  deleteSchedule(id: string) {
+    if (!confirm('Are you sure you want to cancel this scheduled report?')) return;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.api.deleteScheduledReport(id).subscribe({
+      next: () => {
+        this.showToast('Scheduled report cancelled successfully', 'success');
+        this.loadScheduledReports();
+      },
+      error: (err: any) => {
+        this.showToast('Failed to cancel scheduled report', 'error');
+      }
+    });
   }
 }

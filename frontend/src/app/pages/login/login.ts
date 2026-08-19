@@ -22,6 +22,16 @@ export class Login implements OnInit {
   isSubmitted = false;
   isLightTheme = false;
 
+  // Forgot password modal properties
+  showForgotModal = false;
+  resetEmail = '';
+  otpCode = '';
+  newPassword = '';
+  otpSent = false;
+  modalLoading = false;
+  modalError = '';
+  modalSuccess = '';
+
   constructor(
     private api: ApiService,
     private router: Router
@@ -116,6 +126,74 @@ export class Login implements OnInit {
         } else {
           this.errorMessage = 'Invalid email or password. Please try again.';
         }
+      }
+    });
+  }
+
+  // Forgot password modal actions
+  openForgotModal() {
+    this.resetEmail = '';
+    this.otpCode = '';
+    this.newPassword = '';
+    this.otpSent = false;
+    this.modalLoading = false;
+    this.modalError = '';
+    this.modalSuccess = '';
+    this.showForgotModal = true;
+  }
+
+  closeForgotModal() {
+    this.showForgotModal = false;
+  }
+
+  sendResetOtp() {
+    if (!this.resetEmail) {
+      this.modalError = 'Email address is required';
+      return;
+    }
+
+    this.modalLoading = true;
+    this.modalError = '';
+    this.modalSuccess = '';
+
+    this.api.forgotPassword(this.resetEmail).subscribe({
+      next: (res: any) => {
+        this.modalLoading = false;
+        this.otpSent = true;
+        this.modalSuccess = 'OTP sent successfully to your email';
+      },
+      error: (err: any) => {
+        this.modalLoading = false;
+        this.modalError = err.error?.message || 'Failed to send OTP. User may not exist.';
+      }
+    });
+  }
+
+  resetPassword() {
+    if (!this.otpCode || !this.newPassword) {
+      this.modalError = 'OTP code and new password are required';
+      return;
+    }
+
+    this.modalLoading = true;
+    this.modalError = '';
+    this.modalSuccess = '';
+
+    this.api.resetPassword({
+      email: this.resetEmail,
+      otp: this.otpCode,
+      newPassword: this.newPassword
+    }).subscribe({
+      next: (res: any) => {
+        this.modalLoading = false;
+        this.modalSuccess = 'Password has been reset successfully!';
+        setTimeout(() => {
+          this.closeForgotModal();
+        }, 2000);
+      },
+      error: (err: any) => {
+        this.modalLoading = false;
+        this.modalError = err.error?.message || 'Failed to reset password. Please check your OTP code.';
       }
     });
   }

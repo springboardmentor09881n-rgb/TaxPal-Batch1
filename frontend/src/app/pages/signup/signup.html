@@ -8,13 +8,15 @@
     <div class="brand-section">
       <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
         <div class="brand-logo">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="1" x2="12" y2="23"></line>
             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
           </svg>
         </div>
         <button (click)="toggleTheme()" class="theme-toggle-btn" title="Toggle theme">
-          <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg *ngIf="!isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
             <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -25,7 +27,8 @@
             <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
           </svg>
-          <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg *ngIf="isLightTheme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
         </button>
@@ -38,14 +41,15 @@
     <p class="card-subtitle">Get started with tax estimates and expense management</p>
 
     @if (errorMessage) {
-      <div class="alert alert-error">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        <span>{{ errorMessage }}</span>
-      </div>
+    <div class="alert alert-error">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="alert-icon">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </div>
     }
 
     <form (submit)="createAccount(); $event.preventDefault()" class="signup-form">
@@ -57,113 +61,71 @@
           <!-- Full Name -->
           <div class="input-group" [class.has-error]="fullNameError">
             <label for="fullName">Full Name</label>
-            <input
-              id="fullName"
-              type="text"
-              placeholder="John Doe"
-              [(ngModel)]="fullName"
-              name="fullName"
-              (input)="onFullNameInput()"
-              (blur)="validateFullName()">
+            <input id="fullName" type="text" placeholder="John Doe" [(ngModel)]="fullName" name="fullName"
+              (input)="onFullNameInput()" (blur)="validateFullName()">
             @if (fullNameError) {
-              <span class="error-text">{{ fullNameError }}</span>
+            <span class="error-text">{{ fullNameError }}</span>
             }
           </div>
 
           <!-- Username -->
           <div class="input-group" [class.has-error]="usernameError">
             <label for="username">Username</label>
-            <input
-              id="username"
-              type="text"
-              placeholder="johndoe123"
-              [(ngModel)]="username"
-              name="username"
-              (input)="onUsernameInput()"
-              (blur)="validateUsername()">
+            <input id="username" type="text" placeholder="johndoe123" [(ngModel)]="username" name="username"
+              (input)="onUsernameInput()" (blur)="validateUsername()">
             @if (usernameError) {
-              <span class="error-text">{{ usernameError }}</span>
+            <span class="error-text">{{ usernameError }}</span>
             }
           </div>
 
           <!-- Email -->
           <div class="input-group" [class.has-error]="emailError">
             <label for="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="john@example.com"
-              [(ngModel)]="email"
-              name="email"
-              (input)="onEmailInput()"
-              (blur)="validateEmail()">
+            <input id="email" type="email" placeholder="john@example.com" [(ngModel)]="email" name="email"
+              (input)="onEmailInput()" (blur)="validateEmail()">
             @if (emailError) {
-              <span class="error-text">{{ emailError }}</span>
+            <span class="error-text">{{ emailError }}</span>
             }
           </div>
 
           <!-- Password -->
           <div class="input-group" [class.has-error]="passwordError">
             <label for="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Password123"
-              [(ngModel)]="password"
-              name="password"
-              (input)="onPasswordInput()"
-              (blur)="validatePassword()">
+            <input id="password" type="password" placeholder="Password123" [(ngModel)]="password" name="password"
+              (input)="onPasswordInput()" (blur)="validatePassword()">
 
             <!-- Password Strength Indicator -->
             @if (password) {
-              <div class="strength-meter">
-                <div class="strength-bar-bg">
-                  <div class="strength-bar" [class]="passwordStrengthClass" [style.width.%]="passwordStrength * 33.3"></div>
+            <div class="strength-meter">
+              <div class="strength-bar-bg">
+                <div class="strength-bar" [class]="passwordStrengthClass" [style.width.%]="passwordStrength * 33.3">
                 </div>
-                <span class="strength-text" [class]="passwordStrengthClass">{{ passwordStrengthText }}</span>
               </div>
+              <span class="strength-text" [class]="passwordStrengthClass">{{ passwordStrengthText }}</span>
+            </div>
             }
 
             @if (passwordError) {
-              <span class="error-text">{{ passwordError }}</span>
+            <span class="error-text">{{ passwordError }}</span>
             }
           </div>
 
           <!-- Confirm Password -->
           <div class="input-group" [class.has-error]="confirmPasswordError">
             <label for="confirmPassword">Confirm Password</label>
-            <input
-              id="confirmPassword"
-              type="password"
-              placeholder="Confirm password"
-              [(ngModel)]="confirmPassword"
-              name="confirmPassword"
-              (input)="onConfirmPasswordInput()">
+            <input id="confirmPassword" type="password" placeholder="Confirm password" [(ngModel)]="confirmPassword"
+              name="confirmPassword" (input)="onConfirmPasswordInput()">
             @if (confirmPasswordError) {
-              <span class="error-text">{{ confirmPasswordError }}</span>
+            <span class="error-text">{{ confirmPasswordError }}</span>
             }
           </div>
 
           <!-- Country Select -->
           <div class="input-group" [class.has-error]="countryError">
             <label for="country">Country</label>
-            <select
-              id="country"
-              [(ngModel)]="country"
-              name="country"
-              (change)="onCountryInput()">
-              <option value="" disabled selected>Select country</option>
-              <option value="United States">United States</option>
-              <option value="India">India</option>
-              <option value="Canada">Canada</option>
-              <option value="Australia">Australia</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="Germany">Germany</option>
-              <option value="France">France</option>
-              <option value="Other">Other</option>
-            </select>
+            <app-dropdown id="country" [options]="countriesList" [(value)]="country" (valueChange)="onCountryInput()" placeholder="Select country" [searchable]="true"></app-dropdown>
             @if (countryError) {
-              <span class="error-text">{{ countryError }}</span>
+            <span class="error-text">{{ countryError }}</span>
             }
           </div>
         </div>
@@ -175,69 +137,33 @@
           <!-- Phone Number -->
           <div class="input-group">
             <label for="phone">Phone Number</label>
-            <input
-              id="phone"
-              type="tel"
-              placeholder="+1 (555) 000-0000"
-              [(ngModel)]="phone"
-              name="phone">
+            <input id="phone" type="tel" placeholder="+1 (555) 000-0000" [(ngModel)]="phone" name="phone">
           </div>
 
           <!-- Conditional State (e.g. US, Canada, India, Australia) -->
           @if (showStateField) {
-            <div class="input-group state-fade-in">
-              <label for="state">State / Province</label>
-              <input
-                id="state"
-                type="text"
-                placeholder="Enter state"
-                [(ngModel)]="state"
-                name="state">
-            </div>
+          <div class="input-group state-fade-in">
+            <label for="state">State / Province</label>
+            <input id="state" type="text" placeholder="Enter state" [(ngModel)]="state" name="state">
+          </div>
           }
 
           <!-- City -->
           <div class="input-group">
             <label for="city">City</label>
-            <input
-              id="city"
-              type="text"
-              placeholder="Enter city"
-              [(ngModel)]="city"
-              name="city">
+            <input id="city" type="text" placeholder="Enter city" [(ngModel)]="city" name="city">
           </div>
 
           <!-- Language -->
           <div class="input-group">
             <label for="language">Language</label>
-            <select
-              id="language"
-              [(ngModel)]="language"
-              name="language">
-              <option value="English">English</option>
-              <option value="Spanish">Spanish</option>
-              <option value="French">French</option>
-              <option value="German">German</option>
-              <option value="Japanese">Japanese</option>
-              <option value="Chinese">Chinese</option>
-              <option value="Hindi">Hindi</option>
-            </select>
+            <app-dropdown id="language" [options]="languagesList" [(value)]="language" placeholder="Select language"></app-dropdown>
           </div>
 
           <!-- Income Bracket -->
           <div class="input-group">
             <label for="incomeBracket">Income Bracket</label>
-            <select
-              id="incomeBracket"
-              [(ngModel)]="incomeBracket"
-              name="incomeBracket">
-              <option value="" selected>Select income bracket</option>
-              <option value="<25k">&lt; 25k</option>
-              <option value="25k-50k">25k - 50k</option>
-              <option value="50k-100k">50k - 100k</option>
-              <option value="100k-150k">100k - 150k</option>
-              <option value="150k+">150k+</option>
-            </select>
+            <app-dropdown id="incomeBracket" [options]="incomeBracketsList" [(value)]="incomeBracket" placeholder="Select income bracket"></app-dropdown>
           </div>
         </div>
       </div>
@@ -245,14 +171,15 @@
       <!-- Submit button -->
       <button type="submit" class="btn btn-primary btn-signup" [disabled]="isLoading">
         @if (isLoading) {
-          <span class="spinner"></span>
-          <span>Creating account...</span>
+        <span class="spinner"></span>
+        <span>Creating account...</span>
         } @else {
-          <span>Create Account</span>
-          <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12,5 19,12 12,19"></polyline>
-          </svg>
+        <span>Create Account</span>
+        <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12,5 19,12 12,19"></polyline>
+        </svg>
         }
       </button>
     </form>

@@ -1,0 +1,60 @@
+<div class="custom-dropdown-container" [attr.id]="id" [class.open]="isOpen">
+  <!-- Trigger Button -->
+  <button type="button" class="dropdown-trigger" (click)="toggleDropdown()">
+    <span class="selected-value-wrapper">
+      <span *ngIf="getOptionIcon({ label: getSelectedLabel() })" class="selected-icon">
+        {{ getOptionIcon({ label: getSelectedLabel() }) }}
+      </span>
+      <span class="selected-text">{{ getSelectedLabel() }}</span>
+    </span>
+    <!-- Arrow Icon -->
+    <span class="dropdown-chevron">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9l6 6 6-6"></path>
+      </svg>
+    </span>
+  </button>
+ 
+  <!-- Dropdown Menu Popover -->
+  <div class="dropdown-menu-popover" *ngIf="isOpen">
+    <!-- Optional Search Input -->
+    <div class="dropdown-search-wrapper" *ngIf="searchable" (click)="$event.stopPropagation()">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" 
+             class="dropdown-search-input" 
+             [(ngModel)]="filterText" 
+             [placeholder]="searchPlaceholder" 
+             (keydown.enter)="$event.preventDefault()">
+    </div>
+ 
+    <!-- Options List -->
+    <ul class="dropdown-options-list">
+      <li *ngFor="let opt of getFilteredOptions()" 
+          class="dropdown-option-item" 
+          [class.selected]="getOptionValue(opt) === value"
+          (click)="selectOption(opt)">
+        
+        <span class="option-content-left">
+          <!-- Optional Flag / Icon -->
+          <span *ngIf="getOptionIcon(opt)" class="option-icon-preview">
+            {{ getOptionIcon(opt) }}
+          </span>
+          <span class="option-label-text">{{ getOptionLabel(opt) }}</span>
+        </span>
+ 
+        <!-- Checkmark (✓) for selected option -->
+        <span class="option-checkmark" *ngIf="getOptionValue(opt) === value">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </span>
+      </li>
+      <li class="dropdown-no-results" *ngIf="getFilteredOptions().length === 0">
+        No options found
+      </li>
+    </ul>
+  </div>
+</div>

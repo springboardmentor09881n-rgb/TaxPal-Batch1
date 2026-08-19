@@ -3,14 +3,26 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api';
+import { Dropdown } from '../../components/dropdown/dropdown';
 
 @Component({
   selector: 'app-signup',
-  imports: [FormsModule, RouterLink, CommonModule],
+  imports: [FormsModule, RouterLink, CommonModule, Dropdown],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
 export class Signup implements OnInit {
+
+  // Static options lists for custom dropdowns
+  countriesList = ['United States', 'Canada', 'United Kingdom', 'Australia', 'India', 'Germany', 'France', 'Other'];
+  languagesList = ['English', 'Spanish', 'French', 'German', 'Japanese', 'Chinese', 'Hindi'];
+  incomeBracketsList = [
+    { value: '<25k', label: '< 25k' },
+    { value: '25k-50k', label: '25k - 50k' },
+    { value: '50k-100k', label: '50k - 100k' },
+    { value: '100k-150k', label: '100k - 150k' },
+    { value: '150k+', label: '150k+' }
+  ];
 
   username = '';
   fullName = '';

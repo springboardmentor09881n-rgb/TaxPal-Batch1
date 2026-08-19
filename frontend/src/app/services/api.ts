@@ -77,8 +77,16 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/categories`, data, this.getOptions());
   }
 
-  updateCategory(categoryId: string, data: { name?: string; color?: string; icon?: string }) {
+  updateCategory(categoryId: string, data: { name?: string; color?: string; icon?: string; taxDeductible?: boolean; sortOrder?: number }) {
     return this.http.put(`${this.baseUrl}/categories/${categoryId}`, data, this.getOptions());
+  }
+
+  getActiveSessions() {
+    return this.http.get(`${this.baseUrl}/auth/sessions`, this.getOptions());
+  }
+
+  logoutOthers() {
+    return this.http.post(`${this.baseUrl}/auth/sessions/logout-others`, {}, this.getOptions());
   }
 
   deleteCategory(categoryId: string) {
@@ -100,6 +108,10 @@ export class ApiService {
 
   deleteTaxEstimate(id: string) {
     return this.http.delete(`${this.baseUrl}/tax-estimates/${id}`, this.getOptions());
+  }
+
+  updateTaxEstimate(id: string, data: any) {
+    return this.http.put(`${this.baseUrl}/tax-estimates/${id}`, data, this.getOptions());
   }
 
   // Alert endpoints
@@ -142,4 +154,104 @@ export class ApiService {
   deleteReport(id: string) {
     return this.http.delete(`${this.baseUrl}/reports/${id}`, this.getOptions());
   }
+<<<<<<< Updated upstream
+=======
+
+  emailReport(id: string, email: string, format?: string) {
+    return this.http.post(`${this.baseUrl}/reports/${id}/email`, { email, format }, this.getOptions());
+  }
+
+  getScheduledReports() {
+    return this.http.get(`${this.baseUrl}/reports/schedule`, this.getOptions());
+  }
+
+  createScheduledReport(data: { email: string; reportType: string; format: string }) {
+    return this.http.post(`${this.baseUrl}/reports/schedule`, data, this.getOptions());
+  }
+
+  deleteScheduledReport(id: string) {
+    return this.http.delete(`${this.baseUrl}/reports/schedule/${id}`, this.getOptions());
+  }
+
+  // Chat endpoints
+  sendChatMessage(message: string) {
+    return this.http.post(`${this.baseUrl}/chat/message`, { message }, this.getOptions());
+  }
+
+  sendChatStream(message: string, sessionId?: string | null): Promise<Response> {
+    const token = localStorage.getItem('accessToken');
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const body: any = { message };
+    if (sessionId) {
+      body.sessionId = sessionId;
+    }
+
+    return fetch(`${this.baseUrl}/chat/message`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body)
+    }).then(async (response) => {
+      if (response.status === 401) {
+        console.warn('Chat API returned 401. Attempting token refresh...');
+        try {
+          const refreshRes = await fetch(`${this.baseUrl}/auth/refresh`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+          });
+
+          if (refreshRes.ok) {
+            const refreshData = await refreshRes.json();
+            const newAccessToken = refreshData.data?.accessToken || refreshData.accessToken;
+            if (newAccessToken) {
+              console.log('Token refreshed successfully during chat. Retrying request...');
+              localStorage.setItem('accessToken', newAccessToken);
+              headers['Authorization'] = `Bearer ${newAccessToken}`;
+              return fetch(`${this.baseUrl}/chat/message`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(body)
+              });
+            }
+          }
+        } catch (err) {
+          console.error('Failed to auto-refresh token during chat stream:', err);
+        }
+      }
+      return response;
+    });
+  }
+
+  getChatSessions() {
+    return this.http.get(`${this.baseUrl}/chat/sessions`, this.getOptions());
+  }
+
+  getChatHistory(sessionId: string) {
+    return this.http.get(`${this.baseUrl}/chat/sessions/${sessionId}`, this.getOptions());
+  }
+
+  deleteChatSession(sessionId: string) {
+    return this.http.delete(`${this.baseUrl}/chat/sessions/${sessionId}`, this.getOptions());
+  }
+
+  refreshToken() {
+    return this.http.post(`${this.baseUrl}/auth/refresh`, {}, this.getOptions());
+  }
+
+  forgotPassword(email: string) {
+    return this.http.post(`${this.baseUrl}/auth/forgot-password`, { email });
+  }
+
+  resetPassword(data: any) {
+    return this.http.post(`${this.baseUrl}/auth/reset-password`, data);
+  }
+>>>>>>> Stashed changes
 }

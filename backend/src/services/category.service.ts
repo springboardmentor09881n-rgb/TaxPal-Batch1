@@ -6,7 +6,7 @@ export class CategoryService {
    * Get all categories for a user
    */
   public static async getCategories(userId: string): Promise<any[]> {
-    const categories = await Category.find({ userId });
+    const categories = await Category.find({ userId }).sort({ sortOrder: 1, createdAt: 1 });
     return categories;
   }
 
@@ -14,7 +14,7 @@ export class CategoryService {
    * Get categories by type for a user
    */
   public static async getCategoriesByType(userId: string, type: 'expense' | 'income'): Promise<any[]> {
-    const categories = await Category.find({ userId, type });
+    const categories = await Category.find({ userId, type }).sort({ sortOrder: 1, createdAt: 1 });
     return categories;
   }
 
@@ -59,6 +59,8 @@ export class CategoryService {
     name?: string;
     color?: string;
     icon?: string;
+    taxDeductible?: boolean;
+    sortOrder?: number;
   }): Promise<any> {
     const category = await Category.findOne({ _id: categoryId, userId });
     if (!category) {
@@ -81,6 +83,8 @@ export class CategoryService {
 
     if (categoryData.color !== undefined) category.color = categoryData.color;
     if (categoryData.icon !== undefined) category.icon = categoryData.icon;
+    if (categoryData.taxDeductible !== undefined) category.taxDeductible = categoryData.taxDeductible;
+    if (categoryData.sortOrder !== undefined) category.sortOrder = categoryData.sortOrder;
 
     await category.save();
     return category;

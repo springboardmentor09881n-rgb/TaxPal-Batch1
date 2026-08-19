@@ -95,12 +95,14 @@ export class CategoryController {
       }
 
       const { categoryId } = req.params;
-      const { name, color, icon } = req.body;
+      const { name, color, icon, taxDeductible, sortOrder } = req.body;
 
       const category = await CategoryService.updateCategory(categoryId, userId, {
         name,
         color,
-        icon
+        icon,
+        taxDeductible,
+        sortOrder
       });
 
       res.status(200).json(new ApiResponse(category, 'Category updated successfully'));

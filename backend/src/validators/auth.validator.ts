@@ -54,6 +54,10 @@ export const updateProfileSchema = z.object({
     city: z.string().trim().optional(),
     language: z.string().trim().optional(),
     incomeBracket: z.string().trim().optional(),
+    avatar: z.string().optional(),
+    currencyPreference: z.string().trim().optional(),
+    twoFactorEnabled: z.boolean().optional(),
+    twoFactorMethod: z.string().trim().optional(),
     autoCategorizeEnabled: z.boolean().optional(),
     categoryMappings: z.array(
       z.object({

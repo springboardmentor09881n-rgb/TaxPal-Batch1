@@ -751,3 +751,209 @@
 .payment-card {
   border-left: 4px solid #f59e0b;
 }
+
+/* ========================================================
+   Contextual Optimization Tooltips
+   ======================================================== */
+.label-with-tooltip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tooltip-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: rgba(128, 128, 128, 0.15);
+  color: var(--text-secondary);
+  font-size: 9px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  transition: all 0.2s ease;
+}
+
+.tooltip-wrapper:hover .tooltip-icon {
+  background-color: #6366f1;
+  color: white;
+}
+
+.tooltip-text {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background-color: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  line-height: 1.4;
+  width: 220px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+body.light-theme .tooltip-text {
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #0f172a transparent transparent transparent;
+}
+
+body.light-theme .tooltip-text::after {
+  border-color: #1e293b transparent transparent transparent;
+}
+
+.tooltip-wrapper:hover .tooltip-text {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ========================================================
+   Card vs. Grid Calendar View Toggle
+   ======================================================== */
+.view-toggle-container {
+  display: flex;
+  background-color: rgba(128, 128, 128, 0.08);
+  border: 1px solid var(--border-color);
+  padding: 4px;
+  border-radius: 8px;
+}
+
+body.light-theme .view-toggle-container {
+  background-color: rgba(99, 102, 241, 0.03);
+}
+
+.btn-toggle-view {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-toggle-view:hover {
+  color: var(--text-primary);
+}
+
+.btn-toggle-view.active {
+  background-color: var(--bg-tertiary);
+  color: #6366f1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .btn-toggle-view.active {
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+  background-color: #ffffff;
+}
+
+/* ========================================================
+   Mark Payment as Paid Checkbox Toggles
+   ======================================================== */
+.btn-toggle-payment {
+  transition: all 0.2s ease;
+}
+
+.btn-toggle-payment:hover {
+  border-color: #10b981 !important;
+  color: #10b981 !important;
+  background-color: rgba(16, 185, 129, 0.05) !important;
+}
+
+.btn-toggle-payment.paid {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  color: #10b981 !important;
+}
+
+/* ========================================================
+   Monthly Grid Calendar Layout
+   ======================================================== */
+.grid-calendar-table th {
+  border-right: 1px solid var(--border-color);
+}
+.grid-calendar-table th:last-child {
+  border-right: none;
+}
+
+.grid-calendar-table td.empty-day {
+  background: rgba(128, 128, 128, 0.02) !important;
+}
+
+.grid-event {
+  transition: all 0.2s ease;
+}
+
+.grid-event.event-reminder {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.grid-event.event-payment {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.grid-event.event-payment.paid {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  color: #10b981 !important;
+  border: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+.grid-event:hover {
+  transform: translateY(-1px);
+}
+
+/* Status Badges */
+.status-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.badge-ok {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.status-badge.badge-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
