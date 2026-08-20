@@ -116,7 +116,7 @@ export class ReceiptScanner implements OnInit {
           this.scanError = 'Failed to extract data. Please manually enter the details.';
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isScanning = false;
         this.scanError = err.error?.message || 'Error scanning receipt. Make sure the file is clear and < 5MB.';
       }

@@ -42,6 +42,16 @@ export class ApiService {
     return this.http.delete(`${this.baseUrl}/transactions/${id}`, this.getOptions());
   }
 
+  updateTransaction(id: string, data: any) {
+    return this.http.put(`${this.baseUrl}/transactions/${id}`, data, this.getOptions());
+  }
+
+  scanReceipt(file: File) {
+    const formData = new FormData();
+    formData.append('receipt', file);
+    return this.http.post(`${this.baseUrl}/receipts/scan`, formData, this.getOptions());
+  }
+
   getBudgets(month?: string) {
     const url = month ? `${this.baseUrl}/budgets?month=${month}` : `${this.baseUrl}/budgets`;
     return this.http.get(url, this.getOptions());
@@ -154,8 +164,6 @@ export class ApiService {
   deleteReport(id: string) {
     return this.http.delete(`${this.baseUrl}/reports/${id}`, this.getOptions());
   }
-<<<<<<< Updated upstream
-=======
 
   emailReport(id: string, email: string, format?: string) {
     return this.http.post(`${this.baseUrl}/reports/${id}/email`, { email, format }, this.getOptions());
@@ -253,5 +261,4 @@ export class ApiService {
   resetPassword(data: any) {
     return this.http.post(`${this.baseUrl}/auth/reset-password`, data);
   }
->>>>>>> Stashed changes
 }

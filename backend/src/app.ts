@@ -13,6 +13,8 @@ import categoryRoutes from './routes/category.routes';
 import taxEstimateRoutes from './routes/taxEstimate.routes';
 import alertRoutes from './routes/alert.routes';
 import reportRoutes from './routes/report.routes';
+import receiptRoutes from './routes/receipt.routes';
+import chatRoutes from './routes/chat.routes';
 
 import { errorHandler } from './middleware/error.middleware';
 import { ApiError } from './utils/ApiError';
@@ -67,6 +69,8 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/tax-estimates', taxEstimateRoutes);
 app.use('/api/alerts', alertRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/receipts', receiptRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
